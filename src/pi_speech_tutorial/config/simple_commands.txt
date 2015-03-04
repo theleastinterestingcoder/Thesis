@@ -1,0 +1,7 @@
+pause speech
+continue speech
+move forward
+move backward
+turn left
+turn right
+stop
