@@ -5,8 +5,6 @@
 # it emulates the modifications of the setup script without recurring computations
 
 # new environment variables
-export CATKIN_TEST_RESULTS_DIR="/home/asdf/quan_ws/build/test_results"
-export ROS_TEST_RESULTS_DIR="/home/asdf/quan_ws/build/test_results"
 
 # modified environment variables
 export CMAKE_PREFIX_PATH="/home/asdf/quan_ws/devel:$CMAKE_PREFIX_PATH"
@@ -17,4 +15,4 @@ export PKG_CONFIG_PATH="/home/asdf/quan_ws/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PWD="/home/asdf/quan_ws/build"
 export PYTHONPATH="/home/asdf/quan_ws/devel/lib/python2.7/dist-packages:$PYTHONPATH"
 export ROSLISP_PACKAGE_DIRECTORIES="/home/asdf/quan_ws/devel/share/common-lisp"
-export ROS_PACKAGE_PATH="/home/asdf/quan_ws/src:$ROS_PACKAGE_PATH"
+export ROS_PACKAGE_PATH="/home/asdf/quan_ws/src:/opt/ros/hydro/share:/opt/ros/hydro/stacks"

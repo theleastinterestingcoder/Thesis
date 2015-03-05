@@ -1,0 +1,17 @@
+<package>
+  <description brief="alfred">
+    Thesis for Quan Zhou
+
+  </description>
+  <author>patrick</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pi_speech_tutorial</url>
+  <depend package="roscpp"/>
+  <depend package="rospy"/>
+  <depend package="pocketsphinx"/>
+  <depend package="sound_play"/>
+  <depend package="std_msgs"/>
+</package>
+
+
