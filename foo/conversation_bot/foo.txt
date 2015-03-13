@@ -166,15 +166,47 @@ ALSA lib pcm_dmix.c:1018:(snd_pcm_dmix_open) unable to open slave
 Cannot connect to server socket err = No such file or directory
 Cannot connect to server socket
 jack server is not running or cannot be started
+ALSA lib pcm_dsnoop.c:612:(snd_pcm_dsnoop_open) unable to open slave
+ALSA lib pcm_dmix.c:1018:(snd_pcm_dmix_open) unable to open slave
+ALSA lib pcm.c:2217:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2217:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2217:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
+ALSA lib audio/pcm_bluetooth.c:1614:(audioservice_expect) BT_GET_CAPABILITIES failed : Input/output error(5)
+ALSA lib audio/pcm_bluetooth.c:1614:(audioservice_expect) BT_GET_CAPABILITIES failed : Input/output error(5)
+ALSA lib audio/pcm_bluetooth.c:1614:(audioservice_expect) BT_GET_CAPABILITIES failed : Input/output error(5)
+ALSA lib audio/pcm_bluetooth.c:1614:(audioservice_expect) BT_GET_CAPABILITIES failed : Input/output error(5)
+ALSA lib pcm_dmix.c:957:(snd_pcm_dmix_open) The dmix plugin supports only playback stream
+ALSA lib pcm_dmix.c:1018:(snd_pcm_dmix_open) unable to open slave
+Cannot connect to server socket err = No such file or directory
+Cannot connect to server socket
+jack server is not running or cannot be started
+ALSA lib pcm_dsnoop.c:612:(snd_pcm_dsnoop_open) unable to open slave
+ALSA lib pcm_dmix.c:1018:(snd_pcm_dmix_open) unable to open slave
+ALSA lib pcm.c:2217:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2217:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2217:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
+ALSA lib audio/pcm_bluetooth.c:1614:(audioservice_expect) BT_GET_CAPABILITIES failed : Input/output error(5)
+ALSA lib audio/pcm_bluetooth.c:1614:(audioservice_expect) BT_GET_CAPABILITIES failed : Input/output error(5)
+ALSA lib audio/pcm_bluetooth.c:1614:(audioservice_expect) BT_GET_CAPABILITIES failed : Input/output error(5)
+ALSA lib audio/pcm_bluetooth.c:1614:(audioservice_expect) BT_GET_CAPABILITIES failed : Input/output error(5)
+ALSA lib pcm_dmix.c:957:(snd_pcm_dmix_open) The dmix plugin supports only playback stream
+ALSA lib pcm_dmix.c:1018:(snd_pcm_dmix_open) unable to open slave
+Cannot connect to server socket err = No such file or directory
+Cannot connect to server socket
+jack server is not running or cannot be started
 Traceback (most recent call last):
   File "eliza_voice.py", line 61, in <module>
     initiate_doctor()
   File "eliza_voice.py", line 31, in initiate_doctor
     query = mic_to_text(r, verbose=True)
-  File "eliza_voice.py", line 50, in mic_to_text
-    audio = r.listen(source)                   # listen for the first phrase and extract it into audio data
-  File "/usr/local/lib/python2.7/dist-packages/speech_recognition/__init__.py", line 191, in listen
-    buffer = source.stream.read(source.CHUNK)
-  File "/usr/lib/pymodules/python2.7/pyaudio.py", line 564, in read
-    return pa.read_stream(self._stream, num_frames)
+  File "eliza_voice.py", line 54, in mic_to_text
+    return r.recognize(audio)                  # recognize speech using Google Speech Recognition
+  File "/usr/local/lib/python2.7/dist-packages/speech_recognition/__init__.py", line 221, in recognize
+    response_text = response.read().decode("utf-8")
+  File "/usr/lib/python2.7/socket.py", line 351, in read
+    data = self._sock.recv(rbufsize)
+  File "/usr/lib/python2.7/httplib.py", line 561, in read
+    s = self.fp.read(amt)
+  File "/usr/lib/python2.7/socket.py", line 380, in read
+    data = self._sock.recv(left)
 KeyboardInterrupt

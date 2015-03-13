@@ -33,5 +33,6 @@ int main(int argc, char** argv){
         ROS_INFO("Hooray, the base moved 1 meter forward");
     else
         ROS_INFO("The base failed to move forward 1 meter for some reason");
+    ros::spin();
     return 0;
 }
