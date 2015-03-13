@@ -1,8 +1,8 @@
-# Install script for directory: /home/asdf/quan_ws/src/openni_tracker
+# Install script for directory: /home/alfred/quan_ws/src/openni_tracker
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  SET(CMAKE_INSTALL_PREFIX "/home/asdf/quan_ws/install")
+  SET(CMAKE_INSTALL_PREFIX "/home/alfred/quan_ws/install")
 ENDIF(NOT DEFINED CMAKE_INSTALL_PREFIX)
 STRING(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -33,18 +33,18 @@ IF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 ENDIF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/asdf/quan_ws/build/openni_tracker/catkin_generated/installspace/openni_tracker.pc")
+  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/alfred/quan_ws/build/openni_tracker/catkin_generated/installspace/openni_tracker.pc")
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/openni_tracker/cmake" TYPE FILE FILES
-    "/home/asdf/quan_ws/build/openni_tracker/catkin_generated/installspace/openni_trackerConfig.cmake"
-    "/home/asdf/quan_ws/build/openni_tracker/catkin_generated/installspace/openni_trackerConfig-version.cmake"
+    "/home/alfred/quan_ws/build/openni_tracker/catkin_generated/installspace/openni_trackerConfig.cmake"
+    "/home/alfred/quan_ws/build/openni_tracker/catkin_generated/installspace/openni_trackerConfig-version.cmake"
     )
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/openni_tracker" TYPE FILE FILES "/home/asdf/quan_ws/src/openni_tracker/package.xml")
+  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/openni_tracker" TYPE FILE FILES "/home/alfred/quan_ws/src/openni_tracker/package.xml")
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -54,7 +54,7 @@ IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/openni_tracker/openni_tracker"
          RPATH "")
   ENDIF()
-  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/openni_tracker" TYPE EXECUTABLE FILES "/home/asdf/quan_ws/devel/lib/openni_tracker/openni_tracker")
+  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/openni_tracker" TYPE EXECUTABLE FILES "/home/alfred/quan_ws/devel/lib/openni_tracker/openni_tracker")
   IF(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/openni_tracker/openni_tracker" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/openni_tracker/openni_tracker")
     FILE(RPATH_REMOVE
@@ -66,6 +66,6 @@ IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/openni_tracker" TYPE FILE FILES "/home/asdf/quan_ws/src/openni_tracker/openni_tracker.xml")
+  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/openni_tracker" TYPE FILE FILES "/home/alfred/quan_ws/src/openni_tracker/openni_tracker.xml")
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 

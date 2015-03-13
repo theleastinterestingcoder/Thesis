@@ -1,8 +1,8 @@
-# Install script for directory: /home/asdf/quan_ws/src
+# Install script for directory: /home/alfred/quan_ws/src
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  SET(CMAKE_INSTALL_PREFIX "/home/asdf/quan_ws/install")
+  SET(CMAKE_INSTALL_PREFIX "/home/alfred/quan_ws/install")
 ENDIF(NOT DEFINED CMAKE_INSTALL_PREFIX)
 STRING(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -44,38 +44,38 @@ ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unsp
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   list(APPEND CPACK_ABSOLUTE_DESTINATION_FILES
-   "/home/asdf/quan_ws/install/_setup_util.py")
-FILE(INSTALL DESTINATION "/home/asdf/quan_ws/install" TYPE PROGRAM FILES "/home/asdf/quan_ws/build/catkin_generated/installspace/_setup_util.py")
+   "/home/alfred/quan_ws/install/_setup_util.py")
+FILE(INSTALL DESTINATION "/home/alfred/quan_ws/install" TYPE PROGRAM FILES "/home/alfred/quan_ws/build/catkin_generated/installspace/_setup_util.py")
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   list(APPEND CPACK_ABSOLUTE_DESTINATION_FILES
-   "/home/asdf/quan_ws/install/env.sh")
-FILE(INSTALL DESTINATION "/home/asdf/quan_ws/install" TYPE PROGRAM FILES "/home/asdf/quan_ws/build/catkin_generated/installspace/env.sh")
+   "/home/alfred/quan_ws/install/env.sh")
+FILE(INSTALL DESTINATION "/home/alfred/quan_ws/install" TYPE PROGRAM FILES "/home/alfred/quan_ws/build/catkin_generated/installspace/env.sh")
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   list(APPEND CPACK_ABSOLUTE_DESTINATION_FILES
-   "/home/asdf/quan_ws/install/setup.bash")
-FILE(INSTALL DESTINATION "/home/asdf/quan_ws/install" TYPE FILE FILES "/home/asdf/quan_ws/build/catkin_generated/installspace/setup.bash")
+   "/home/alfred/quan_ws/install/setup.bash")
+FILE(INSTALL DESTINATION "/home/alfred/quan_ws/install" TYPE FILE FILES "/home/alfred/quan_ws/build/catkin_generated/installspace/setup.bash")
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   list(APPEND CPACK_ABSOLUTE_DESTINATION_FILES
-   "/home/asdf/quan_ws/install/setup.sh")
-FILE(INSTALL DESTINATION "/home/asdf/quan_ws/install" TYPE FILE FILES "/home/asdf/quan_ws/build/catkin_generated/installspace/setup.sh")
+   "/home/alfred/quan_ws/install/setup.sh")
+FILE(INSTALL DESTINATION "/home/alfred/quan_ws/install" TYPE FILE FILES "/home/alfred/quan_ws/build/catkin_generated/installspace/setup.sh")
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   list(APPEND CPACK_ABSOLUTE_DESTINATION_FILES
-   "/home/asdf/quan_ws/install/setup.zsh")
-FILE(INSTALL DESTINATION "/home/asdf/quan_ws/install" TYPE FILE FILES "/home/asdf/quan_ws/build/catkin_generated/installspace/setup.zsh")
+   "/home/alfred/quan_ws/install/setup.zsh")
+FILE(INSTALL DESTINATION "/home/alfred/quan_ws/install" TYPE FILE FILES "/home/alfred/quan_ws/build/catkin_generated/installspace/setup.zsh")
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   list(APPEND CPACK_ABSOLUTE_DESTINATION_FILES
-   "/home/asdf/quan_ws/install/.rosinstall")
-FILE(INSTALL DESTINATION "/home/asdf/quan_ws/install" TYPE FILE FILES "/home/asdf/quan_ws/build/catkin_generated/installspace/.rosinstall")
+   "/home/alfred/quan_ws/install/.rosinstall")
+FILE(INSTALL DESTINATION "/home/alfred/quan_ws/install" TYPE FILE FILES "/home/alfred/quan_ws/build/catkin_generated/installspace/.rosinstall")
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -88,9 +88,13 @@ ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unsp
 
 IF(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  INCLUDE("/home/asdf/quan_ws/build/gtest/cmake_install.cmake")
-  INCLUDE("/home/asdf/quan_ws/build/simple_navigation_goals/cmake_install.cmake")
-  INCLUDE("/home/asdf/quan_ws/build/openni_tracker/cmake_install.cmake")
+  INCLUDE("/home/alfred/quan_ws/build/gtest/cmake_install.cmake")
+  INCLUDE("/home/alfred/quan_ws/build/pocketsphinx/cmake_install.cmake")
+  INCLUDE("/home/alfred/quan_ws/build/gscam/cmake_install.cmake")
+  INCLUDE("/home/alfred/quan_ws/build/procrob_functional/cmake_install.cmake")
+  INCLUDE("/home/alfred/quan_ws/build/learning_actionlib/cmake_install.cmake")
+  INCLUDE("/home/alfred/quan_ws/build/simple_navigation_goals/cmake_install.cmake")
+  INCLUDE("/home/alfred/quan_ws/build/openni_tracker/cmake_install.cmake")
 
 ENDIF(NOT CMAKE_INSTALL_LOCAL_ONLY)
 
@@ -100,7 +104,7 @@ ELSE(CMAKE_INSTALL_COMPONENT)
   SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 ENDIF(CMAKE_INSTALL_COMPONENT)
 
-FILE(WRITE "/home/asdf/quan_ws/build/${CMAKE_INSTALL_MANIFEST}" "")
+FILE(WRITE "/home/alfred/quan_ws/build/${CMAKE_INSTALL_MANIFEST}" "")
 FOREACH(file ${CMAKE_INSTALL_MANIFEST_FILES})
-  FILE(APPEND "/home/asdf/quan_ws/build/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
+  FILE(APPEND "/home/alfred/quan_ws/build/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
 ENDFOREACH(file)

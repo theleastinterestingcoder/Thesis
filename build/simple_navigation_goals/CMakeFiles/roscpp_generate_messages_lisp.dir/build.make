@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/asdf/quan_ws/src
+CMAKE_SOURCE_DIR = /home/alfred/quan_ws/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/asdf/quan_ws/build
+CMAKE_BINARY_DIR = /home/alfred/quan_ws/build
 
 # Utility rule file for roscpp_generate_messages_lisp.
 
@@ -53,10 +53,10 @@ simple_navigation_goals/CMakeFiles/roscpp_generate_messages_lisp.dir/build: rosc
 .PHONY : simple_navigation_goals/CMakeFiles/roscpp_generate_messages_lisp.dir/build
 
 simple_navigation_goals/CMakeFiles/roscpp_generate_messages_lisp.dir/clean:
-	cd /home/asdf/quan_ws/build/simple_navigation_goals && $(CMAKE_COMMAND) -P CMakeFiles/roscpp_generate_messages_lisp.dir/cmake_clean.cmake
+	cd /home/alfred/quan_ws/build/simple_navigation_goals && $(CMAKE_COMMAND) -P CMakeFiles/roscpp_generate_messages_lisp.dir/cmake_clean.cmake
 .PHONY : simple_navigation_goals/CMakeFiles/roscpp_generate_messages_lisp.dir/clean
 
 simple_navigation_goals/CMakeFiles/roscpp_generate_messages_lisp.dir/depend:
-	cd /home/asdf/quan_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/asdf/quan_ws/src /home/asdf/quan_ws/src/simple_navigation_goals /home/asdf/quan_ws/build /home/asdf/quan_ws/build/simple_navigation_goals /home/asdf/quan_ws/build/simple_navigation_goals/CMakeFiles/roscpp_generate_messages_lisp.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/alfred/quan_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/alfred/quan_ws/src /home/alfred/quan_ws/src/simple_navigation_goals /home/alfred/quan_ws/build /home/alfred/quan_ws/build/simple_navigation_goals /home/alfred/quan_ws/build/simple_navigation_goals/CMakeFiles/roscpp_generate_messages_lisp.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : simple_navigation_goals/CMakeFiles/roscpp_generate_messages_lisp.dir/depend
 

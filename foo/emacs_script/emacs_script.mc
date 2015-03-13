@@ -1,0 +1,2 @@
+#! emacs -- script
+hello world

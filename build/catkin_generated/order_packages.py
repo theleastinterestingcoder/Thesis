@@ -1,5 +1,5 @@
 # generated from catkin/cmake/template/order_packages.context.py.in
-source_root_dir = "/home/asdf/quan_ws/src"
+source_root_dir = "/home/alfred/quan_ws/src"
 whitelisted_packages = "".split(';') if "" != "" else []
 blacklisted_packages = "".split(';') if "" != "" else []
-underlay_workspaces = "/opt/ros/hydro".split(';') if "/opt/ros/hydro" != "" else []
+underlay_workspaces = "/home/alfred/quan_ws/devel;/opt/ros/hydro".split(';') if "/home/alfred/quan_ws/devel;/opt/ros/hydro" != "" else []

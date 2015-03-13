@@ -4,7 +4,7 @@ SET(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_CXX
-  "/home/asdf/quan_ws/src/simple_navigation_goals/src/simple_navigation_goals.cpp" "/home/asdf/quan_ws/build/simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.o"
+  "/home/alfred/quan_ws/src/simple_navigation_goals/src/simple_navigation_goals.cpp" "/home/alfred/quan_ws/build/simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.o"
   )
 SET(CMAKE_CXX_COMPILER_ID "GNU")
 

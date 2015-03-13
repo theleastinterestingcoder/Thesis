@@ -4,7 +4,7 @@ SET(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_CXX
-  "/home/asdf/quan_ws/src/openni_tracker/src/openni_tracker.cpp" "/home/asdf/quan_ws/build/openni_tracker/CMakeFiles/openni_tracker.dir/src/openni_tracker.cpp.o"
+  "/home/alfred/quan_ws/src/openni_tracker/src/openni_tracker.cpp" "/home/alfred/quan_ws/build/openni_tracker/CMakeFiles/openni_tracker.dir/src/openni_tracker.cpp.o"
   )
 SET(CMAKE_CXX_COMPILER_ID "GNU")
 

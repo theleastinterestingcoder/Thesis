@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/asdf/quan_ws/src
+CMAKE_SOURCE_DIR = /home/alfred/quan_ws/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/asdf/quan_ws/build
+CMAKE_BINARY_DIR = /home/alfred/quan_ws/build
 
 # Include any dependencies generated for this target.
 include simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/depend.make
@@ -47,18 +47,18 @@ include simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/progress.
 include simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/flags.make
 
 simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.o: simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/flags.make
-simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.o: /home/asdf/quan_ws/src/simple_navigation_goals/src/simple_navigation_goals.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/asdf/quan_ws/build/CMakeFiles $(CMAKE_PROGRESS_1)
+simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.o: /home/alfred/quan_ws/src/simple_navigation_goals/src/simple_navigation_goals.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/alfred/quan_ws/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.o"
-	cd /home/asdf/quan_ws/build/simple_navigation_goals && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.o -c /home/asdf/quan_ws/src/simple_navigation_goals/src/simple_navigation_goals.cpp
+	cd /home/alfred/quan_ws/build/simple_navigation_goals && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.o -c /home/alfred/quan_ws/src/simple_navigation_goals/src/simple_navigation_goals.cpp
 
 simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.i"
-	cd /home/asdf/quan_ws/build/simple_navigation_goals && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/asdf/quan_ws/src/simple_navigation_goals/src/simple_navigation_goals.cpp > CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.i
+	cd /home/alfred/quan_ws/build/simple_navigation_goals && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/alfred/quan_ws/src/simple_navigation_goals/src/simple_navigation_goals.cpp > CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.i
 
 simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.s"
-	cd /home/asdf/quan_ws/build/simple_navigation_goals && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/asdf/quan_ws/src/simple_navigation_goals/src/simple_navigation_goals.cpp -o CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.s
+	cd /home/alfred/quan_ws/build/simple_navigation_goals && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/alfred/quan_ws/src/simple_navigation_goals/src/simple_navigation_goals.cpp -o CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.s
 
 simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.o.requires:
 .PHONY : simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.o.requires
@@ -76,42 +76,42 @@ simple_navigation_goals_OBJECTS = \
 # External object files for target simple_navigation_goals
 simple_navigation_goals_EXTERNAL_OBJECTS =
 
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.o
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/libactionlib.so
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/libroscpp.so
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /usr/lib/libboost_signals-mt.so
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /usr/lib/libboost_filesystem-mt.so
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/librosconsole.so
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/librosconsole_log4cxx.so
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/librosconsole_backend_interface.so
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /usr/lib/liblog4cxx.so
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /usr/lib/libboost_regex-mt.so
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/libroscpp_serialization.so
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/librostime.so
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /usr/lib/libboost_date_time-mt.so
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /usr/lib/libboost_system-mt.so
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /usr/lib/libboost_thread-mt.so
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /usr/lib/x86_64-linux-gnu/libpthread.so
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/libxmlrpcpp.so
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/libcpp_common.so
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/libconsole_bridge.so
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/build.make
-/home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable /home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals"
-	cd /home/asdf/quan_ws/build/simple_navigation_goals && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/simple_navigation_goals.dir/link.txt --verbose=$(VERBOSE)
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.o
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/libactionlib.so
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/libroscpp.so
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /usr/lib/libboost_signals-mt.so
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /usr/lib/libboost_filesystem-mt.so
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/librosconsole.so
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/librosconsole_log4cxx.so
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/librosconsole_backend_interface.so
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /usr/lib/liblog4cxx.so
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /usr/lib/libboost_regex-mt.so
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/libroscpp_serialization.so
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/librostime.so
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /usr/lib/libboost_date_time-mt.so
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /usr/lib/libboost_system-mt.so
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /usr/lib/libboost_thread-mt.so
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /usr/lib/x86_64-linux-gnu/libpthread.so
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/libxmlrpcpp.so
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/libcpp_common.so
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: /opt/ros/hydro/lib/libconsole_bridge.so
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/build.make
+/home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals: simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable /home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals"
+	cd /home/alfred/quan_ws/build/simple_navigation_goals && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/simple_navigation_goals.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/build: /home/asdf/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals
+simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/build: /home/alfred/quan_ws/devel/lib/simple_navigation_goals/simple_navigation_goals
 .PHONY : simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/build
 
 simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/requires: simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.cpp.o.requires
 .PHONY : simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/requires
 
 simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/clean:
-	cd /home/asdf/quan_ws/build/simple_navigation_goals && $(CMAKE_COMMAND) -P CMakeFiles/simple_navigation_goals.dir/cmake_clean.cmake
+	cd /home/alfred/quan_ws/build/simple_navigation_goals && $(CMAKE_COMMAND) -P CMakeFiles/simple_navigation_goals.dir/cmake_clean.cmake
 .PHONY : simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/clean
 
 simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/depend:
-	cd /home/asdf/quan_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/asdf/quan_ws/src /home/asdf/quan_ws/src/simple_navigation_goals /home/asdf/quan_ws/build /home/asdf/quan_ws/build/simple_navigation_goals /home/asdf/quan_ws/build/simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/alfred/quan_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/alfred/quan_ws/src /home/alfred/quan_ws/src/simple_navigation_goals /home/alfred/quan_ws/build /home/alfred/quan_ws/build/simple_navigation_goals /home/alfred/quan_ws/build/simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/depend
 

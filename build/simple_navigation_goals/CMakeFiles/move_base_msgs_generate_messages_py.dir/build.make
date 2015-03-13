@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/asdf/quan_ws/src
+CMAKE_SOURCE_DIR = /home/alfred/quan_ws/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/asdf/quan_ws/build
+CMAKE_BINARY_DIR = /home/alfred/quan_ws/build
 
 # Utility rule file for move_base_msgs_generate_messages_py.
 
@@ -53,10 +53,10 @@ simple_navigation_goals/CMakeFiles/move_base_msgs_generate_messages_py.dir/build
 .PHONY : simple_navigation_goals/CMakeFiles/move_base_msgs_generate_messages_py.dir/build
 
 simple_navigation_goals/CMakeFiles/move_base_msgs_generate_messages_py.dir/clean:
-	cd /home/asdf/quan_ws/build/simple_navigation_goals && $(CMAKE_COMMAND) -P CMakeFiles/move_base_msgs_generate_messages_py.dir/cmake_clean.cmake
+	cd /home/alfred/quan_ws/build/simple_navigation_goals && $(CMAKE_COMMAND) -P CMakeFiles/move_base_msgs_generate_messages_py.dir/cmake_clean.cmake
 .PHONY : simple_navigation_goals/CMakeFiles/move_base_msgs_generate_messages_py.dir/clean
 
 simple_navigation_goals/CMakeFiles/move_base_msgs_generate_messages_py.dir/depend:
-	cd /home/asdf/quan_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/asdf/quan_ws/src /home/asdf/quan_ws/src/simple_navigation_goals /home/asdf/quan_ws/build /home/asdf/quan_ws/build/simple_navigation_goals /home/asdf/quan_ws/build/simple_navigation_goals/CMakeFiles/move_base_msgs_generate_messages_py.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/alfred/quan_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/alfred/quan_ws/src /home/alfred/quan_ws/src/simple_navigation_goals /home/alfred/quan_ws/build /home/alfred/quan_ws/build/simple_navigation_goals /home/alfred/quan_ws/build/simple_navigation_goals/CMakeFiles/move_base_msgs_generate_messages_py.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : simple_navigation_goals/CMakeFiles/move_base_msgs_generate_messages_py.dir/depend
 

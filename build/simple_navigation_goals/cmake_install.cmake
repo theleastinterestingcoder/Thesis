@@ -1,8 +1,8 @@
-# Install script for directory: /home/asdf/quan_ws/src/simple_navigation_goals
+# Install script for directory: /home/alfred/quan_ws/src/simple_navigation_goals
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  SET(CMAKE_INSTALL_PREFIX "/home/asdf/quan_ws/install")
+  SET(CMAKE_INSTALL_PREFIX "/home/alfred/quan_ws/install")
 ENDIF(NOT DEFINED CMAKE_INSTALL_PREFIX)
 STRING(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -33,17 +33,17 @@ IF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 ENDIF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/asdf/quan_ws/build/simple_navigation_goals/catkin_generated/installspace/simple_navigation_goals.pc")
+  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/alfred/quan_ws/build/simple_navigation_goals/catkin_generated/installspace/simple_navigation_goals.pc")
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simple_navigation_goals/cmake" TYPE FILE FILES
-    "/home/asdf/quan_ws/build/simple_navigation_goals/catkin_generated/installspace/simple_navigation_goalsConfig.cmake"
-    "/home/asdf/quan_ws/build/simple_navigation_goals/catkin_generated/installspace/simple_navigation_goalsConfig-version.cmake"
+    "/home/alfred/quan_ws/build/simple_navigation_goals/catkin_generated/installspace/simple_navigation_goalsConfig.cmake"
+    "/home/alfred/quan_ws/build/simple_navigation_goals/catkin_generated/installspace/simple_navigation_goalsConfig-version.cmake"
     )
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simple_navigation_goals" TYPE FILE FILES "/home/asdf/quan_ws/src/simple_navigation_goals/package.xml")
+  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simple_navigation_goals" TYPE FILE FILES "/home/alfred/quan_ws/src/simple_navigation_goals/package.xml")
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 

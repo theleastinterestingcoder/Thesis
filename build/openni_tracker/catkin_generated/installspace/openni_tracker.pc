@@ -1,8 +1,8 @@
-prefix=/home/asdf/quan_ws/install
+prefix=/home/alfred/quan_ws/install
 
 Name: openni_tracker
 Description: Description of openni_tracker
 Version: 0.2.0
 Cflags: 
-Libs: -L/home/asdf/quan_ws/install/lib 
+Libs: -L/home/alfred/quan_ws/install/lib 
 Requires: 

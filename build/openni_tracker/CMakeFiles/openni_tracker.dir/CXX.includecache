@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/asdf/quan_ws/src/openni_tracker/src/openni_tracker.cpp
+/home/alfred/quan_ws/src/openni_tracker/src/openni_tracker.cpp
 ros/ros.h
 -
 ros/package.h

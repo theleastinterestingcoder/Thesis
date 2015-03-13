@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/asdf/quan_ws/src
+CMAKE_SOURCE_DIR = /home/alfred/quan_ws/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/asdf/quan_ws/build
+CMAKE_BINARY_DIR = /home/alfred/quan_ws/build
 
 # Utility rule file for roscpp_generate_messages_lisp.
 
@@ -53,10 +53,10 @@ openni_tracker/CMakeFiles/roscpp_generate_messages_lisp.dir/build: roscpp_genera
 .PHONY : openni_tracker/CMakeFiles/roscpp_generate_messages_lisp.dir/build
 
 openni_tracker/CMakeFiles/roscpp_generate_messages_lisp.dir/clean:
-	cd /home/asdf/quan_ws/build/openni_tracker && $(CMAKE_COMMAND) -P CMakeFiles/roscpp_generate_messages_lisp.dir/cmake_clean.cmake
+	cd /home/alfred/quan_ws/build/openni_tracker && $(CMAKE_COMMAND) -P CMakeFiles/roscpp_generate_messages_lisp.dir/cmake_clean.cmake
 .PHONY : openni_tracker/CMakeFiles/roscpp_generate_messages_lisp.dir/clean
 
 openni_tracker/CMakeFiles/roscpp_generate_messages_lisp.dir/depend:
-	cd /home/asdf/quan_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/asdf/quan_ws/src /home/asdf/quan_ws/src/openni_tracker /home/asdf/quan_ws/build /home/asdf/quan_ws/build/openni_tracker /home/asdf/quan_ws/build/openni_tracker/CMakeFiles/roscpp_generate_messages_lisp.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/alfred/quan_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/alfred/quan_ws/src /home/alfred/quan_ws/src/openni_tracker /home/alfred/quan_ws/build /home/alfred/quan_ws/build/openni_tracker /home/alfred/quan_ws/build/openni_tracker/CMakeFiles/roscpp_generate_messages_lisp.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : openni_tracker/CMakeFiles/roscpp_generate_messages_lisp.dir/depend
 

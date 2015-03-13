@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/asdf/quan_ws/src
+CMAKE_SOURCE_DIR = /home/alfred/quan_ws/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/asdf/quan_ws/build
+CMAKE_BINARY_DIR = /home/alfred/quan_ws/build
 
 # Utility rule file for clean_test_results.
 
@@ -43,7 +43,7 @@ CMAKE_BINARY_DIR = /home/asdf/quan_ws/build
 include CMakeFiles/clean_test_results.dir/progress.make
 
 CMakeFiles/clean_test_results:
-	/usr/bin/cmake -E remove_directory /home/asdf/quan_ws/build/test_results
+	/usr/bin/cmake -E remove_directory /home/alfred/quan_ws/build/test_results
 
 clean_test_results: CMakeFiles/clean_test_results
 clean_test_results: CMakeFiles/clean_test_results.dir/build.make
@@ -58,6 +58,6 @@ CMakeFiles/clean_test_results.dir/clean:
 .PHONY : CMakeFiles/clean_test_results.dir/clean
 
 CMakeFiles/clean_test_results.dir/depend:
-	cd /home/asdf/quan_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/asdf/quan_ws/src /home/asdf/quan_ws/src /home/asdf/quan_ws/build /home/asdf/quan_ws/build /home/asdf/quan_ws/build/CMakeFiles/clean_test_results.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/alfred/quan_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/alfred/quan_ws/src /home/alfred/quan_ws/src /home/alfred/quan_ws/build /home/alfred/quan_ws/build /home/alfred/quan_ws/build/CMakeFiles/clean_test_results.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/clean_test_results.dir/depend
 

@@ -1,7 +1,7 @@
 FILE(REMOVE_RECURSE
   "CMakeFiles/openni_tracker.dir/src/openni_tracker.cpp.o"
-  "/home/asdf/quan_ws/devel/lib/openni_tracker/openni_tracker.pdb"
-  "/home/asdf/quan_ws/devel/lib/openni_tracker/openni_tracker"
+  "/home/alfred/quan_ws/devel/lib/openni_tracker/openni_tracker.pdb"
+  "/home/alfred/quan_ws/devel/lib/openni_tracker/openni_tracker"
 )
 
 # Per-language clean rules from dependency scanning.
