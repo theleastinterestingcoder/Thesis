@@ -6,7 +6,10 @@
     <param name="dict" value="$(find alfred)/config/nav_commands/nav_commands.dic"/>
   </node>
 
-  <!-- Pi speech stuff -->
+  <!-- Node for Managing decoding speech into commands -->
   <node name="nav_goals" pkg="alfred" type="nav_goals.py" output="screen">
   </node>
+
+  <!-- Baselink, for finding the current location of the robot -->
+  <node name="bar1" pkg="foo_pkg" type="bar" args="$(find baz_pkg)/resources/map.pgm" />
 </launch>
