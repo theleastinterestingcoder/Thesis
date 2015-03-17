@@ -26,12 +26,12 @@ class NavGoalManager:
     # Note: this might break if there are multiple NavGoalManagers
     if not rospy.core.is_initialized():
           rospy.init_node('nav_goal_manager')
-    tfl = TransformListener()
 
     def __init__(self):
         # Initialize some basic stuff here
         self.sac = actionlib.SimpleActionClient("move_base", MoveBaseAction)
         self.marks = []                           # User defined locations
+        self.tfl = TransformListener()
 
 
     def add_mark(self, x=0, y=0, z=0, w=0):
@@ -72,12 +72,21 @@ class NavGoalManager:
         loc_z = goal.target_pose.pose.position.z
 
         rospy.loginfo('Sending goal with (x,y,z) =[%s, %s, %s]' % (loc_x, loc_y, loc_z))
-        self.sac.send_goal(goal, done_cb=done_goal_callback)
+        self.sac.send_goal(goal, done_cb=self.done_goal_callback)
 
-        # wait for process to finish
-#        res = self.sac.wait_for_result()
-        # Print the result
-#        rospy.loginfo('Goal has: %s' % self.sac.get_result())
+    def done_goal_callback(self, a,b):
+        rospy.loginfo('Success in arriving at position: (x,y,z,w) =  (%s, %s, %s, %s)' % self.get_current_position())
+
+    def get_current_position(self):
+        # Returns [x, y, w], where (x,y) are locations and w is the yaw
+        base_f = rospy.get_param('~base_frame', '/base_link')                                                          
+        map_f  = rospy.get_param('~map_frame', '/map')
+
+        now = rospy.Time(0)
+        self.tfl.waitForTransform(map_f, base_f, now, rospy.Duration(4.0))
+        (pos,quat) = self.tfl.lookupTransform(map_f, base_f, now)
+        euler = transformations.euler_from_quaternion(quat)
+        return (pos[0], pos[1], pos[2], euler[2])
 
     def cancel_all_goals(self):
         self.sac.cancel_all_goals()
@@ -102,19 +111,7 @@ def form_goal(x=0, y=0, z=0, w=0):
 
     return goal
 
-def get_current_position():
-    # Returns [x, y, w], where (x,y) are locations and w is the yaw
-    base_f = rospy.get_param('~base_frame', '/base_link')                                                          
-    map_f  = rospy.get_param('~map_frame', '/map')
 
-    now = rospy.Time(0)
-    NavGoalManager.tfl.waitForTransform(map_f, base_f, now, rospy.Duration(4.0))
-    (pos,quat) = NavGoalManager.tfl.lookupTransform(map_f, base_f, now)
-    euler = transformations.euler_from_quaternion(quat)
-    return (pos[0], pos[1], pos[2], euler[2])
-
-def done_goal_callback(a,b):
-    rospy.loginfo('Success in arriving at position: (x,y,z,w) =  (%s, %s, %s, %s)' % get_current_position())
 
 if __name__ == '__main__':
     try:
