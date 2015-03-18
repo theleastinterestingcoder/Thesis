@@ -24,15 +24,12 @@ from termcolor import colored
 class NavGoalManager:
     # This is kinda hacky, but every NavGoalManager will share the same tfl coordinates
     # Note: this might break if there are multiple NavGoalManagers
-    if not rospy.core.is_initialized():
-          rospy.init_node('nav_goal_manager')
 
     def __init__(self):
         # Initialize some basic stuff here
         self.sac = actionlib.SimpleActionClient("move_base", MoveBaseAction)
         self.marks = []                           # User defined locations
         self.tfl = TransformListener()
-
 
     def add_mark(self, x=0, y=0, z=0, w=0):
         # Addes a mark to user defined coordinates
@@ -115,6 +112,7 @@ def form_goal(x=0, y=0, z=0, w=0):
 
 if __name__ == '__main__':
     try:
+        rospy.init_node('nav_goal_manager')
         ngm = NavGoalManager()
         ngm.go_to_location(3,2,w=0)
         rospy.spin()

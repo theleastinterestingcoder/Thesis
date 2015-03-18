@@ -25,7 +25,6 @@ class voice_cmd_vel:
         # Set some parameters
 #         self.rate = rospy.get_param("~rate", 5)
 #         r = rospy.Rate(self.rate)
-
         # Initialize this node if it has not been initialized already
         if not rospy.core.is_initialized():
             rospy.init_node(name)
@@ -44,7 +43,7 @@ class voice_cmd_vel:
         self.alpha = voice_cmd_vel.loc_alpha
         self.beta  = voice_cmd_vel.loc_beta
 
-        self.ngm = NavGoalManager('nav_goal_manager')
+        self.ngm = NavGoalManager()
         rospy.loginfo("Ready to receive voice commands")
         rospy.on_shutdown(self.cleanup)
 
