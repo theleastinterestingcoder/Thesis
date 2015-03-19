@@ -8,3 +8,4 @@
 
 # modified environment variables
 export PWD="/home/alfred/quan_ws/build"
+export ROS_PACKAGE_PATH="/home/alfred/quan_ws/src:/opt/ros/hydro/share:/opt/ros/hydro/stacks"

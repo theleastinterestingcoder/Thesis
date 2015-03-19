@@ -1,3 +1,4 @@
+#!/usr/bin/env python 
 '''
   face_recognizer.py
 

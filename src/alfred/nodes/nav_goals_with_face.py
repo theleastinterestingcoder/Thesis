@@ -75,11 +75,20 @@ class voice_cmd_vel:
     # Some scripting here to launch the face recognition stuff
     def launch_face_recognition(self):
         pwd = os.getcwd()
-        # Run gscamera from /bin/
+        # Setup gscam (kinda hacky and awkward, but it'll work)
         os.chdir("/bin")
+        if os.path.isfile('/home/alfred/quan_ws/src/gscam/bin/gscam'):
+            subprocess.call('mv /home/alfred/quan_ws/src/gscam/bin/gscam /home/alfred/quan_ws/src/gscam/bin/gscam_tmp', shell=True)
         subprocess.call("cd /bin/", shell=True)
-        subprocess.call("gscam_export='export GSCAM_CONFIG=\"v4l2src device=/dev/video0 ! video/x-ra w-rgb ! ffmpegcolorspace\"", shell=True) 
-        gscam = subprocess.Popen("rosrun gscam gscam", stdout=subprocess.PIPE, preexec_fn=os.setsid, shell=True)
+        new_env = os.environ.copy()
+        new_env['GSCAM_CONFIG']= "v4l2src device=/dev/video0 ! video/x-ra w-rgb ! ffmpegcolorspace"
+
+        # Get the webcam up
+        gscam = subprocess.Popen("rosrun gscam gscam", stdout=subprocess.PIPE, preexec_fn=os.setsid, shell=True, env=new_env)
+        
+        # Restore the hacky thingy
+        if os.path.isfile('/home/alfred/quan_ws/src/gscam/bin/gscam_tmp'):
+            subprocess.call('mv home/alfred/quan_ws/src/gscam/bin/gscam_tmp /home/alfred/quan_ws/src/gscam/bin/gscam /', shell=True)
 
         # Run the face recognition stuff
         fclient = subprocess.Popen("rosrun face_recognition Fserver", stdout=subprocess.PIPE, preexec_fn=os.setsid, shell=True)
@@ -88,9 +97,11 @@ class voice_cmd_vel:
         rospy.loginfo('Pausing to allow face_recognition software to initialize')
         time.sleep(4)
         rospy.loginfo('Initializing Face recognition')
+        
         # Now start publishing for execution
         subprocess.call("rostopic pub -1 /fr_order face_recognition/FRClientGoal -- 1 \"none\"", shell=True )
-        
+        response = subprocess.Popen("rosrun alfred face_recognizer.py", shell=True)
+
         time.sleep(4)
         rospy.loginfo('Waiting for 5 seconds')
         

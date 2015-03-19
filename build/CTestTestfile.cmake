@@ -6,6 +6,7 @@
 # testing this directory and lists subdirectories to be tested as well.
 SUBDIRS(gtest)
 SUBDIRS(pocketsphinx)
+SUBDIRS(gscam)
 SUBDIRS(procrob_functional)
 SUBDIRS(learning_actionlib)
 SUBDIRS(simple_navigation_goals)

@@ -90,6 +90,7 @@ IF(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   INCLUDE("/home/alfred/quan_ws/build/gtest/cmake_install.cmake")
   INCLUDE("/home/alfred/quan_ws/build/pocketsphinx/cmake_install.cmake")
+  INCLUDE("/home/alfred/quan_ws/build/gscam/cmake_install.cmake")
   INCLUDE("/home/alfred/quan_ws/build/procrob_functional/cmake_install.cmake")
   INCLUDE("/home/alfred/quan_ws/build/learning_actionlib/cmake_install.cmake")
   INCLUDE("/home/alfred/quan_ws/build/simple_navigation_goals/cmake_install.cmake")
