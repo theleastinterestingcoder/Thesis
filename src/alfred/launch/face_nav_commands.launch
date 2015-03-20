@@ -1,6 +1,6 @@
 <!-- simple_nav_commands.launch is for navigating with goals -->
-<!-- It launches pocket sphinx recognition, turtlebot minimal.launch, and amcl stuff -->
 <launch>
+  <!-- It launches pocket sphinx recognition, turtlebot minimal.launch, and amcl stuff -->
   <node name="recognizer" pkg="pocketsphinx" type="recognizer.py" output="screen">
     <param name="lm" value="$(find alfred)/config/nav_commands/nav_commands.lm"/>
     <param name="dict" value="$(find alfred)/config/nav_commands/nav_commands.dic"/>
