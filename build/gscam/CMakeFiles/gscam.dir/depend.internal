@@ -174,6 +174,8 @@ gscam/CMakeFiles/gscam.dir/src/gscam.cpp.o
  /usr/include/glib-2.0/gobject/gvalue.h
  /usr/include/glib-2.0/gobject/gvaluearray.h
  /usr/include/glib-2.0/gobject/gvaluetypes.h
+ /usr/include/gstreamer-0.10/gst/app/gstappsink.h
+ /usr/include/gstreamer-0.10/gst/base/gstbasesink.h
  /usr/include/gstreamer-0.10/gst/glib-compat.h
  /usr/include/gstreamer-0.10/gst/gst.h
  /usr/include/gstreamer-0.10/gst/gstatomicqueue.h

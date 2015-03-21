@@ -129,6 +129,7 @@ IF(NOT CMAKE_INSTALL_LOCAL_ONLY)
   INCLUDE("/home/alfred/quan_ws/build/audio_common/audio_common_msgs/cmake_install.cmake")
   INCLUDE("/home/alfred/quan_ws/build/audio_common/audio_capture/cmake_install.cmake")
   INCLUDE("/home/alfred/quan_ws/build/audio_common/audio_play/cmake_install.cmake")
+  INCLUDE("/home/alfred/quan_ws/build/gscam/cmake_install.cmake")
   INCLUDE("/home/alfred/quan_ws/build/audio_common/sound_play/cmake_install.cmake")
   INCLUDE("/home/alfred/quan_ws/build/procrob_functional/cmake_install.cmake")
 

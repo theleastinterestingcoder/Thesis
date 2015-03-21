@@ -173,6 +173,8 @@ gscam/CMakeFiles/gscam.dir/src/gscam.cpp.o: /usr/include/glib-2.0/gobject/gtypep
 gscam/CMakeFiles/gscam.dir/src/gscam.cpp.o: /usr/include/glib-2.0/gobject/gvalue.h
 gscam/CMakeFiles/gscam.dir/src/gscam.cpp.o: /usr/include/glib-2.0/gobject/gvaluearray.h
 gscam/CMakeFiles/gscam.dir/src/gscam.cpp.o: /usr/include/glib-2.0/gobject/gvaluetypes.h
+gscam/CMakeFiles/gscam.dir/src/gscam.cpp.o: /usr/include/gstreamer-0.10/gst/app/gstappsink.h
+gscam/CMakeFiles/gscam.dir/src/gscam.cpp.o: /usr/include/gstreamer-0.10/gst/base/gstbasesink.h
 gscam/CMakeFiles/gscam.dir/src/gscam.cpp.o: /usr/include/gstreamer-0.10/gst/glib-compat.h
 gscam/CMakeFiles/gscam.dir/src/gscam.cpp.o: /usr/include/gstreamer-0.10/gst/gst.h
 gscam/CMakeFiles/gscam.dir/src/gscam.cpp.o: /usr/include/gstreamer-0.10/gst/gstatomicqueue.h

@@ -164,6 +164,20 @@ Fclient/fast:
 .PHONY : Fclient/fast
 
 # Convenience name for target.
+procrob_functional/CMakeFiles/Fpublisher.dir/rule:
+	cd /home/alfred/quan_ws/build && $(MAKE) -f CMakeFiles/Makefile2 procrob_functional/CMakeFiles/Fpublisher.dir/rule
+.PHONY : procrob_functional/CMakeFiles/Fpublisher.dir/rule
+
+# Convenience name for target.
+Fpublisher: procrob_functional/CMakeFiles/Fpublisher.dir/rule
+.PHONY : Fpublisher
+
+# fast build rule for target.
+Fpublisher/fast:
+	cd /home/alfred/quan_ws/build && $(MAKE) -f procrob_functional/CMakeFiles/Fpublisher.dir/build.make procrob_functional/CMakeFiles/Fpublisher.dir/build
+.PHONY : Fpublisher/fast
+
+# Convenience name for target.
 procrob_functional/CMakeFiles/Fserver.dir/rule:
 	cd /home/alfred/quan_ws/build && $(MAKE) -f CMakeFiles/Makefile2 procrob_functional/CMakeFiles/Fserver.dir/rule
 .PHONY : procrob_functional/CMakeFiles/Fserver.dir/rule
@@ -443,90 +457,6 @@ face_recognition_lib/fast:
 	cd /home/alfred/quan_ws/build && $(MAKE) -f procrob_functional/CMakeFiles/face_recognition_lib.dir/build.make procrob_functional/CMakeFiles/face_recognition_lib.dir/build
 .PHONY : face_recognition_lib/fast
 
-# Convenience name for target.
-procrob_functional/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule:
-	cd /home/alfred/quan_ws/build && $(MAKE) -f CMakeFiles/Makefile2 procrob_functional/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule
-.PHONY : procrob_functional/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-geometry_msgs_generate_messages_cpp: procrob_functional/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule
-.PHONY : geometry_msgs_generate_messages_cpp
-
-# fast build rule for target.
-geometry_msgs_generate_messages_cpp/fast:
-	cd /home/alfred/quan_ws/build && $(MAKE) -f procrob_functional/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/build.make procrob_functional/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/build
-.PHONY : geometry_msgs_generate_messages_cpp/fast
-
-# Convenience name for target.
-procrob_functional/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule:
-	cd /home/alfred/quan_ws/build && $(MAKE) -f CMakeFiles/Makefile2 procrob_functional/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule
-.PHONY : procrob_functional/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-geometry_msgs_generate_messages_lisp: procrob_functional/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule
-.PHONY : geometry_msgs_generate_messages_lisp
-
-# fast build rule for target.
-geometry_msgs_generate_messages_lisp/fast:
-	cd /home/alfred/quan_ws/build && $(MAKE) -f procrob_functional/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/build.make procrob_functional/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/build
-.PHONY : geometry_msgs_generate_messages_lisp/fast
-
-# Convenience name for target.
-procrob_functional/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule:
-	cd /home/alfred/quan_ws/build && $(MAKE) -f CMakeFiles/Makefile2 procrob_functional/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule
-.PHONY : procrob_functional/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule
-
-# Convenience name for target.
-geometry_msgs_generate_messages_py: procrob_functional/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule
-.PHONY : geometry_msgs_generate_messages_py
-
-# fast build rule for target.
-geometry_msgs_generate_messages_py/fast:
-	cd /home/alfred/quan_ws/build && $(MAKE) -f procrob_functional/CMakeFiles/geometry_msgs_generate_messages_py.dir/build.make procrob_functional/CMakeFiles/geometry_msgs_generate_messages_py.dir/build
-.PHONY : geometry_msgs_generate_messages_py/fast
-
-# Convenience name for target.
-procrob_functional/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule:
-	cd /home/alfred/quan_ws/build && $(MAKE) -f CMakeFiles/Makefile2 procrob_functional/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
-.PHONY : procrob_functional/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-sensor_msgs_generate_messages_cpp: procrob_functional/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
-.PHONY : sensor_msgs_generate_messages_cpp
-
-# fast build rule for target.
-sensor_msgs_generate_messages_cpp/fast:
-	cd /home/alfred/quan_ws/build && $(MAKE) -f procrob_functional/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build.make procrob_functional/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build
-.PHONY : sensor_msgs_generate_messages_cpp/fast
-
-# Convenience name for target.
-procrob_functional/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule:
-	cd /home/alfred/quan_ws/build && $(MAKE) -f CMakeFiles/Makefile2 procrob_functional/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule
-.PHONY : procrob_functional/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-sensor_msgs_generate_messages_lisp: procrob_functional/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule
-.PHONY : sensor_msgs_generate_messages_lisp
-
-# fast build rule for target.
-sensor_msgs_generate_messages_lisp/fast:
-	cd /home/alfred/quan_ws/build && $(MAKE) -f procrob_functional/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/build.make procrob_functional/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/build
-.PHONY : sensor_msgs_generate_messages_lisp/fast
-
-# Convenience name for target.
-procrob_functional/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule:
-	cd /home/alfred/quan_ws/build && $(MAKE) -f CMakeFiles/Makefile2 procrob_functional/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule
-.PHONY : procrob_functional/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule
-
-# Convenience name for target.
-sensor_msgs_generate_messages_py: procrob_functional/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule
-.PHONY : sensor_msgs_generate_messages_py
-
-# fast build rule for target.
-sensor_msgs_generate_messages_py/fast:
-	cd /home/alfred/quan_ws/build && $(MAKE) -f procrob_functional/CMakeFiles/sensor_msgs_generate_messages_py.dir/build.make procrob_functional/CMakeFiles/sensor_msgs_generate_messages_py.dir/build
-.PHONY : sensor_msgs_generate_messages_py/fast
-
 src/face_rec_client.o: src/face_rec_client.cpp.o
 .PHONY : src/face_rec_client.o
 
@@ -550,6 +480,30 @@ src/face_rec_client.s: src/face_rec_client.cpp.s
 src/face_rec_client.cpp.s:
 	cd /home/alfred/quan_ws/build && $(MAKE) -f procrob_functional/CMakeFiles/Fclient.dir/build.make procrob_functional/CMakeFiles/Fclient.dir/src/face_rec_client.cpp.s
 .PHONY : src/face_rec_client.cpp.s
+
+src/face_rec_publisher.o: src/face_rec_publisher.cpp.o
+.PHONY : src/face_rec_publisher.o
+
+# target to build an object file
+src/face_rec_publisher.cpp.o:
+	cd /home/alfred/quan_ws/build && $(MAKE) -f procrob_functional/CMakeFiles/Fpublisher.dir/build.make procrob_functional/CMakeFiles/Fpublisher.dir/src/face_rec_publisher.cpp.o
+.PHONY : src/face_rec_publisher.cpp.o
+
+src/face_rec_publisher.i: src/face_rec_publisher.cpp.i
+.PHONY : src/face_rec_publisher.i
+
+# target to preprocess a source file
+src/face_rec_publisher.cpp.i:
+	cd /home/alfred/quan_ws/build && $(MAKE) -f procrob_functional/CMakeFiles/Fpublisher.dir/build.make procrob_functional/CMakeFiles/Fpublisher.dir/src/face_rec_publisher.cpp.i
+.PHONY : src/face_rec_publisher.cpp.i
+
+src/face_rec_publisher.s: src/face_rec_publisher.cpp.s
+.PHONY : src/face_rec_publisher.s
+
+# target to generate assembly for a file
+src/face_rec_publisher.cpp.s:
+	cd /home/alfred/quan_ws/build && $(MAKE) -f procrob_functional/CMakeFiles/Fpublisher.dir/build.make procrob_functional/CMakeFiles/Fpublisher.dir/src/face_rec_publisher.cpp.s
+.PHONY : src/face_rec_publisher.cpp.s
 
 src/face_recognition.o: src/face_recognition.cpp.o
 .PHONY : src/face_recognition.o
@@ -606,6 +560,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... Fclient"
+	@echo "... Fpublisher"
 	@echo "... Fserver"
 	@echo "... _face_recognition_generate_messages_check_deps_FRClientGoal"
 	@echo "... _face_recognition_generate_messages_check_deps_FaceRecognitionAction"
@@ -627,21 +582,18 @@ help:
 	@echo "... face_recognition_genlisp"
 	@echo "... face_recognition_genpy"
 	@echo "... face_recognition_lib"
-	@echo "... geometry_msgs_generate_messages_cpp"
-	@echo "... geometry_msgs_generate_messages_lisp"
-	@echo "... geometry_msgs_generate_messages_py"
 	@echo "... install"
 	@echo "... install/local"
 	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
-	@echo "... sensor_msgs_generate_messages_cpp"
-	@echo "... sensor_msgs_generate_messages_lisp"
-	@echo "... sensor_msgs_generate_messages_py"
 	@echo "... test"
 	@echo "... src/face_rec_client.o"
 	@echo "... src/face_rec_client.i"
 	@echo "... src/face_rec_client.s"
+	@echo "... src/face_rec_publisher.o"
+	@echo "... src/face_rec_publisher.i"
+	@echo "... src/face_rec_publisher.s"
 	@echo "... src/face_recognition.o"
 	@echo "... src/face_recognition.i"
 	@echo "... src/face_recognition.s"
