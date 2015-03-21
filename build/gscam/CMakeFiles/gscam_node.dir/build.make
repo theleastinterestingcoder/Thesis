@@ -31,6 +31,9 @@ CMAKE_COMMAND = /usr/bin/cmake
 # The command to remove a file.
 RM = /usr/bin/cmake -E remove -f
 
+# Escaping for special characters.
+EQUALS = =
+
 # The top-level source directory on which CMake was run.
 CMAKE_SOURCE_DIR = /home/alfred/quan_ws/src
 
@@ -77,37 +80,37 @@ gscam_node_OBJECTS = \
 gscam_node_EXTERNAL_OBJECTS =
 
 /home/alfred/quan_ws/devel/lib/gscam/gscam: gscam/CMakeFiles/gscam_node.dir/src/gscam_node.cpp.o
+/home/alfred/quan_ws/devel/lib/gscam/gscam: gscam/CMakeFiles/gscam_node.dir/build.make
 /home/alfred/quan_ws/devel/lib/gscam/gscam: /home/alfred/quan_ws/devel/lib/libgscam.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/hydro/lib/libimage_transport.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/hydro/lib/libmessage_filters.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/hydro/lib/libnodeletlib.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/hydro/lib/libbondcpp.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/indigo/lib/libimage_transport.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/indigo/lib/libmessage_filters.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/indigo/lib/libnodeletlib.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/indigo/lib/libbondcpp.so
 /home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/x86_64-linux-gnu/libuuid.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/libtinyxml.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/hydro/lib/libclass_loader.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/x86_64-linux-gnu/libtinyxml.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/indigo/lib/libclass_loader.so
 /home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/libPocoFoundation.so
 /home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/x86_64-linux-gnu/libdl.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/hydro/lib/libroslib.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/hydro/lib/libcamera_calibration_parsers.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/hydro/lib/libcamera_info_manager.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/hydro/lib/libroscpp.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/libboost_signals-mt.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/libboost_filesystem-mt.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/hydro/lib/librosconsole.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/hydro/lib/librosconsole_log4cxx.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/hydro/lib/librosconsole_backend_interface.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/indigo/lib/libroslib.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/indigo/lib/libcamera_calibration_parsers.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/indigo/lib/libcamera_info_manager.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/indigo/lib/libroscpp.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/x86_64-linux-gnu/libboost_signals.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/indigo/lib/librosconsole.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/indigo/lib/librosconsole_log4cxx.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/indigo/lib/librosconsole_backend_interface.so
 /home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/liblog4cxx.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/libboost_regex-mt.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/hydro/lib/libxmlrpcpp.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/hydro/lib/libroscpp_serialization.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/hydro/lib/librostime.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/libboost_date_time-mt.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/libboost_system-mt.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/libboost_thread-mt.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/x86_64-linux-gnu/libboost_regex.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/indigo/lib/libxmlrpcpp.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/indigo/lib/libroscpp_serialization.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/indigo/lib/librostime.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/x86_64-linux-gnu/libboost_date_time.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/indigo/lib/libcpp_common.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/x86_64-linux-gnu/libboost_system.so
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/x86_64-linux-gnu/libboost_thread.so
 /home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/x86_64-linux-gnu/libpthread.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/hydro/lib/libcpp_common.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: /opt/ros/hydro/lib/libconsole_bridge.so
-/home/alfred/quan_ws/devel/lib/gscam/gscam: gscam/CMakeFiles/gscam_node.dir/build.make
+/home/alfred/quan_ws/devel/lib/gscam/gscam: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so
 /home/alfred/quan_ws/devel/lib/gscam/gscam: gscam/CMakeFiles/gscam_node.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable /home/alfred/quan_ws/devel/lib/gscam/gscam"
 	cd /home/alfred/quan_ws/build/gscam && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/gscam_node.dir/link.txt --verbose=$(VERBOSE)
