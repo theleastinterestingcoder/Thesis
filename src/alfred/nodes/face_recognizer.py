@@ -20,6 +20,7 @@ class face_recognizer:
         self.pub = rospy.Publisher('/mobile_base/commands/sound', msg.Sound, queue_size=10)
 
         self.name = name
+        rospy.spin()
 
 
     def face_response(self, data):

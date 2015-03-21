@@ -18,7 +18,8 @@ from move_base_msgs.msg import *
 from tf import transformations, TransformListener
 from termcolor import colored
 
-#Creat an instance of a Transform Listener
+# For extended callback functions
+from callback_function import cb_func
 
 # Create a node and manages goals
 class NavGoalManager:
@@ -30,6 +31,9 @@ class NavGoalManager:
         self.sac = actionlib.SimpleActionClient("move_base", MoveBaseAction)
         self.marks = []                           # User defined locations
         self.tfl = TransformListener()
+
+        self.cbf = {}                             # Dictionary of Callback Functions
+        self.cba = {}                             # Dictionary of Callback Parameters
 
     def add_mark(self, x=0, y=0, z=0, w=0):
         # Addes a mark to user defined coordinates
@@ -56,12 +60,12 @@ class NavGoalManager:
             self.go_to_location(self.marks[mark_num])
             rospy.loginfo('Sending Goal with mark_num=%s with (x,y,z,w) = %s' % (mark_num, self.marks[mark_num]))
 
-    def go_to_location(self, x=0, y=0, z=0, w=0):
+    def go_to_location(self, x=0, y=0, z=0, w=0, done_cb=None):
         # Wrapper for go_to_goal
         goal = form_goal(x,y,z,w)
-        self.go_to_goal(goal)
+        self.go_to_goal(goal, done_cb=done_cb)
 
-    def go_to_goal(self, goal):
+    def go_to_goal(self, goal, done_cb=None):
         # Wait for the server, send the goal, and then publish the result
         self.sac.wait_for_server()
         loc_x = goal.target_pose.pose.position.x
@@ -69,7 +73,12 @@ class NavGoalManager:
         loc_z = goal.target_pose.pose.position.z
 
         rospy.loginfo('Sending goal with (x,y,z) =[%s, %s, %s]' % (loc_x, loc_y, loc_z))
-        self.sac.send_goal(goal, done_cb=self.done_goal_callback)
+
+        # Depending on the callback function, do stuff
+        if done_cb == None:
+            self.sac.send_goal(goal, done_cb=self.done_goal_callback)
+        else:
+            self.sac.send_goal(goal, done_cb=done_cb.call_back)
 
     def done_goal_callback(self, a,b):
         rospy.loginfo('Success in arriving at position: (x,y,z,w) =  (%s, %s, %s, %s)' % self.get_current_position())
@@ -114,7 +123,15 @@ if __name__ == '__main__':
     try:
         rospy.init_node('nav_goal_manager')
         ngm = NavGoalManager()
-        ngm.go_to_location(3,2,w=0)
+        
+        # an example of some callback function
+        def print_greeting(greeting='foo'):                                                                                             
+            print "I think this works! %s" % greeting
+        # Create the callback function and the parameters
+        done_cb = cb_func(**{'function': print_greeting, 'greeting': 'Quan'})
+        
+        # When the goal success, call the callback function
+        ngm.go_to_location(3,2,w=0, done_cb=done_cb)
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
