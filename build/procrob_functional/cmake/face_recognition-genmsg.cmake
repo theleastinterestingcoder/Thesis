@@ -2,7 +2,7 @@
 
 message(STATUS "face_recognition: 8 messages, 0 services")
 
-set(MSG_I_FLAGS "-Iface_recognition:/home/alfred/quan_ws/src/procrob_functional/msg;-Iface_recognition:/home/alfred/quan_ws/devel/share/face_recognition/msg;-Istd_msgs:/opt/ros/hydro/share/std_msgs/cmake/../msg;-Iactionlib_msgs:/opt/ros/hydro/share/actionlib_msgs/cmake/../msg")
+set(MSG_I_FLAGS "-Iface_recognition:/home/alfred/quan_ws/src/procrob_functional/msg;-Iface_recognition:/home/alfred/quan_ws/devel/share/face_recognition/msg;-Istd_msgs:/opt/ros/indigo/share/std_msgs/cmake/../msg;-Iactionlib_msgs:/opt/ros/indigo/share/actionlib_msgs/cmake/../msg")
 
 # Find all generators
 find_package(gencpp REQUIRED)
@@ -10,6 +10,50 @@ find_package(genlisp REQUIRED)
 find_package(genpy REQUIRED)
 
 add_custom_target(face_recognition_generate_messages ALL)
+
+# verify that message/service dependencies have not changed since configure
+
+
+
+get_filename_component(_filename "/home/alfred/quan_ws/src/procrob_functional/msg/FRClientGoal.msg" NAME_WE)
+add_custom_target(_face_recognition_generate_messages_check_deps_${_filename}
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "face_recognition" "/home/alfred/quan_ws/src/procrob_functional/msg/FRClientGoal.msg" ""
+)
+
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionGoal.msg" NAME_WE)
+add_custom_target(_face_recognition_generate_messages_check_deps_${_filename}
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "face_recognition" "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionGoal.msg" "face_recognition/FaceRecognitionGoal:actionlib_msgs/GoalID:std_msgs/Header"
+)
+
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionGoal.msg" NAME_WE)
+add_custom_target(_face_recognition_generate_messages_check_deps_${_filename}
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "face_recognition" "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionGoal.msg" ""
+)
+
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionAction.msg" NAME_WE)
+add_custom_target(_face_recognition_generate_messages_check_deps_${_filename}
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "face_recognition" "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionAction.msg" "face_recognition/FaceRecognitionActionResult:face_recognition/FaceRecognitionResult:actionlib_msgs/GoalStatus:actionlib_msgs/GoalID:face_recognition/FaceRecognitionActionGoal:std_msgs/Header:face_recognition/FaceRecognitionGoal:face_recognition/FaceRecognitionFeedback:face_recognition/FaceRecognitionActionFeedback"
+)
+
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionResult.msg" NAME_WE)
+add_custom_target(_face_recognition_generate_messages_check_deps_${_filename}
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "face_recognition" "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionResult.msg" ""
+)
+
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionResult.msg" NAME_WE)
+add_custom_target(_face_recognition_generate_messages_check_deps_${_filename}
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "face_recognition" "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionResult.msg" "actionlib_msgs/GoalStatus:actionlib_msgs/GoalID:std_msgs/Header:face_recognition/FaceRecognitionResult"
+)
+
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionFeedback.msg" NAME_WE)
+add_custom_target(_face_recognition_generate_messages_check_deps_${_filename}
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "face_recognition" "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionFeedback.msg" ""
+)
+
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionFeedback.msg" NAME_WE)
+add_custom_target(_face_recognition_generate_messages_check_deps_${_filename}
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "face_recognition" "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionFeedback.msg" "actionlib_msgs/GoalStatus:actionlib_msgs/GoalID:std_msgs/Header:face_recognition/FaceRecognitionFeedback"
+)
 
 #
 #  langs = gencpp;genlisp;genpy
@@ -26,7 +70,7 @@ _generate_msg_cpp(face_recognition
 _generate_msg_cpp(face_recognition
   "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionGoal.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/hydro/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionGoal.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalID.msg"
+  "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionGoal.msg;/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/indigo/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/face_recognition
 )
 _generate_msg_cpp(face_recognition
@@ -38,7 +82,7 @@ _generate_msg_cpp(face_recognition
 _generate_msg_cpp(face_recognition
   "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionAction.msg"
   "${MSG_I_FLAGS}"
-  "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionGoal.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/hydro/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionGoal.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionFeedback.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalID.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionResult.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionResult.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionFeedback.msg"
+  "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionResult.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionResult.msg;/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalID.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionGoal.msg;/opt/ros/indigo/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionGoal.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionFeedback.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionFeedback.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/face_recognition
 )
 _generate_msg_cpp(face_recognition
@@ -50,13 +94,13 @@ _generate_msg_cpp(face_recognition
 _generate_msg_cpp(face_recognition
   "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionResult.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/hydro/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionResult.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalID.msg"
+  "/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/indigo/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionResult.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/face_recognition
 )
 _generate_msg_cpp(face_recognition
   "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionFeedback.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/hydro/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionFeedback.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalID.msg"
+  "/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/indigo/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionFeedback.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/face_recognition
 )
 _generate_msg_cpp(face_recognition
@@ -79,6 +123,24 @@ add_custom_target(face_recognition_generate_messages_cpp
 )
 add_dependencies(face_recognition_generate_messages face_recognition_generate_messages_cpp)
 
+# add dependencies to all check dependencies targets
+get_filename_component(_filename "/home/alfred/quan_ws/src/procrob_functional/msg/FRClientGoal.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_cpp _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionGoal.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_cpp _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionGoal.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_cpp _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionAction.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_cpp _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionResult.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_cpp _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionResult.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_cpp _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionFeedback.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_cpp _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionFeedback.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_cpp _face_recognition_generate_messages_check_deps_${_filename})
+
 # target for backward compatibility
 add_custom_target(face_recognition_gencpp)
 add_dependencies(face_recognition_gencpp face_recognition_generate_messages_cpp)
@@ -97,7 +159,7 @@ _generate_msg_lisp(face_recognition
 _generate_msg_lisp(face_recognition
   "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionGoal.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/hydro/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionGoal.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalID.msg"
+  "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionGoal.msg;/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/indigo/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/face_recognition
 )
 _generate_msg_lisp(face_recognition
@@ -109,7 +171,7 @@ _generate_msg_lisp(face_recognition
 _generate_msg_lisp(face_recognition
   "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionAction.msg"
   "${MSG_I_FLAGS}"
-  "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionGoal.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/hydro/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionGoal.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionFeedback.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalID.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionResult.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionResult.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionFeedback.msg"
+  "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionResult.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionResult.msg;/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalID.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionGoal.msg;/opt/ros/indigo/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionGoal.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionFeedback.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionFeedback.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/face_recognition
 )
 _generate_msg_lisp(face_recognition
@@ -121,13 +183,13 @@ _generate_msg_lisp(face_recognition
 _generate_msg_lisp(face_recognition
   "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionResult.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/hydro/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionResult.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalID.msg"
+  "/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/indigo/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionResult.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/face_recognition
 )
 _generate_msg_lisp(face_recognition
   "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionFeedback.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/hydro/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionFeedback.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalID.msg"
+  "/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/indigo/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionFeedback.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/face_recognition
 )
 _generate_msg_lisp(face_recognition
@@ -150,6 +212,24 @@ add_custom_target(face_recognition_generate_messages_lisp
 )
 add_dependencies(face_recognition_generate_messages face_recognition_generate_messages_lisp)
 
+# add dependencies to all check dependencies targets
+get_filename_component(_filename "/home/alfred/quan_ws/src/procrob_functional/msg/FRClientGoal.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_lisp _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionGoal.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_lisp _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionGoal.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_lisp _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionAction.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_lisp _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionResult.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_lisp _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionResult.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_lisp _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionFeedback.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_lisp _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionFeedback.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_lisp _face_recognition_generate_messages_check_deps_${_filename})
+
 # target for backward compatibility
 add_custom_target(face_recognition_genlisp)
 add_dependencies(face_recognition_genlisp face_recognition_generate_messages_lisp)
@@ -168,7 +248,7 @@ _generate_msg_py(face_recognition
 _generate_msg_py(face_recognition
   "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionGoal.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/hydro/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionGoal.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalID.msg"
+  "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionGoal.msg;/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/indigo/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/face_recognition
 )
 _generate_msg_py(face_recognition
@@ -180,7 +260,7 @@ _generate_msg_py(face_recognition
 _generate_msg_py(face_recognition
   "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionAction.msg"
   "${MSG_I_FLAGS}"
-  "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionGoal.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/hydro/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionGoal.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionFeedback.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalID.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionResult.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionResult.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionFeedback.msg"
+  "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionResult.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionResult.msg;/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalID.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionGoal.msg;/opt/ros/indigo/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionGoal.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionFeedback.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionFeedback.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/face_recognition
 )
 _generate_msg_py(face_recognition
@@ -192,13 +272,13 @@ _generate_msg_py(face_recognition
 _generate_msg_py(face_recognition
   "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionResult.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/hydro/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionResult.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalID.msg"
+  "/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/indigo/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionResult.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/face_recognition
 )
 _generate_msg_py(face_recognition
   "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionFeedback.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/hydro/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionFeedback.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/hydro/share/actionlib_msgs/cmake/../msg/GoalID.msg"
+  "/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/indigo/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/indigo/share/std_msgs/cmake/../msg/Header.msg;/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionFeedback.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/face_recognition
 )
 _generate_msg_py(face_recognition
@@ -220,6 +300,24 @@ add_custom_target(face_recognition_generate_messages_py
   DEPENDS ${ALL_GEN_OUTPUT_FILES_py}
 )
 add_dependencies(face_recognition_generate_messages face_recognition_generate_messages_py)
+
+# add dependencies to all check dependencies targets
+get_filename_component(_filename "/home/alfred/quan_ws/src/procrob_functional/msg/FRClientGoal.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_py _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionGoal.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_py _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionGoal.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_py _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionAction.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_py _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionResult.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_py _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionResult.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_py _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionFeedback.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_py _face_recognition_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfred/quan_ws/devel/share/face_recognition/msg/FaceRecognitionActionFeedback.msg" NAME_WE)
+add_dependencies(face_recognition_generate_messages_py _face_recognition_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
 add_custom_target(face_recognition_genpy)

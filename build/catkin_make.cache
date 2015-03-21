@@ -1,1 +1,2 @@
-gscam:learning_actionlib:openni_tracker:pocketsphinx:procrob_functional:simple_navigation_goals
+audio_common/audio_capture:audio_common/audio_common:audio_common/audio_common_msgs:audio_common/audio_play:audio_common/sound_play:procrob_functional
+-DCATKIN_DEVEL_PREFIX=/home/alfred/quan_ws/devel -DCMAKE_INSTALL_PREFIX=/home/alfred/quan_ws/install -G Unix Makefiles

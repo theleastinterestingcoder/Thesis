@@ -2,12 +2,12 @@
 # Source directory: /home/alfred/quan_ws/src
 # Build directory: /home/alfred/quan_ws/build
 # 
-# This file includes the relevent testing commands required for 
+# This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.
 SUBDIRS(gtest)
-SUBDIRS(pocketsphinx)
-SUBDIRS(gscam)
+SUBDIRS(audio_common/audio_common)
+SUBDIRS(audio_common/audio_common_msgs)
+SUBDIRS(audio_common/audio_capture)
+SUBDIRS(audio_common/audio_play)
+SUBDIRS(audio_common/sound_play)
 SUBDIRS(procrob_functional)
-SUBDIRS(learning_actionlib)
-SUBDIRS(simple_navigation_goals)
-SUBDIRS(openni_tracker)

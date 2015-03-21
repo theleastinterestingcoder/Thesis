@@ -1,0 +1,8 @@
+prefix=/home/alfred/quan_ws/install
+
+Name: audio_common_msgs
+Description: Description of audio_common_msgs
+Version: 0.2.7
+Cflags: -I/home/alfred/quan_ws/install/include
+Libs: -L/home/alfred/quan_ws/install/lib 
+Requires: message_runtime

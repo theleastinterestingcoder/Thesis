@@ -28,8 +28,8 @@ MSG: std_msgs/Header
 # sequence ID: consecutively increasing ID 
 uint32 seq
 #Two-integer timestamp that is expressed as:
-# * stamp.secs: seconds (stamp_secs) since epoch
-# * stamp.nsecs: nanoseconds since stamp_secs
+# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')
+# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')
 # time-handling sugar is provided by the client library
 time stamp
 #Frame this data is associated with
@@ -154,7 +154,10 @@ float32[] confidence
       if python3 or type(_x) == unicode:
         _x = _x.encode('utf-8')
         length = len(_x)
-      buff.write(struct.pack('<I%ss'%length, length, _x))
+      if python3:
+        buff.write(struct.pack('<I%sB'%length, length, *_x))
+      else:
+        buff.write(struct.pack('<I%ss'%length, length, _x))
       _x = self
       buff.write(_struct_2I.pack(_x.status.goal_id.stamp.secs, _x.status.goal_id.stamp.nsecs))
       _x = self.status.goal_id.id
@@ -162,14 +165,20 @@ float32[] confidence
       if python3 or type(_x) == unicode:
         _x = _x.encode('utf-8')
         length = len(_x)
-      buff.write(struct.pack('<I%ss'%length, length, _x))
+      if python3:
+        buff.write(struct.pack('<I%sB'%length, length, *_x))
+      else:
+        buff.write(struct.pack('<I%ss'%length, length, _x))
       buff.write(_struct_B.pack(self.status.status))
       _x = self.status.text
       length = len(_x)
       if python3 or type(_x) == unicode:
         _x = _x.encode('utf-8')
         length = len(_x)
-      buff.write(struct.pack('<I%ss'%length, length, _x))
+      if python3:
+        buff.write(struct.pack('<I%sB'%length, length, *_x))
+      else:
+        buff.write(struct.pack('<I%ss'%length, length, _x))
       buff.write(_struct_B.pack(self.feedback.order_id))
       length = len(self.feedback.names)
       buff.write(_struct_I.pack(length))
@@ -178,7 +187,10 @@ float32[] confidence
         if python3 or type(val1) == unicode:
           val1 = val1.encode('utf-8')
           length = len(val1)
-        buff.write(struct.pack('<I%ss'%length, length, val1))
+        if python3:
+          buff.write(struct.pack('<I%sB'%length, length, *val1))
+        else:
+          buff.write(struct.pack('<I%ss'%length, length, val1))
       length = len(self.feedback.confidence)
       buff.write(_struct_I.pack(length))
       pattern = '<%sf'%length
@@ -281,7 +293,10 @@ float32[] confidence
       if python3 or type(_x) == unicode:
         _x = _x.encode('utf-8')
         length = len(_x)
-      buff.write(struct.pack('<I%ss'%length, length, _x))
+      if python3:
+        buff.write(struct.pack('<I%sB'%length, length, *_x))
+      else:
+        buff.write(struct.pack('<I%ss'%length, length, _x))
       _x = self
       buff.write(_struct_2I.pack(_x.status.goal_id.stamp.secs, _x.status.goal_id.stamp.nsecs))
       _x = self.status.goal_id.id
@@ -289,14 +304,20 @@ float32[] confidence
       if python3 or type(_x) == unicode:
         _x = _x.encode('utf-8')
         length = len(_x)
-      buff.write(struct.pack('<I%ss'%length, length, _x))
+      if python3:
+        buff.write(struct.pack('<I%sB'%length, length, *_x))
+      else:
+        buff.write(struct.pack('<I%ss'%length, length, _x))
       buff.write(_struct_B.pack(self.status.status))
       _x = self.status.text
       length = len(_x)
       if python3 or type(_x) == unicode:
         _x = _x.encode('utf-8')
         length = len(_x)
-      buff.write(struct.pack('<I%ss'%length, length, _x))
+      if python3:
+        buff.write(struct.pack('<I%sB'%length, length, *_x))
+      else:
+        buff.write(struct.pack('<I%ss'%length, length, _x))
       buff.write(_struct_B.pack(self.feedback.order_id))
       length = len(self.feedback.names)
       buff.write(_struct_I.pack(length))
@@ -305,7 +326,10 @@ float32[] confidence
         if python3 or type(val1) == unicode:
           val1 = val1.encode('utf-8')
           length = len(val1)
-        buff.write(struct.pack('<I%ss'%length, length, val1))
+        if python3:
+          buff.write(struct.pack('<I%sB'%length, length, *val1))
+        else:
+          buff.write(struct.pack('<I%ss'%length, length, val1))
       length = len(self.feedback.confidence)
       buff.write(_struct_I.pack(length))
       pattern = '<%sf'%length

@@ -2,4 +2,4 @@
 source_root_dir = "/home/alfred/quan_ws/src"
 whitelisted_packages = "".split(';') if "" != "" else []
 blacklisted_packages = "".split(';') if "" != "" else []
-underlay_workspaces = "/home/alfred/quan_ws/devel;/opt/ros/hydro".split(';') if "/home/alfred/quan_ws/devel;/opt/ros/hydro" != "" else []
+underlay_workspaces = "/home/alfred/quan_ws/devel;/home/alfred/rocon/devel;/opt/ros/indigo".split(';') if "/home/alfred/quan_ws/devel;/home/alfred/rocon/devel;/opt/ros/indigo" != "" else []

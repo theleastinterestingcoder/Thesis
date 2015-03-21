@@ -7,15 +7,33 @@
 # The syntax for the file is as follows:
 # KEY:TYPE=VALUE
 # KEY is the name of a variable in the cache.
-# TYPE is a hint to GUI's for the type of VALUE, DO NOT EDIT TYPE!.
+# TYPE is a hint to GUIs for the type of VALUE, DO NOT EDIT TYPE!.
 # VALUE is the current value for the KEY.
 
 ########################
 # EXTERNAL cache entries
 ########################
 
+//The threading library used by boost-thread
+BOOST_THREAD_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libpthread.so
+
 //Build shared libraries (DLLs).
 BUILD_SHARED_LIBS:BOOL=ON
+
+//The directory containing a CMake configuration file for Boost.
+Boost_DIR:PATH=Boost_DIR-NOTFOUND
+
+//Path to a file.
+Boost_INCLUDE_DIR:PATH=/usr/include
+
+//Boost library directory
+Boost_LIBRARY_DIR:PATH=/usr/lib/x86_64-linux-gnu
+
+//Boost thread library (debug)
+Boost_THREAD_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_thread.so
+
+//Boost thread library (release)
+Boost_THREAD_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_thread.so
 
 //List of ';' separated packages to exclude
 CATKIN_BLACKLIST_PACKAGES:STRING=
@@ -154,8 +172,27 @@ CMAKE_SHARED_LINKER_FLAGS_RELEASE:STRING=
 //Flags used by the linker during Release with Debug Info builds.
 CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
+//If set, runtime paths are not added when installing shared libraries,
+// but are added when building.
+CMAKE_SKIP_INSTALL_RPATH:BOOL=NO
+
 //If set, runtime paths are not added when using shared libraries.
 CMAKE_SKIP_RPATH:BOOL=NO
+
+//Flags used by the linker during the creation of static libraries.
+CMAKE_STATIC_LINKER_FLAGS:STRING=
+
+//Flags used by the linker during debug builds.
+CMAKE_STATIC_LINKER_FLAGS_DEBUG:STRING=
+
+//Flags used by the linker during release minsize builds.
+CMAKE_STATIC_LINKER_FLAGS_MINSIZEREL:STRING=
+
+//Flags used by the linker during release builds.
+CMAKE_STATIC_LINKER_FLAGS_RELEASE:STRING=
+
+//Flags used by the linker during Release with Debug Info builds.
+CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
 //Path to a program.
 CMAKE_STRIP:FILEPATH=/usr/bin/strip
@@ -174,6 +211,9 @@ DOXYGEN_EXECUTABLE:FILEPATH=DOXYGEN_EXECUTABLE-NOTFOUND
 
 //Path to a program.
 EMPY_EXECUTABLE:FILEPATH=/usr/bin/empy
+
+//Empy script
+EMPY_SCRIPT:STRING=/usr/bin/empy
 
 //Dependencies for the target
 GSCamNodelet_LIB_DEPENDS:STATIC=general;gscam;general;/opt/ros/hydro/lib/libimage_transport.so;general;/opt/ros/hydro/lib/libmessage_filters.so;general;/opt/ros/hydro/lib/libnodeletlib.so;general;/opt/ros/hydro/lib/libbondcpp.so;general;/usr/lib/x86_64-linux-gnu/libuuid.so;general;/usr/lib/libtinyxml.so;general;/opt/ros/hydro/lib/libclass_loader.so;general;/usr/lib/libPocoFoundation.so;general;/usr/lib/x86_64-linux-gnu/libdl.so;general;/opt/ros/hydro/lib/libroslib.so;general;/opt/ros/hydro/lib/libcamera_calibration_parsers.so;general;/opt/ros/hydro/lib/libcamera_info_manager.so;general;/opt/ros/hydro/lib/libroscpp.so;general;/usr/lib/libboost_signals-mt.so;general;/usr/lib/libboost_filesystem-mt.so;general;/opt/ros/hydro/lib/librosconsole.so;general;/opt/ros/hydro/lib/librosconsole_log4cxx.so;general;/opt/ros/hydro/lib/librosconsole_backend_interface.so;general;/usr/lib/liblog4cxx.so;general;/usr/lib/libboost_regex-mt.so;general;/opt/ros/hydro/lib/libxmlrpcpp.so;general;/opt/ros/hydro/lib/libroscpp_serialization.so;general;/opt/ros/hydro/lib/librostime.so;general;/usr/lib/libboost_date_time-mt.so;general;/usr/lib/libboost_system-mt.so;general;/usr/lib/libboost_thread-mt.so;general;/usr/lib/x86_64-linux-gnu/libpthread.so;general;/opt/ros/hydro/lib/libcpp_common.so;general;/opt/ros/hydro/lib/libconsole_bridge.so;general;gstreamer-0.10;general;gobject-2.0;general;gmodule-2.0;general;gthread-2.0;general;rt;general;xml2;general;glib-2.0;general;gstapp-0.10;general;gstbase-0.10;general;gstreamer-0.10;general;gobject-2.0;general;gmodule-2.0;general;gthread-2.0;general;rt;general;xml2;general;glib-2.0;
@@ -229,6 +269,9 @@ UBUNTU:BOOL=TRUE
 //LSB Distrib - codename tag
 UBUNTU_PRECISE:BOOL=TRUE
 
+//LSB Distrib - codename tag
+UBUNTU_TRUSTY:BOOL=TRUE
+
 //Path to a file.
 _CATKIN_GTEST_INCLUDE:FILEPATH=/usr/include/gtest/gtest.h
 
@@ -236,10 +279,37 @@ _CATKIN_GTEST_INCLUDE:FILEPATH=/usr/include/gtest/gtest.h
 _CATKIN_GTEST_SRC:FILEPATH=/usr/src/gtest/src/gtest.cc
 
 //The directory containing a CMake configuration file for actionlib.
-actionlib_DIR:PATH=/opt/ros/hydro/share/actionlib/cmake
+actionlib_DIR:PATH=/opt/ros/indigo/share/actionlib/cmake
 
 //The directory containing a CMake configuration file for actionlib_msgs.
-actionlib_msgs_DIR:PATH=/opt/ros/hydro/share/actionlib_msgs/cmake
+actionlib_msgs_DIR:PATH=/opt/ros/indigo/share/actionlib_msgs/cmake
+
+//Value Computed by CMake
+audio_capture_BINARY_DIR:STATIC=/home/alfred/quan_ws/build/audio_common/audio_capture
+
+//Value Computed by CMake
+audio_capture_SOURCE_DIR:STATIC=/home/alfred/quan_ws/src/audio_common/audio_capture
+
+//Value Computed by CMake
+audio_common_BINARY_DIR:STATIC=/home/alfred/quan_ws/build/audio_common/audio_common
+
+//Value Computed by CMake
+audio_common_SOURCE_DIR:STATIC=/home/alfred/quan_ws/src/audio_common/audio_common
+
+//Value Computed by CMake
+audio_common_msgs_BINARY_DIR:STATIC=/home/alfred/quan_ws/build/audio_common/audio_common_msgs
+
+//The directory containing a CMake configuration file for audio_common_msgs.
+audio_common_msgs_DIR:PATH=/home/alfred/quan_ws/devel/share/audio_common_msgs/cmake
+
+//Value Computed by CMake
+audio_common_msgs_SOURCE_DIR:STATIC=/home/alfred/quan_ws/src/audio_common/audio_common_msgs
+
+//Value Computed by CMake
+audio_play_BINARY_DIR:STATIC=/home/alfred/quan_ws/build/audio_common/audio_play
+
+//Value Computed by CMake
+audio_play_SOURCE_DIR:STATIC=/home/alfred/quan_ws/src/audio_common/audio_play
 
 //The directory containing a CMake configuration file for bond.
 bond_DIR:PATH=/opt/ros/hydro/share/bond/cmake
@@ -254,16 +324,16 @@ camera_calibration_parsers_DIR:PATH=/opt/ros/hydro/share/camera_calibration_pars
 camera_info_manager_DIR:PATH=/opt/ros/hydro/share/camera_info_manager/cmake
 
 //The directory containing a CMake configuration file for catkin.
-catkin_DIR:PATH=/opt/ros/hydro/share/catkin/cmake
+catkin_DIR:PATH=/opt/ros/indigo/share/catkin/cmake
 
 //The directory containing a CMake configuration file for class_loader.
-class_loader_DIR:PATH=/opt/ros/hydro/share/class_loader/cmake
+class_loader_DIR:PATH=/opt/ros/indigo/share/class_loader/cmake
 
 //The directory containing a CMake configuration file for cpp_common.
-cpp_common_DIR:PATH=/opt/ros/hydro/share/cpp_common/cmake
+cpp_common_DIR:PATH=/opt/ros/indigo/share/cpp_common/cmake
 
 //The directory containing a CMake configuration file for cv_bridge.
-cv_bridge_DIR:PATH=/opt/ros/hydro/share/cv_bridge/cmake
+cv_bridge_DIR:PATH=/opt/ros/indigo/share/cv_bridge/cmake
 
 //Value Computed by CMake
 face_recognition_BINARY_DIR:STATIC=/home/alfred/quan_ws/build/procrob_functional
@@ -275,19 +345,19 @@ face_recognition_SOURCE_DIR:STATIC=/home/alfred/quan_ws/src/procrob_functional
 face_recognition_lib_LIB_DEPENDS:STATIC=
 
 //The directory containing a CMake configuration file for gencpp.
-gencpp_DIR:PATH=/opt/ros/hydro/share/gencpp/cmake
+gencpp_DIR:PATH=/opt/ros/indigo/share/gencpp/cmake
 
 //The directory containing a CMake configuration file for genlisp.
-genlisp_DIR:PATH=/opt/ros/hydro/share/genlisp/cmake
+genlisp_DIR:PATH=/opt/ros/indigo/share/genlisp/cmake
 
 //The directory containing a CMake configuration file for genmsg.
-genmsg_DIR:PATH=/opt/ros/hydro/share/genmsg/cmake
+genmsg_DIR:PATH=/opt/ros/indigo/share/genmsg/cmake
 
 //The directory containing a CMake configuration file for genpy.
-genpy_DIR:PATH=/opt/ros/hydro/share/genpy/cmake
+genpy_DIR:PATH=/opt/ros/indigo/share/genpy/cmake
 
 //The directory containing a CMake configuration file for geometry_msgs.
-geometry_msgs_DIR:PATH=/opt/ros/hydro/share/geometry_msgs/cmake
+geometry_msgs_DIR:PATH=/opt/ros/indigo/share/geometry_msgs/cmake
 
 //Value Computed by CMake
 gscam_BINARY_DIR:STATIC=/home/alfred/quan_ws/build/gscam
@@ -324,7 +394,7 @@ gtest_force_shared_crt:BOOL=OFF
 gtest_main_LIB_DEPENDS:STATIC=general;-lpthread;general;gtest;
 
 //The directory containing a CMake configuration file for image_transport.
-image_transport_DIR:PATH=/opt/ros/hydro/share/image_transport/cmake
+image_transport_DIR:PATH=/opt/ros/indigo/share/image_transport/cmake
 
 //Value Computed by CMake
 learning_actionlib_BINARY_DIR:STATIC=/home/alfred/quan_ws/build/learning_actionlib
@@ -333,16 +403,16 @@ learning_actionlib_BINARY_DIR:STATIC=/home/alfred/quan_ws/build/learning_actionl
 learning_actionlib_SOURCE_DIR:STATIC=/home/alfred/quan_ws/src/learning_actionlib
 
 //Path to a library.
-lib:FILEPATH=/opt/ros/hydro/lib/libtf2.so
+lib:FILEPATH=/opt/ros/indigo/lib/libroslib.so
 
 //The directory containing a CMake configuration file for message_filters.
-message_filters_DIR:PATH=/opt/ros/hydro/share/message_filters/cmake
+message_filters_DIR:PATH=/opt/ros/indigo/share/message_filters/cmake
 
 //The directory containing a CMake configuration file for message_generation.
-message_generation_DIR:PATH=/opt/ros/hydro/share/message_generation/cmake
+message_generation_DIR:PATH=/opt/ros/indigo/share/message_generation/cmake
 
 //The directory containing a CMake configuration file for message_runtime.
-message_runtime_DIR:PATH=/opt/ros/hydro/share/message_runtime/cmake
+message_runtime_DIR:PATH=/opt/ros/indigo/share/message_runtime/cmake
 
 //The directory containing a CMake configuration file for move_base_msgs.
 move_base_msgs_DIR:PATH=/opt/ros/hydro/share/move_base_msgs/cmake
@@ -360,7 +430,7 @@ openni_tracker_SOURCE_DIR:STATIC=/home/alfred/quan_ws/src/openni_tracker
 orocos_kdl_DIR:PATH=/opt/ros/hydro/share/orocos_kdl
 
 //The directory containing a CMake configuration file for pluginlib.
-pluginlib_DIR:PATH=/opt/ros/hydro/share/pluginlib/cmake
+pluginlib_DIR:PATH=/opt/ros/indigo/share/pluginlib/cmake
 
 //Value Computed by CMake
 pocketsphinx_BINARY_DIR:STATIC=/home/alfred/quan_ws/build/pocketsphinx
@@ -369,34 +439,34 @@ pocketsphinx_BINARY_DIR:STATIC=/home/alfred/quan_ws/build/pocketsphinx
 pocketsphinx_SOURCE_DIR:STATIC=/home/alfred/quan_ws/src/pocketsphinx
 
 //The directory containing a CMake configuration file for rosconsole.
-rosconsole_DIR:PATH=/opt/ros/hydro/share/rosconsole/cmake
+rosconsole_DIR:PATH=/opt/ros/indigo/share/rosconsole/cmake
 
 //The directory containing a CMake configuration file for roscpp.
-roscpp_DIR:PATH=/opt/ros/hydro/share/roscpp/cmake
+roscpp_DIR:PATH=/opt/ros/indigo/share/roscpp/cmake
 
 //The directory containing a CMake configuration file for roscpp_serialization.
-roscpp_serialization_DIR:PATH=/opt/ros/hydro/share/roscpp_serialization/cmake
+roscpp_serialization_DIR:PATH=/opt/ros/indigo/share/roscpp_serialization/cmake
 
 //The directory containing a CMake configuration file for roscpp_traits.
-roscpp_traits_DIR:PATH=/opt/ros/hydro/share/roscpp_traits/cmake
+roscpp_traits_DIR:PATH=/opt/ros/indigo/share/roscpp_traits/cmake
 
 //The directory containing a CMake configuration file for rosgraph.
 rosgraph_DIR:PATH=/opt/ros/hydro/share/rosgraph/cmake
 
 //The directory containing a CMake configuration file for rosgraph_msgs.
-rosgraph_msgs_DIR:PATH=/opt/ros/hydro/share/rosgraph_msgs/cmake
+rosgraph_msgs_DIR:PATH=/opt/ros/indigo/share/rosgraph_msgs/cmake
 
 //The directory containing a CMake configuration file for roslib.
-roslib_DIR:PATH=/opt/ros/hydro/share/roslib/cmake
+roslib_DIR:PATH=/opt/ros/indigo/share/roslib/cmake
 
 //The directory containing a CMake configuration file for rospy.
 rospy_DIR:PATH=/opt/ros/hydro/share/rospy/cmake
 
 //The directory containing a CMake configuration file for rostime.
-rostime_DIR:PATH=/opt/ros/hydro/share/rostime/cmake
+rostime_DIR:PATH=/opt/ros/indigo/share/rostime/cmake
 
 //The directory containing a CMake configuration file for sensor_msgs.
-sensor_msgs_DIR:PATH=/opt/ros/hydro/share/sensor_msgs/cmake
+sensor_msgs_DIR:PATH=/opt/ros/indigo/share/sensor_msgs/cmake
 
 //Value Computed by CMake
 simple_navigation_goals_BINARY_DIR:STATIC=/home/alfred/quan_ws/build/simple_navigation_goals
@@ -407,8 +477,14 @@ simple_navigation_goals_SOURCE_DIR:STATIC=/home/alfred/quan_ws/src/simple_naviga
 //The directory containing a CMake configuration file for smclib.
 smclib_DIR:PATH=/opt/ros/hydro/share/smclib/cmake
 
+//Value Computed by CMake
+sound_play_BINARY_DIR:STATIC=/home/alfred/quan_ws/build/audio_common/sound_play
+
+//Value Computed by CMake
+sound_play_SOURCE_DIR:STATIC=/home/alfred/quan_ws/src/audio_common/sound_play
+
 //The directory containing a CMake configuration file for std_msgs.
-std_msgs_DIR:PATH=/opt/ros/hydro/share/std_msgs/cmake
+std_msgs_DIR:PATH=/opt/ros/indigo/share/std_msgs/cmake
 
 //The directory containing a CMake configuration file for tf2.
 tf2_DIR:PATH=/opt/ros/hydro/share/tf2/cmake
@@ -426,13 +502,23 @@ tf2_ros_DIR:PATH=/opt/ros/hydro/share/tf2_ros/cmake
 tf_DIR:PATH=/opt/ros/hydro/share/tf/cmake
 
 //The directory containing a CMake configuration file for xmlrpcpp.
-xmlrpcpp_DIR:PATH=/opt/ros/hydro/share/xmlrpcpp/cmake
+xmlrpcpp_DIR:PATH=/opt/ros/indigo/share/xmlrpcpp/cmake
 
 
 ########################
 # INTERNAL cache entries
 ########################
 
+//ADVANCED property for variable: Boost_DIR
+Boost_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_INCLUDE_DIR
+Boost_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_LIBRARY_DIR
+Boost_LIBRARY_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_THREAD_LIBRARY_DEBUG
+Boost_THREAD_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_THREAD_LIBRARY_RELEASE
+Boost_THREAD_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
 //catkin environment
 CATKIN_ENV:INTERNAL=/home/alfred/quan_ws/build/catkin_generated/env_cached.sh
 CATKIN_TEST_RESULTS_DIR:INTERNAL=/home/alfred/quan_ws/build/test_results
@@ -449,7 +535,7 @@ CMAKE_CACHE_MAJOR_VERSION:INTERNAL=2
 //Minor version of cmake used to create the current loaded cache
 CMAKE_CACHE_MINOR_VERSION:INTERNAL=8
 //Patch version of cmake used to create the current loaded cache
-CMAKE_CACHE_PATCH_VERSION:INTERNAL=7
+CMAKE_CACHE_PATCH_VERSION:INTERNAL=12
 //ADVANCED property for variable: CMAKE_COLOR_MAKEFILE
 CMAKE_COLOR_MAKEFILE-ADVANCED:INTERNAL=1
 //Path to CMake executable.
@@ -460,7 +546,6 @@ CMAKE_CPACK_COMMAND:INTERNAL=/usr/bin/cpack
 CMAKE_CTEST_COMMAND:INTERNAL=/usr/bin/ctest
 //ADVANCED property for variable: CMAKE_CXX_COMPILER
 CMAKE_CXX_COMPILER-ADVANCED:INTERNAL=1
-CMAKE_CXX_COMPILER_WORKS:INTERNAL=1
 //ADVANCED property for variable: CMAKE_CXX_FLAGS
 CMAKE_CXX_FLAGS-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_CXX_FLAGS_DEBUG
@@ -473,7 +558,6 @@ CMAKE_CXX_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 CMAKE_CXX_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_C_COMPILER
 CMAKE_C_COMPILER-ADVANCED:INTERNAL=1
-CMAKE_C_COMPILER_WORKS:INTERNAL=1
 //ADVANCED property for variable: CMAKE_C_FLAGS
 CMAKE_C_FLAGS-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_C_FLAGS_DEBUG
@@ -504,6 +588,10 @@ CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 CMAKE_EXPORT_COMPILE_COMMANDS-ADVANCED:INTERNAL=1
 //Name of generator.
 CMAKE_GENERATOR:INTERNAL=Unix Makefiles
+//Name of generator toolset.
+CMAKE_GENERATOR_TOOLSET:INTERNAL=
+//Have symbol pthread_create
+CMAKE_HAVE_LIBC_CREATE:INTERNAL=
 //Have library pthreads
 CMAKE_HAVE_PTHREADS_CREATE:INTERNAL=
 //Have library pthread
@@ -532,7 +620,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_LOCAL_GENERATORS:INTERNAL=8
+CMAKE_NUMBER_OF_LOCAL_GENERATORS:INTERNAL=9
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -551,8 +639,20 @@ CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
 CMAKE_SHARED_LINKER_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO
 CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_SKIP_INSTALL_RPATH
+CMAKE_SKIP_INSTALL_RPATH-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_SKIP_RPATH
 CMAKE_SKIP_RPATH-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_STATIC_LINKER_FLAGS
+CMAKE_STATIC_LINKER_FLAGS-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_STATIC_LINKER_FLAGS_DEBUG
+CMAKE_STATIC_LINKER_FLAGS_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_STATIC_LINKER_FLAGS_MINSIZEREL
+CMAKE_STATIC_LINKER_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_STATIC_LINKER_FLAGS_RELEASE
+CMAKE_STATIC_LINKER_FLAGS_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO
+CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_STRIP
 CMAKE_STRIP-ADVANCED:INTERNAL=1
 //uname command
@@ -561,8 +661,10 @@ CMAKE_UNAME:INTERNAL=/bin/uname
 CMAKE_USE_RELATIVE_PATHS-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//Details about finding PkgConfig
+FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[/usr/bin/pkg-config][v0.26()]
 //Details about finding PythonInterp
-FIND_PACKAGE_MESSAGE_DETAILS_PythonInterp:INTERNAL=[/usr/bin/python][v2.7.3()]
+FIND_PACKAGE_MESSAGE_DETAILS_PythonInterp:INTERNAL=[/usr/bin/python][v2.7.6()]
 //Details about finding Threads
 FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 GSTREAMER_CFLAGS:INTERNAL=-pthread;-I/usr/include/gstreamer-0.10;-I/usr/include/glib-2.0;-I/usr/lib/x86_64-linux-gnu/glib-2.0/include;-I/usr/include/libxml2
@@ -633,6 +735,40 @@ GST_APP_gstreamer-app-0.10_INCLUDEDIR:INTERNAL=
 GST_APP_gstreamer-app-0.10_LIBDIR:INTERNAL=
 GST_APP_gstreamer-app-0.10_PREFIX:INTERNAL=
 GST_APP_gstreamer-app-0.10_VERSION:INTERNAL=
+GST_CFLAGS:INTERNAL=-pthread;-I/usr/include/gstreamer-0.10;-I/usr/include/glib-2.0;-I/usr/lib/x86_64-linux-gnu/glib-2.0/include;-I/usr/include/libxml2
+GST_CFLAGS_I:INTERNAL=
+GST_CFLAGS_OTHER:INTERNAL=-pthread
+GST_FOUND:INTERNAL=1
+GST_INCLUDEDIR:INTERNAL=/usr/include/gstreamer-0.10
+GST_INCLUDE_DIRS:INTERNAL=/usr/include/gstreamer-0.10;/usr/include/glib-2.0;/usr/lib/x86_64-linux-gnu/glib-2.0/include;/usr/include/libxml2
+GST_LDFLAGS:INTERNAL=-pthread;-lgstreamer-0.10;-lgobject-2.0;-lgmodule-2.0;-lgthread-2.0;-lxml2;-lglib-2.0
+GST_LDFLAGS_OTHER:INTERNAL=
+GST_LIBDIR:INTERNAL=/usr/lib/x86_64-linux-gnu
+GST_LIBRARIES:INTERNAL=gstreamer-0.10;gobject-2.0;gmodule-2.0;gthread-2.0;xml2;glib-2.0
+GST_LIBRARY_DIRS:INTERNAL=
+GST_LIBS:INTERNAL=
+GST_LIBS_L:INTERNAL=
+GST_LIBS_OTHER:INTERNAL=
+GST_LIBS_PATHS:INTERNAL=
+GST_PREFIX:INTERNAL=/usr
+GST_STATIC_CFLAGS:INTERNAL=-pthread;-I/usr/include/gstreamer-0.10;-I/usr/include/glib-2.0;-I/usr/lib/x86_64-linux-gnu/glib-2.0/include;-I/usr/include/libxml2
+GST_STATIC_CFLAGS_I:INTERNAL=
+GST_STATIC_CFLAGS_OTHER:INTERNAL=-pthread
+GST_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include/gstreamer-0.10;/usr/include/glib-2.0;/usr/lib/x86_64-linux-gnu/glib-2.0/include;/usr/include/libxml2
+GST_STATIC_LDFLAGS:INTERNAL=-pthread;-lgstreamer-0.10;-lgobject-2.0;-lffi;-lgmodule-2.0;-ldl;-lgthread-2.0;-lxml2;-lz;-lm;-llzma;-lglib-2.0;-lpcre
+GST_STATIC_LDFLAGS_OTHER:INTERNAL=
+GST_STATIC_LIBDIR:INTERNAL=
+GST_STATIC_LIBRARIES:INTERNAL=gstreamer-0.10;gobject-2.0;ffi;gmodule-2.0;dl;gthread-2.0;xml2;z;m;lzma;glib-2.0;pcre
+GST_STATIC_LIBRARY_DIRS:INTERNAL=
+GST_STATIC_LIBS:INTERNAL=
+GST_STATIC_LIBS_L:INTERNAL=
+GST_STATIC_LIBS_OTHER:INTERNAL=
+GST_STATIC_LIBS_PATHS:INTERNAL=
+GST_VERSION:INTERNAL=0.10.36
+GST_gstreamer-0.10_INCLUDEDIR:INTERNAL=
+GST_gstreamer-0.10_LIBDIR:INTERNAL=
+GST_gstreamer-0.10_PREFIX:INTERNAL=
+GST_gstreamer-0.10_VERSION:INTERNAL=
 GTEST_FROM_SOURCE_FOUND:INTERNAL=TRUE
 GTEST_FROM_SOURCE_INCLUDE_DIRS:INTERNAL=/usr/include
 GTEST_FROM_SOURCE_LIBRARIES:INTERNAL=gtest
@@ -690,6 +826,15 @@ PYTHON_EXECUTABLE-ADVANCED:INTERNAL=1
 //  And it needs to match.  But setuptools won't tell us where
 // it will install things.
 PYTHON_INSTALL_DIR:INTERNAL=lib/python2.7/dist-packages
+//Components requested for this build tree.
+_Boost_COMPONENTS_SEARCHED:INTERNAL=thread
+//Last used Boost_INCLUDE_DIR value.
+_Boost_INCLUDE_DIR_LAST:INTERNAL=/usr/include
+//Last used Boost_LIBRARY_DIR value.
+_Boost_LIBRARY_DIR_LAST:INTERNAL=/usr/lib/x86_64-linux-gnu
+//Last used Boost_USE_MULTITHREADED value.
+_Boost_USE_MULTITHREADED_LAST:INTERNAL=TRUE
+__pkg_config_checked_GST:INTERNAL=1
 __pkg_config_checked_GSTREAMER:INTERNAL=1
 __pkg_config_checked_GST_APP:INTERNAL=1
 __pkg_config_checked_OpenNI:INTERNAL=1
