@@ -44,7 +44,7 @@ class face_recognition_spawner:
     def watch_for(self, names, duration):
         # everytime you see a face, add it to the queue
         fq = self.face_queue()
-        sub = rospy.Subscriber('recognized_faces', String, fq.add)
+        sub = rospy.Subscriber('recognized_face', String, fq.add)
 
         # clear the queue at a rate of 10hz
         start = rospy.Time.now()
@@ -94,7 +94,7 @@ class face_recognition_spawner:
 
     # get the face recognition client up and running
     def launch_fquan(self):
-        fquan   = subprocess.Popen("rosrun face_recognition Fquan", stdout=subprocess.PIPE, preexec_fn=os.setsid, shell=True)
+        fquan   = subprocess.Popen("rosrun face_recognition Fpublisher", stdout=subprocess.PIPE, preexec_fn=os.setsid, shell=True)
         return fquan
 
     def launch_response(self):
@@ -138,22 +138,22 @@ class face_recognition_spawner:
 
  
 if __name__=="__main__":
-   frs = face_recognition_spawner()
-   frs.init_nodes() # launches all the necessary processes
-   frs.start_pub()  # starts scanning for faces by publishing to fr_order -- 1 "none"
+    frs = face_recognition_spawner()
+    frs.init_nodes() # launches all the necessary processes
+    frs.start_pub()  # starts scanning for faces by publishing to fr_order -- 1 "none"
 
-   if frs.watch_for(['Quan'], 10):
-      rospy.loginfo('Quan Found')
-   else:
-      rospy.loginfo('Quan Not found in 10 seconds')
+    if frs.watch_for(['Quan'], 10):
+        rospy.loginfo('Quan Found')
+    else:
+        rospy.loginfo('Quan Not found in 10 seconds')
 
-   frs.stop_pub()
-   frs.kill_everything() # 
+    frs.stop_pub()
+    frs.kill_everything() # 
 # if __name__== "__main__":
 #     frs = face_recognition_spawner()
 #     frs.launch_gscam()
 #     fclient = subprocess.Popen("rosrun face_recognition Fserver", stdout=subprocess.PIPE, preexec_fn=os.setsid, shell=True)
-#     fquan   = subprocess.Popen("rosrun face_recognition Fquan", stdout=subprocess.PIPE, preexec_fn=os.setsid, shell=True)
+#     fquan   = subprocess.Popen("rosrun face_recognition Fpublisher", stdout=subprocess.PIPE, preexec_fn=os.setsid, shell=True)
 #     subprocess.call("rostopic pub -1 /fr_order face_recognition/FRClientGoal -- 1 \"none\"", shell=True )
 
 

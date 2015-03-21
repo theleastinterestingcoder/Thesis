@@ -14,7 +14,7 @@ from kobuki_msgs import msg
 
 
 class face_recognizer:
-    def __init__(self, name='Quan', sub='recognized_faces'):
+    def __init__(self, name='Quan', sub='recognized_face'):
         rospy.init_node('alfred_face_response');
         rospy.Subscriber(sub, String, self.face_response)
         self.pub = rospy.Publisher('/mobile_base/commands/sound', msg.Sound, queue_size=10)
