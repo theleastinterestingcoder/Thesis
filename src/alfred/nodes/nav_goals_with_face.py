@@ -30,7 +30,7 @@ class voice_cmd:
     loc = {}
     loc['alpha'] = [3, 2, 0]
     loc['beta']  = [4, 4, 0]
-    loc['home']  = [1.929, -0.061, 0.010]
+    loc['home']  = [2.134, -0.987, 0.010]
 
     def __init__(self, name = 'voice_cmd'):
         # Initialize this node if it has not been initialized already
@@ -57,7 +57,6 @@ class voice_cmd:
 
         # Some other stuff
         rospy.loginfo("Ready to receive voice commands")
-        self.look_for_face()
         rospy.on_shutdown(self.cleanup)
 
         rospy.spin()
@@ -74,9 +73,19 @@ class voice_cmd:
         command = self.get_command(msg.data)
         rospy.loginfo("Command: " + str(command))
 
-#         done_cb = cb_func({'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})
-#         done_cb = cb_func({'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})
-        done_cb = cb_func(**{'function': self.ksm.beep, 'val': 1})
+        # Goes to the goal and then beeps
+#         done_cb =   cb_func(function=self.ksm.beep, **{'val': 1, 'done_cb': None})
+        
+        # An example of chaining (note, has to go backwards b/c of the first needs to reference the next)
+        finish_cb = cb_func(function=self.ksm.beep, **{'val': 1, 'done_cb': None})
+        return_cb = cb_func(function=self.ngm.go_to_location, *self.loc['home'], **{'done_cb': finish_cb})
+        face_cb   = cb_func(function=self.fds.look_for_face, names=['Quan'], duration=10, done_cb = return_cb)
+        done_cb =   cb_func(function=self.ksm.beep, **{'val': 1, 'done_cb': face_cb})
+
+#         done_cb = cb_func(**{'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})
+#         done_cb = cb_func(**{'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})
+#         done_cb = cb_func(**{'cb_f': self.look_for_face, 'name' : ['Quan'], 'duration' : 10})
+#         return_cb = cb_func(**{'cb_f': self.go_to_location}, *self.loc['alpha']}) 
 
         if command == 'cancel':
             self.ngm.cancel_all_goals()
@@ -90,60 +99,40 @@ class voice_cmd:
     def print_greeting(self, greeting='foo'):
         print "I think this works! %s" % greeting
 
-     
-#    def look_for_face(names=['Quan'], duration=10, \
-#                                      success_fp=self.go_to_location, success_arg=self.loc['home'], \
-#                                      fail_fp=self.beep, fail_arg=1):
 
      # Look for a face and then do an action depending on sucess or failure
-
-    def look_for_face(self, names = ['Quan'], duration=10):
+    def look_for_face(self, names = ['Quan'], duration=10, done_cb=None):
         # Allow only face recognition function to be working at a time
         if not self.fds.is_busy:
-            pdb.set_trace()
             self.fds.init_nodes() # Locks the fds
             self.fds.start_pub()
          
             # Check if a face has been seen
-            if self.fds.watch_for(names, duration):
-                self.go_to_location(*self.loc['home'])
+            person = self.fds.watch_for(names, duration)
+            if person: 
+                rospy.loginfo('%s has been found' % person)
+                self.beep(1) 
+#                 self.go_to_location(*self.loc['home'])
                 ans = True
             else:
-                self.beep(1) 
+                rospy.loginfo('waited for %s, but did not find anyone in %s' % (duration, names))
                 ans = False
           
-            fds.stop_pub()
-            fds.kill_everything() # Releases the lock
+            self.fds.stop_pub()
+            self.fds.kill_everything() # Releases the lock
         else:
             rospy.info('Tried to look for face, but Face Detection Service is busy!')
- 
-#         start = rospy.Time.now();
-#         
-#         fp_success=self.ngm.go_to_location
-#         fp_failure=rospy.loginfo
-# 
-#         self.launch_face_recognition(wait_time=10, success=fp_success, failure=fp_failure)
-#         
-#         while rospy.
-#         # If you've seen Quan since the start of the navigation goal
-#         if self.fds.seen('Quan', start):
-#             self.ngm.go_to_location(*self.loc_home)
+        
+        # If there is chaining, then do it
+        if done_cb and ans:
+            return done_cb.call_back()
+        return ans
         
        
     def cleanup(self):
         # When shutting down be sure to stop the robot! 
         self.ngm.cancel_all_goals()
   
-#     # Some scripting here to launch the face recognition stuff
-#     def launch_face_recognition(self):
-#         fds = face_recognition_spawner() 
-#         fds.init_nodes()
-#         fds.start_pub()
-#         for i in range(10):
-#             rospy.loginfo("Countdown to kill is %s" % i)
-#             time.sleep(1)
-#         fds.stop_pub()
-#         fds.kill_everything()
 
           
 

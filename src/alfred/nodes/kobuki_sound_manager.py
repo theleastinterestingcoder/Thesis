@@ -14,10 +14,14 @@ class kobuki_sound_manager:
         self.pub = rospy.Publisher('/mobile_base/commands/sound', msg.Sound, queue_size=10, latch=True)
 
 
-    def beep(self, val=1):
+    def beep(self, val=1, done_cb=None):
         m = msg.Sound()
         m.value = val
         self.pub.publish(m)
+
+        if done_cb:
+            return done_cb.call_back()
+        return True
 
 if __name__=='__main__':
     rospy.init_node('ksm_tutorial')

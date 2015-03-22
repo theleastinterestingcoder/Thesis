@@ -57,12 +57,41 @@ class face_recognition_spawner:
                 item = fq.queue[0]
                 if item[0] in names:
                     sub.unregister()# unsubscribe from the feed
-                    return True
+                    return item[0]
                 else:
                     del fq.queue[0]
         # nothing has been found in the time duration      
         sub.unregister() 
-        return False
+        return None
+
+     # Look for a face and then do an action depending on sucess or failure
+    def look_for_face(self, names = ['Quan'], duration=10, done_cb=None):
+        # Allow only face recognition function to be working at a time
+        if not self.is_busy:
+            self.init_nodes() # Locks the fds
+            self.start_pub()
+         
+            # Check if a face has been seen
+            person = self.watch_for(names, duration)
+            if person:                                                                                                                                
+                rospy.loginfo('%s has been found' % person)
+                self.beep(1)
+#                 self.go_to_location(*self.loc['home'])
+                ans = True
+            else:
+                rospy.loginfo('waited for %s, but did not find anyone in %s' % (duration, names))
+                ans = False
+
+            self.stop_pub()
+            self.kill_everything() # Releases the lock
+        else:
+            rospy.info('Tried to look for face, but Face Detection Service is busy!')
+
+        # If there is chaining, then do it
+        if done_cb and ans:
+            return done_cb.call_back()
+        return ans
+
 
     # get the camera up and running
     def launch_gscam(self):

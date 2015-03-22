@@ -9,10 +9,11 @@
 import pdb
 
 class cb_func:
-    def __init__(self, function, **kwargs):
-        self.function = function
-        self.param = kwargs
+    def __init__(self, *args, **kwargs):
+        self.function = kwargs.pop('function')
+        self.p_kwargs = kwargs
+        self.p_args = args
 
     def call_back(self, *args, **kwargs):
-        return self.function(**self.param)
+        return self.function(*self.p_args, **self.p_kwargs)
 
