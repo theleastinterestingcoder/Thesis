@@ -81,7 +81,7 @@ class NavGoalManager:
             self.sac.send_goal(goal, done_cb=done_cb.call_back)
 
     def done_goal_callback(self, a,b):
-        rospy.loginfo('Success in arriving at position: (x,y,z,w) =  (%s, %s, %s, %s)' % self.get_current_position())
+        rospy.loginfo('At position: (x,y,z,w) =  (%s, %s, %s, %s)' % self.get_current_position())
 
     def get_current_position(self):
         # Returns [x, y, w], where (x,y) are locations and w is the yaw

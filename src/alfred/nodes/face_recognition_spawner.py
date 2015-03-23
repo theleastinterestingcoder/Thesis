@@ -75,7 +75,6 @@ class face_recognition_spawner:
             person = self.watch_for(names, duration)
             if person:                                                                                                                                
                 rospy.loginfo('%s has been found' % person)
-                self.beep(1)
 #                 self.go_to_location(*self.loc['home'])
                 ans = True
             else:
