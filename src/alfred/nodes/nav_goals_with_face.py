@@ -49,7 +49,12 @@ class voice_cmd:
                                      'go home' : 'go home', 
                                      'set mark alpha' : 'set mark alpha',
                                      'set mark beta' : 'set mark beta',
-                                    }
+                                     }
+#                                      'move foward' : 'move foward',
+#                                      'turn left' : 'turn left',
+#                                      'turn right' : 'turn right',
+#                                      'stop' : 'stop',
+#                                     }
         # Get copies of default locations of alpha and beta
         self.loc = voice_cmd.loc
 
@@ -57,6 +62,10 @@ class voice_cmd:
         self.ngm = NavGoalManager()
         self.fds = face_recognition_spawner()
         self.ksm = kobuki_sound_manager()
+#         self.snc = subprocess.Popen("rosrun alfred simple_nav_commander.py", stdout=subprocess.PIPE, preexec_fn=os.setsid, shell=True)
+        
+        # Setup a publisher for simple navigation commander
+#         self.snc_pub = rospy.Publisher('/alfred/simple_nav_commander/', String, queue_size=1)
 
         # Some other stuff
         rospy.loginfo("Ready to receive voice commands")
@@ -106,16 +115,30 @@ class voice_cmd:
             self.loc['alpha'] = self.ngm.get_current_position()
         elif command == 'set mark beta':
             self.loc['beta'] = self.ngm.get_current_position()
+#         elif command == 'move foward':
+#             self.snc_pub.publish('move foward')
+#         elif command == 'move backward':
+#             self.snc_pub.publish('move backward')
+#         elif command == 'turn left' : 
+#             self.snc_pub.publish('turn left')
+#         elif command == 'turn right':
+#             self.snc_pub.publish('turn right')
+#         elif command == 'stop':
+#             self.snc_pub.publish('stop')
+
+        return
+        
             
     def print_greeting(self, greeting='foo'):
         print "I think this works! %s" % greeting
-
-
-        
        
     def cleanup(self):
         # When shutting down be sure to stop the robot! 
         self.ngm.cancel_all_goals()
+#         try:
+#             os.killpg(self.snc, signal.SIGTERM)
+#         except:
+#             rospy.loginfo('Error, Could not kill simple_nav_commander for some reason')
   
 
           
