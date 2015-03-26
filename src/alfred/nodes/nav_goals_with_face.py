@@ -97,10 +97,10 @@ class voice_cmd:
 #         return_cb = cb_func(function=self.ngm.go_to_location, *self.loc['home'], done_cb=finish_cb)
 #         face_cb   = cb_func(function=self.fds.look_for_face, names=['Quan'], duration=10, done_cb = return_cb)
 #         done_cb   = cb_func(function=self.ksm.beep, val= 1, done_cb=face_cb)
-
+        fail_cb = cb_func(function=self.ksm.beep, val = 2, done_cb=None)
         finish_cb = cb_func(function=self.ksm.beep, val= 1, success_cb = None)
         return_cb = cb_func(function=self.ngm.go_to_location, *self.loc['home'], success_cb = finish_cb)
-        face_cb   = cb_func(function=self.fds.look_for_face, names=['Quan'], duration=10, success_cb = return_cb)
+        face_cb   = cb_func(function=self.fds.look_for_face, names=['Quan'], duration=10, success_cb = return_cb, fail_cb=fail_cb)
         done_cb = cb_func(function=self.ksm.beep, val=1, success_cb=face_cb)
 
 #         done_cb = cb_func(**{'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})
@@ -114,7 +114,7 @@ class voice_cmd:
             self.ngm.go_to_location(*self.loc['alpha'], done_cb=done_cb)
         elif command == 'go to beta':
             self.ngm.go_to_location(*self.loc['beta'], done_cb=done_cb)
-        elif command == 'go to home':
+        elif command == 'go home':
             self.ngm.go_to_location(*self.loc['home'], done_cb=None)
         elif command == 'set mark alpha':
             self.loc['alpha'] = self.ngm.get_current_position()
