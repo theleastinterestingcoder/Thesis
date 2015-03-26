@@ -16,7 +16,7 @@ from geometry_msgs.msg import Twist
 from std_msgs.msg import String
 from math import copysign
 
-from NavGoalManager import NavGoalManager
+from nav_goal_manager import nav_goal_manager
 import os, subprocess, time, signal
 
 class face_recognition_spawner:

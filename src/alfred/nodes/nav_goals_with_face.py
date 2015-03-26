@@ -17,7 +17,7 @@ from std_msgs.msg import String
 from math import copysign
 
 # Some of my own packages
-from NavGoalManager import NavGoalManager
+from nav_goal_manager import nav_goal_manager
 from face_recognition_spawner import face_recognition_spawner
 from kobuki_sound_manager import kobuki_sound_manager
 
@@ -59,7 +59,7 @@ class voice_cmd:
         self.loc = voice_cmd.loc
 
         # Core processes
-        self.ngm = NavGoalManager()
+        self.ngm = nav_goal_manager()
         self.fds = face_recognition_spawner()
         self.ksm = kobuki_sound_manager()
 #         self.snc = subprocess.Popen("rosrun alfred simple_nav_commander.py", stdout=subprocess.PIPE, preexec_fn=os.setsid, shell=True)
@@ -93,10 +93,15 @@ class voice_cmd:
 #         done_cb =   cb_func(function=self.ksm.beep, **{'val': 1, 'done_cb': None})
         
         # An example of chaining (note, has to go backwards b/c of the first needs to reference the next)
-        finish_cb = cb_func(function=self.ksm.beep, val= 1, done_cb=None)
-        return_cb = cb_func(function=self.ngm.go_to_location, *self.loc['home'], done_cb=finish_cb)
-        face_cb   = cb_func(function=self.fds.look_for_face, names=['Quan'], duration=10, done_cb = return_cb)
-        done_cb   = cb_func(function=self.ksm.beep, val= 1, done_cb=face_cb)
+#         finish_cb = cb_func(function=self.ksm.beep, val= 1, done_cb=None)
+#         return_cb = cb_func(function=self.ngm.go_to_location, *self.loc['home'], done_cb=finish_cb)
+#         face_cb   = cb_func(function=self.fds.look_for_face, names=['Quan'], duration=10, done_cb = return_cb)
+#         done_cb   = cb_func(function=self.ksm.beep, val= 1, done_cb=face_cb)
+
+        finish_cb = cb_func(function=self.ksm.beep, val= 1, success_cb = None)
+        return_cb = cb_func(function=self.ngm.go_to_location, *self.loc['home'], success_cb = finish_cb)
+        face_cb   = cb_func(function=self.fds.look_for_face, names=['Quan'], duration=10, success_cb = return_cb)
+        done_cb = cb_func(function=self.ksm.beep, val=1, success_cb=face_cb)
 
 #         done_cb = cb_func(**{'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})
 #         done_cb = cb_func(**{'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})

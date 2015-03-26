@@ -19,12 +19,12 @@ from tf import transformations, TransformListener
 from termcolor import colored
 
 # For extended callback functions
-from callback_function import cb_func
+
 
 # Create a node and manages goals
-class NavGoalManager:
-    # This is kinda hacky, but every NavGoalManager will share the same tfl coordinates
-    # Note: this might break if there are multiple NavGoalManagers
+class nav_goal_manager:
+    # This is kinda hacky, but every nav_goal_manager will share the same tfl coordinates
+    # Note: this might break if there are multiple nav_goal_managers
 
     def __init__(self):
         # Initialize some basic stuff here
@@ -63,7 +63,7 @@ class NavGoalManager:
     def go_to_location(self, x=0, y=0, z=0, w=0, done_cb=None):
         # Wrapper for go_to_goal
         goal = form_goal(x,y,z,w)
-        self.go_to_goal(goal, done_cb=done_cb)
+        return self.go_to_goal(goal, done_cb=done_cb)
 
     def go_to_goal(self, goal, done_cb=None):
         # Wait for the server, send the goal, and then publish the result
@@ -79,6 +79,8 @@ class NavGoalManager:
             self.sac.send_goal(goal, done_cb=self.done_goal_callback)
         else:
             self.sac.send_goal(goal, done_cb=done_cb.call_back)
+
+        return self.sac
 
     def done_goal_callback(self, a,b):
         rospy.loginfo('At position: (x,y,z,w) =  (%s, %s, %s, %s)' % self.get_current_position())
@@ -120,9 +122,10 @@ def form_goal(x=0, y=0, z=0, w=0):
 
 
 if __name__ == '__main__':
+    import callback_function
     try:
         rospy.init_node('nav_goal_manager')
-        ngm = NavGoalManager()
+        ngm = nav_goal_manager()
         
         # an example of some callback function
         def print_greeting(greeting='foo'):                                                                                             
