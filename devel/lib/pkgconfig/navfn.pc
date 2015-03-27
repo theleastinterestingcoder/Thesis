@@ -1,0 +1,8 @@
+prefix=/home/alfred/quan_ws/devel
+
+Name: navfn
+Description: Description of navfn
+Version: 1.13.0
+Cflags: -I/home/alfred/quan_ws/devel/include -I/home/alfred/quan_ws/src/navigation/navfn/include
+Libs: -L/home/alfred/quan_ws/devel/lib -lnavfn
+Requires: nav_core roscpp pluginlib

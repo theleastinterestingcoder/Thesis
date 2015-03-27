@@ -1,0 +1,60 @@
+Language model created by QuickLM on Mon Mar 23 12:13:13 EDT 2015
+Copyright (c) 1996-2010 Carnegie Mellon University and Alexander I. Rudnicky
+
+The model is in standard ARPA format, designed by Doug Paul while he was at MITRE.
+
+The code that was used to produce this language model is available in Open Source.
+Please visit http://www.speech.cs.cmu.edu/tools/ for more information
+
+The (fixed) discount mass is 0.5. The backoffs are computed using the ratio method.
+This model based on a corpus of 6 sentences and 10 words
+
+\data\
+ngram 1=10
+ngram 2=14
+ngram 3=13
+
+\1-grams:
+-0.9542 </s> -0.3010
+-0.9542 <s> -0.2499
+-1.4314 ALPHA -0.2499
+-1.4314 BETA -0.2499
+-1.7324 CANCEL -0.2499
+-1.2553 GO -0.2762
+-1.7324 HOME -0.2499
+-1.4314 MARK -0.2676
+-1.4314 SET -0.2846
+-1.4314 TO -0.2676
+
+\2-grams:
+-1.0792 <s> CANCEL 0.0000
+-0.6021 <s> GO 0.0000
+-0.7782 <s> SET 0.0000
+-0.3010 ALPHA </s> -0.3010
+-0.3010 BETA </s> -0.3010
+-0.3010 CANCEL </s> -0.3010
+-0.7782 GO HOME 0.0000
+-0.4771 GO TO 0.0000
+-0.3010 HOME </s> -0.3010
+-0.6021 MARK ALPHA 0.0000
+-0.6021 MARK BETA 0.0000
+-0.3010 SET MARK 0.0000
+-0.6021 TO ALPHA 0.0000
+-0.6021 TO BETA 0.0000
+
+\3-grams:
+-0.3010 <s> CANCEL </s>
+-0.7782 <s> GO HOME
+-0.4771 <s> GO TO
+-0.3010 <s> SET MARK
+-0.3010 GO HOME </s>
+-0.6021 GO TO ALPHA
+-0.6021 GO TO BETA
+-0.3010 MARK ALPHA </s>
+-0.3010 MARK BETA </s>
+-0.6021 SET MARK ALPHA
+-0.6021 SET MARK BETA
+-0.3010 TO ALPHA </s>
+-0.3010 TO BETA </s>
+
+\end\

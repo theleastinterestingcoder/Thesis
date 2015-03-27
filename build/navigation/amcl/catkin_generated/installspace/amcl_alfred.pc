@@ -1,0 +1,8 @@
+prefix=/home/alfred/quan_ws/install
+
+Name: amcl_alfred
+Description: Description of amcl_alfred
+Version: 1.13.0
+Cflags: -I/home/alfred/quan_ws/install/include
+Libs: -L/home/alfred/quan_ws/install/lib -lamcl_sensors -lamcl_map -lamcl_pf
+Requires: roscpp dynamic_reconfigure tf

@@ -1,0 +1,8 @@
+prefix=/home/alfred/quan_ws/devel
+
+Name: dwa_local_planner
+Description: Description of dwa_local_planner
+Version: 1.13.0
+Cflags: -I/home/alfred/quan_ws/devel/include -I/home/alfred/quan_ws/src/navigation/dwa_local_planner/include
+Libs: -L/home/alfred/quan_ws/devel/lib -ldwa_local_planner
+Requires: dynamic_reconfigure pluginlib roscpp

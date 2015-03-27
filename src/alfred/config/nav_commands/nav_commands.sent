@@ -4,3 +4,7 @@
 <s> GO HOME </s>
 <s> SET MARK ALPHA </s>
 <s> SET MARK BETA </s>
+<s> MOVE FOWARD </s>
+<s> TURN LEFT </s>
+<s> TURN RIGHT </s>
+<s> STOP </s>

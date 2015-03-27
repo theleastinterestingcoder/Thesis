@@ -524,3 +524,24 @@ Parsed CXX implicit link information from above output:
   implicit fwks: []
 
 
+The target system is: Linux - 3.16.0-30-generic - x86_64
+The host system is: Linux - 3.16.0-31-generic - x86_64
+Determining if the include file FL/Fl.H exists passed with the following output:
+Change Dir: /home/alfred/quan_ws/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec1891366744/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1891366744.dir/build.make CMakeFiles/cmTryCompileExec1891366744.dir/build
+make[1]: Entering directory `/home/alfred/quan_ws/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/alfred/quan_ws/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec1891366744.dir/CheckIncludeFile.cxx.o
+/usr/bin/c++    -Wno-deprecated    -o CMakeFiles/cmTryCompileExec1891366744.dir/CheckIncludeFile.cxx.o -c /home/alfred/quan_ws/build/CMakeFiles/CMakeTmp/CheckIncludeFile.cxx
+Linking CXX executable cmTryCompileExec1891366744
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1891366744.dir/link.txt --verbose=1
+/usr/bin/c++     -Wno-deprecated     CMakeFiles/cmTryCompileExec1891366744.dir/CheckIncludeFile.cxx.o  -o cmTryCompileExec1891366744 -rdynamic 
+make[1]: Leaving directory `/home/alfred/quan_ws/build/CMakeFiles/CMakeTmp'
+
+
+The target system is: Linux - 3.16.0-30-generic - x86_64
+The host system is: Linux - 3.16.0-31-generic - x86_64
+The target system is: Linux - 3.16.0-30-generic - x86_64
+The host system is: Linux - 3.16.0-31-generic - x86_64

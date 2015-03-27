@@ -20,6 +20,7 @@ from math import copysign
 from nav_goal_manager import nav_goal_manager
 from face_recognition_spawner import face_recognition_spawner
 from kobuki_sound_manager import kobuki_sound_manager
+from simple_nav_commander import simple_nav_commander
 
 import os, subprocess, time, signal
 
@@ -43,18 +44,10 @@ class voice_cmd:
         rospy.Subscriber('/recognizer/output', String, self.speechCb)
         
         # A mapping from keywords to commands.
-        self.keywords_to_command = { 'cancel' : 'cancel', 
-                                     'go to alpha': 'go to alpha',
-                                     'go to beta' : 'go to beta',
-                                     'go home' : 'go home', 
-                                     'set mark alpha' : 'set mark alpha',
-                                     'set mark beta' : 'set mark beta',
-                                     }
-#                                      'move foward' : 'move foward',
-#                                      'turn left' : 'turn left',
-#                                      'turn right' : 'turn right',
-#                                      'stop' : 'stop',
-#                                     }
+        self.keywords = {'ngm' : ['go to alpha', 'go to beta', 'go home', 'abort goals'], 
+                         'rvc' : ['move foward', 'move right', 'turn left', 'turn right', 'stop', 'stop broadcast', 'start broadcast'],
+                         'aux' : ['cancel', 'set mark alpha', 'set mark beta']}
+
         # Get copies of default locations of alpha and beta
         self.loc = voice_cmd.loc
 
@@ -62,10 +55,10 @@ class voice_cmd:
         self.ngm = nav_goal_manager()
         self.fds = face_recognition_spawner()
         self.ksm = kobuki_sound_manager()
-#         self.snc = subprocess.Popen("rosrun alfred simple_nav_commander.py", stdout=subprocess.PIPE, preexec_fn=os.setsid, shell=True)
+#         self.rvc = subprocess.Popen("rosrun alfred simple_nav_commander.py", stdout=subprocess.PIPE, preexec_fn=os.setsid, shell=True)
         
-        # Setup a publisher for simple navigation commander
-#         self.snc_pub = rospy.Publisher('/alfred/simple_nav_commander/', String, queue_size=1)
+        # Setup a publisher for simple navigation commander (note: raw_vel_cmd.py must be running)
+        self.rvc_pub = rospy.Publisher('/alfred/simple_nav_commander/', String, queue_size=1)
 
         # Some other stuff
         rospy.loginfo("Ready to receive voice commands")
@@ -75,14 +68,11 @@ class voice_cmd:
 
     def get_command(self, data):
         # Convert a string into a command
-        ans =  self.keywords_to_command.get(data)
-        if not ans:
-            rospy.loginfo('Warning: command not recognized "%s"' % data)
-        return ans
-#         for (command, keywords) in self.keywords_to_command.iteritems():
-#             for word in keywords:
-#                 if data.find(word) > -1:
-#                     return command
+        for module, commands in self.keywords:
+            if data in commands:
+                return data
+        rospy.loginfo('Warning: command not recognized "%s"' % data)
+        return None
         
     def speechCb(self, msg):        
         # Triggers on messages to /recognizer/output
@@ -107,7 +97,14 @@ class voice_cmd:
 #         done_cb = cb_func(**{'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})
 #         done_cb = cb_func(**{'cb_f': self.look_for_face, 'name' : ['Quan'], 'duration' : 10})
 #         return_cb = cb_func(**{'cb_f': self.go_to_location}, *self.loc['alpha']}) 
+        
+        # For managing which module gets to send messages
+        if command in self.keywords['ngm']:
+            self.rvc_pub.publish('stop broadcast')
+        elif command in self.keywords['rvc']:
+            self.ngm.cancel_all_goals()
 
+        # Symbol -> Semantics
         if command == 'cancel':
             self.ngm.cancel_all_goals()
         elif command == 'go to alpha':
@@ -120,17 +117,16 @@ class voice_cmd:
             self.loc['alpha'] = self.ngm.get_current_position()
         elif command == 'set mark beta':
             self.loc['beta'] = self.ngm.get_current_position()
-#         elif command == 'move foward':
-#             self.snc_pub.publish('move foward')
-#         elif command == 'move backward':
-#             self.snc_pub.publish('move backward')
-#         elif command == 'turn left' : 
-#             self.snc_pub.publish('turn left')
-#         elif command == 'turn right':
-#             self.snc_pub.publish('turn right')
-#         elif command == 'stop':
-#             self.snc_pub.publish('stop')
-
+        elif command == 'move foward':
+            self.rvc_pub.publish('move foward')
+        elif command == 'move backward':
+            self.rvc_pub.publish('move backward')
+        elif command == 'turn left' : 
+            self.rvc_pub.publish('turn left')
+        elif command == 'turn right':
+            self.rvc_pub.publish('turn right')
+        elif command == 'stop':
+            self.rvc_pub.publish('stop')
         return
         
             
@@ -140,10 +136,10 @@ class voice_cmd:
     def cleanup(self):
         # When shutting down be sure to stop the robot! 
         self.ngm.cancel_all_goals()
-#         try:
-#             os.killpg(self.snc, signal.SIGTERM)
-#         except:
-#             rospy.loginfo('Error, Could not kill simple_nav_commander for some reason')
+        try:
+            os.killpg(self.rvc, signal.SIGTERM)
+        except:
+            rospy.loginfo('Error, Could not kill simple_nav_commander for some reason')
   
 
           
