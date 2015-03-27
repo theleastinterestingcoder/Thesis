@@ -20,7 +20,7 @@ class raw_vel_commander:
         rospy.on_shutdown(self.cleanup)
         self.max_speed = rospy.get_param("~max_speed", 0.6)
         self.max_angular_speed = rospy.get_param("~max_angular_speed", 1.5)
-        self.speed = rospy.get_param("~start_speed", 0.3)
+        self.speed = rospy.get_param("~start_speed", 0.15)
         self.angular_speed = rospy.get_param("~start_angular_speed", 0.5)
         self.linear_increment = rospy.get_param("~linear_increment", 0.05)
         self.angular_increment = rospy.get_param("~angular_increment", 0.4)
@@ -37,7 +37,7 @@ class raw_vel_commander:
         self.cmd_vel_pub = rospy.Publisher('/navigation_velocity_smoother/raw_cmd_vel', Twist, queue_size=1)
 
         # Subscribe to the command _velocity command
-        self.cmd_sub  = rospy.Subscriber('/alfred/raw_cmd_comander/', String, self.handle_commands)
+        self.cmd_sub  = rospy.Subscriber('/alfred/raw_vel_commander/', String, self.handle_commands)
 
         self.cmd_map = {'move foward': self.move_foward,
                         'move backward' : self.move_backward,

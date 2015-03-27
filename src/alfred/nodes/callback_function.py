@@ -9,11 +9,9 @@
 
 import pdb
 import rospy
-from nav_goal_manager import nav_goal_manager as ngm
+import actionlib
 
 class cb_func:
-    action_lib_func = [ngm.go_to_location, ngm.go_to_goal]
-
     # First strip special arguments, then deliver rest as payload
     def __init__(self, *args, **kwargs):
         self.function = kwargs.pop('function')
@@ -26,11 +24,14 @@ class cb_func:
     
     # Call the function, and then depending on the results, call the successor function
     def call_back(self, *args, **kwargs):
+        if args and args[0] == 3:
+            ans =  self.function(*self.p_args, **self.p_kwargs)
+        else:
+            return False
 
-        ans =  self.function(*self.p_args, **self.p_kwargs)
         # Special case for server based actions
-        if ans in cb_func.action_lib_func:
-            ans.wait_for_result()
+        if isinstance(ans, actionlib.simple_action_client.SimpleActionClient):
+            pass
         if self.pd_cb:
             return self.pd_cb.call_back()
         elif ans and self.ps_cb:

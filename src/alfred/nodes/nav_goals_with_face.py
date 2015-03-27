@@ -58,7 +58,7 @@ class voice_cmd:
 #         self.rvc = subprocess.Popen("rosrun alfred simple_nav_commander.py", stdout=subprocess.PIPE, preexec_fn=os.setsid, shell=True)
         
         # Setup a publisher for simple navigation commander (note: raw_vel_cmd.py must be running)
-        self.rvc_pub = rospy.Publisher('/alfred/simple_nav_commander/', String, queue_size=1)
+        self.rvc_pub = rospy.Publisher('/alfred/raw_vel_commander/', String, queue_size=1)
 
         # Some other stuff
         rospy.loginfo("Ready to receive voice commands")
@@ -68,7 +68,7 @@ class voice_cmd:
 
     def get_command(self, data):
         # Convert a string into a command
-        for module, commands in self.keywords:
+        for module, commands in self.keywords.iteritems():
             if data in commands:
                 return data
         rospy.loginfo('Warning: command not recognized "%s"' % data)
@@ -80,18 +80,15 @@ class voice_cmd:
         rospy.loginfo("Command: " + str(command))
 
         # Goes to the goal and then beeps
-#         done_cb =   cb_func(function=self.ksm.beep, **{'val': 1, 'done_cb': None})
-        
+        success_cb =   cb_func(function=self.ksm.beep, **{'val': 1, 'done_cb': None})
+        fail_cb =   cb_func(function=self.ksm.beep, **{'val': 2, 'done_cb': None})
+        secondary = cb_func(function=self.ngm.go_to_location, *[2,2] , success_cb = success_cb, fail_cb = fail_cb)
         # An example of chaining (note, has to go backwards b/c of the first needs to reference the next)
-#         finish_cb = cb_func(function=self.ksm.beep, val= 1, done_cb=None)
-#         return_cb = cb_func(function=self.ngm.go_to_location, *self.loc['home'], done_cb=finish_cb)
-#         face_cb   = cb_func(function=self.fds.look_for_face, names=['Quan'], duration=10, done_cb = return_cb)
-#         done_cb   = cb_func(function=self.ksm.beep, val= 1, done_cb=face_cb)
-        fail_cb = cb_func(function=self.ksm.beep, val = 2, done_cb=None)
-        finish_cb = cb_func(function=self.ksm.beep, val= 1, success_cb = None)
-        return_cb = cb_func(function=self.ngm.go_to_location, *self.loc['home'], success_cb = finish_cb)
-        face_cb   = cb_func(function=self.fds.look_for_face, names=['Quan'], duration=10, success_cb = return_cb, fail_cb=fail_cb)
-        done_cb = cb_func(function=self.ksm.beep, val=1, success_cb=face_cb)
+#         fail_cb = cb_func(function=self.ksm.beep, val = 2, done_cb=None)
+#         finish_cb = cb_func(function=self.ksm.beep, val= 1, done_cb= None)
+#         return_cb = cb_func(function=self.ngm.go_to_location, *self.loc['home'], success_cb = finish_cb, fail_cb = fail_cb)
+#         face_cb   = cb_func(function=self.fds.look_for_face, names=['Quan'], duration=10, success_cb = return_cb, fail_cb=fail_cb)
+#         done_cb = cb_func(function=self.ksm.beep, val=1, success_cb=face_cb)
 
 #         done_cb = cb_func(**{'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})
 #         done_cb = cb_func(**{'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})
@@ -108,11 +105,11 @@ class voice_cmd:
         if command == 'cancel':
             self.ngm.cancel_all_goals()
         elif command == 'go to alpha':
-            self.ngm.go_to_location(*self.loc['alpha'], done_cb=done_cb)
+            cb_func(function=self.ngm.go_to_location, *self.loc['alpha'], success_db=secondary, fail_db=fail_cb).callback()
         elif command == 'go to beta':
             self.ngm.go_to_location(*self.loc['beta'], done_cb=done_cb)
         elif command == 'go home':
-            self.ngm.go_to_location(*self.loc['home'], done_cb=None)
+            self.ngm.go_to_location(*self.loc['home'], done_cb=return_cb)
         elif command == 'set mark alpha':
             self.loc['alpha'] = self.ngm.get_current_position()
         elif command == 'set mark beta':

@@ -4,6 +4,13 @@
   <node name="nav_goals_with_face" pkg="alfred" type="nav_goals_with_face.py" output="screen">
   </node>
 
-  <node name="raw_vel_cmd" pkg="alfred" type="raw_vel_cmd.py">
+  <node name="raw_vel_cmd" pkg="alfred" type="raw_vel_commander.py">
+    <param name="max_speed" value="0.6"/>
+    <param name= "~max_angular_speed" value="1.5" />
+    <param name= "start_speed" value="0.15" />
+    <param name= "start_angular_speed" value="0.5" />
+    <param name= "linear_increment" value="0.05" />
+    <param name= "angular_increment" value="0.4" />
+    <param name= "rate" value="5"  />
   </node>
 </launch>

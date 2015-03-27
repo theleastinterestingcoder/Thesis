@@ -74,13 +74,10 @@ class nav_goal_manager:
 
         rospy.loginfo('Sending goal with (x,y,z) =[%s, %s, %s]' % (loc_x, loc_y, loc_z))
 
-        # Depending on the callback function, do stuff
-        if done_cb == None:
-            self.sac.send_goal(goal, done_cb=self.done_goal_callback)
-        else:
-            self.sac.send_goal(goal, done_cb=done_cb.call_back)
+        self.sac.send_goal(goal)
+        ans = self.sac.wait_for_result()
 
-        return self.sac
+        return ans
 
     def done_goal_callback(self, a,b):
         rospy.loginfo('At position: (x,y,z,w) =  (%s, %s, %s, %s)' % self.get_current_position())
@@ -122,19 +119,12 @@ def form_goal(x=0, y=0, z=0, w=0):
 
 
 if __name__ == '__main__':
-    import callback_function
+    from callback_function import cb_func
     try:
         rospy.init_node('nav_goal_manager')
         ngm = nav_goal_manager()
         
-        # an example of some callback function
-        def print_greeting(greeting='foo'):                                                                                             
-            print "I think this works! %s" % greeting
-        # Create the callback function and the parameters
-        done_cb = cb_func(**{'function': print_greeting, 'greeting': 'Quan'})
-        
         # When the goal success, call the callback function
-        ngm.go_to_location(3,2,w=0, done_cb=done_cb)
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
