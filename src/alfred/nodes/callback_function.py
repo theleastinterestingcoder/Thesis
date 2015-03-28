@@ -23,21 +23,19 @@ class cb_func:
         self.p_args = args
     
     # Call the function, and then depending on the results, call the successor function
-    def call_back(self, *args, **kwargs):
-        if args and args[0] == 3:
-            ans =  self.function(*self.p_args, **self.p_kwargs)
-        else:
+    def callback(self, *args, **kwargs):
+        ans =  self.function(*self.p_args, **self.p_kwargs)
+        
+        # None is a signal for a Canceled function
+        if ans == None:
             return False
 
-        # Special case for server based actions
-        if isinstance(ans, actionlib.simple_action_client.SimpleActionClient):
-            pass
         if self.pd_cb:
-            return self.pd_cb.call_back()
+            return self.pd_cb.callback()
         elif ans and self.ps_cb:
-            return self.ps_cb.call_back()
+            return self.ps_cb.callback()
         elif self.pf_cb:
-            return self.pf_cb.call_back()
+            return self.pf_cb.callback()
 
     def __repr__(self):
         return "{function: %s\nargs: %s\n kwargs: %s}\n" % (self.function, self.p_args, self.p_kwargs)

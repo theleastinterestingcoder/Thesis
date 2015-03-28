@@ -75,7 +75,6 @@ class face_recognition_spawner:
             person = self.watch_for(names, duration)
             if person:                                                                                                                                
                 rospy.loginfo('%s has been found' % person)
-#                 self.go_to_location(*self.loc['home'])
                 ans = True
             else:
                 rospy.loginfo('waited for %s, but did not find anyone in %s' % (duration, names))
@@ -85,10 +84,6 @@ class face_recognition_spawner:
             self.kill_everything() # Releases the lock
         else:
             rospy.info('Tried to look for face, but Face Detection Service is busy!')
-
-        # If there is chaining, then do it
-        if done_cb and ans:
-            return done_cb.call_back()
         return ans
 
 

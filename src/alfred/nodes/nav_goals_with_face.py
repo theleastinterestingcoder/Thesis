@@ -11,10 +11,11 @@
 
 import roslib; roslib.load_manifest('pi_speech_tutorial')
 import rospy
-import pdb
+import pdb, time
 from geometry_msgs.msg import Twist
 from std_msgs.msg import String
 from math import copysign
+from termcolor import colored
 
 # Some of my own packages
 from nav_goal_manager import nav_goal_manager
@@ -24,8 +25,9 @@ from simple_nav_commander import simple_nav_commander
 
 import os, subprocess, time, signal
 
-# A callback function
+# Import auxiliary functions
 from callback_function import cb_func
+from mission_thread import mission_thread
 
 class voice_cmd:
     loc = {}
@@ -61,6 +63,7 @@ class voice_cmd:
         self.rvc_pub = rospy.Publisher('/alfred/raw_vel_commander/', String, queue_size=1)
 
         # Some other stuff
+        time.sleep(0.1)
         rospy.loginfo("Ready to receive voice commands")
         rospy.on_shutdown(self.cleanup)
 
@@ -95,35 +98,36 @@ class voice_cmd:
 #         done_cb = cb_func(**{'cb_f': self.look_for_face, 'name' : ['Quan'], 'duration' : 10})
 #         return_cb = cb_func(**{'cb_f': self.go_to_location}, *self.loc['alpha']}) 
         
-        # For managing which module gets to send messages
+        # Manages which module gets to send messages to raw_vel_cmd 
         if command in self.keywords['ngm']:
             self.rvc_pub.publish('stop broadcast')
         elif command in self.keywords['rvc']:
             self.ngm.cancel_all_goals()
-
-        # Symbol -> Semantics
-        if command == 'cancel':
+        # Symbol -> Semantics; Syntax is almost a little bit too expresive, but understandable
+        #   once you pick it apart
+        if command == 'cancel' or command == 'abort goals':
             self.ngm.cancel_all_goals()
+            self.rvc_pub.publish('stop')
         elif command == 'go to alpha':
-            cb_func(function=self.ngm.go_to_location, *self.loc['alpha'], success_db=secondary, fail_db=fail_cb).callback()
+            mission_f = cb_func(function=self.ngm.go_to_location, *self.loc['alpha'], success_cb=success_cb, fail_cb=fail_cb)
         elif command == 'go to beta':
-            self.ngm.go_to_location(*self.loc['beta'], done_cb=done_cb)
+            mission_f = cb_func(function=self.ngm.go_to_location, *self.loc['beta'], success_cb=success_cb, fail_cb=fail_cb)
         elif command == 'go home':
-            self.ngm.go_to_location(*self.loc['home'], done_cb=return_cb)
+            mission_f = cb_func(function=self.ngm.go_to_location, *self.loc['home'], success_cb=success_cb, fail_cb=fail_cb)
         elif command == 'set mark alpha':
             self.loc['alpha'] = self.ngm.get_current_position()
         elif command == 'set mark beta':
             self.loc['beta'] = self.ngm.get_current_position()
-        elif command == 'move foward':
-            self.rvc_pub.publish('move foward')
-        elif command == 'move backward':
-            self.rvc_pub.publish('move backward')
-        elif command == 'turn left' : 
-            self.rvc_pub.publish('turn left')
-        elif command == 'turn right':
-            self.rvc_pub.publish('turn right')
-        elif command == 'stop':
-            self.rvc_pub.publish('stop')
+        elif command in self.keywords['rvc']:
+            self.rvc_pub.publish(command)
+        
+        # If a mission has been formed, then execute the thread
+        if 'mission_f' in locals():
+            mission_t = mission_thread(name=command, cb = mission_f) 
+            mission_t.start()
+
+        print colored('>', 'green'),
+
         return
         
             

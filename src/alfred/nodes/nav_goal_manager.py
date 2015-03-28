@@ -75,12 +75,21 @@ class nav_goal_manager:
         rospy.loginfo('Sending goal with (x,y,z) =[%s, %s, %s]' % (loc_x, loc_y, loc_z))
 
         self.sac.send_goal(goal)
-        ans = self.sac.wait_for_result()
-
-        return ans
+        self.sac.wait_for_result()
+        ans = self.sac.get_state()
+        
+        if ans == 3:
+            rospy.loginfo('Goal Success: reached goal at location [%s, %s, %s]' % self.get_current_position())
+            return True
+        elif ans == 2:
+            rospy.loginfo('Goal Cancel: goal to location [%s, %s, %s] was canceled' % self.get_current_position())
+            return None
+        else:
+            rospy.loginfo('Goal Failure: Unable to reach goal [%s, %s, %s]' % (loc_x, loc_y, loc_z))
+            return False
 
     def done_goal_callback(self, a,b):
-        rospy.loginfo('At position: (x,y,z,w) =  (%s, %s, %s, %s)' % self.get_current_position())
+        rospy.loginfo('At position: (x,y,z,w) =  (%s, %s, %s)' % self.get_current_position())
 
     def get_current_position(self):
         # Returns [x, y, w], where (x,y) are locations and w is the yaw
@@ -91,7 +100,7 @@ class nav_goal_manager:
         self.tfl.waitForTransform(map_f, base_f, now, rospy.Duration(4.0))
         (pos,quat) = self.tfl.lookupTransform(map_f, base_f, now)
         euler = transformations.euler_from_quaternion(quat)
-        return (pos[0], pos[1], pos[2], euler[2])
+        return (pos[0], pos[1], euler[2])
 
     def cancel_all_goals(self):
         self.sac.cancel_all_goals()

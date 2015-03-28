@@ -19,8 +19,6 @@ class kobuki_sound_manager:
         m.value = val
         self.pub.publish(m)
 
-        if done_cb:
-            return done_cb.call_back()
         return True
 
 if __name__=='__main__':
