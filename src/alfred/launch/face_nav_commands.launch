@@ -1,7 +1,7 @@
 <!-- simple_nav_commands.launch is for navigating with goals -->
 <launch>
   <!-- Node for decoding speech into commands -->
-  <node name="nav_goals_with_face" pkg="alfred" type="nav_goals_with_face.py" output="screen">
+  <node name="alfred" pkg="alfred" type="alfred.py" output="screen">
   </node>
 
   <node name="raw_vel_cmd" pkg="alfred" type="raw_vel_commander.py">

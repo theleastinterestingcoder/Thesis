@@ -3,7 +3,10 @@
 
     written by Quan Zhou on 3/19/15
 
-    Contains a set of wrapper functions for sound
+    Contains a set of wrapper functions for sound. 
+
+    Sound cannot be canceled by 'cancel' to /alfred/command, since
+    this should not be interruptable
 '''
 import rospy
 from kobuki_msgs import msg

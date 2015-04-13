@@ -24,24 +24,26 @@ class face_recognition_spawner:
         if not rospy.core.is_initialized():
             rospy.init_node("Face_Detection_Package_Manager")
             rospy.loginfo("Created node")
-            
+
+        # Set core parameters, functions, and subscriptions 
         self.is_busy = False
-        # launch everything as needed
+        self.face_recorded = False
+
         rospy.on_shutdown(self.cleanup)
+        rospy.Subscriber('/alfred/mission_control', String, self.handle_mission_control)
     
-    # start all the processes
+    # Initialize all the nodes required for core processes
     def init_nodes(self):
         if not self.is_busy:
             self.gscam = self.launch_gscam()
             self.fclient = self.launch_fclient()
             self.fquan = self.launch_fquan()
-#             self.response = self.launch_response()
             self.is_busy=True
         else:
             rospy.info('face_detection_spawner tried to initialize nodes but was locked! [failed]')
     
-    # pause and see if we can see a list of people 
-    def watch_for(self, names, duration):
+    # Blocks this function until we see a name of a person
+    def spin_and_monitor(self, names, duration):
         # everytime you see a face, add it to the queue
         fq = self.face_queue()
         sub = rospy.Subscriber('recognized_face', String, fq.add)
@@ -53,6 +55,11 @@ class face_recognition_spawner:
 
         # at every tick, pull items off the queue and examine it
         while (rospy.Time.now() - start).to_sec() < duration:
+            # Check for interrupt flag
+            if self.is_interrupted:
+                self.is_interrupted = False
+                return None
+
             while len(fq.queue) > 0:
                 item = fq.queue[0]
                 if item[0] in names:
@@ -60,11 +67,12 @@ class face_recognition_spawner:
                     return item[0]
                 else:
                     del fq.queue[0]
+            rate.sleep()
         # nothing has been found in the time duration      
         sub.unregister() 
-        return None
+        return False
 
-     # Look for a face and then do an action depending on sucess or failure
+    # Primitive Action: a wrapped version of spin and monitor that has the properties of a primitive action
     def look_for_face(self, names = ['Quan'], duration=10, done_cb=None):
         # Allow only face recognition function to be working at a time
         if not self.is_busy:
@@ -72,20 +80,61 @@ class face_recognition_spawner:
             self.start_pub()
          
             # Check if a face has been seen
-            person = self.watch_for(names, duration)
+            person = self.spin_and_monitor(names, duration)
             if person:                                                                                                                                
-                rospy.loginfo('%s has been found' % person)
-                ans = True
+                rospy.loginfo('FRS: %s has been found' % person)
+                ans = person
+            elif ans == False:
+                rospy.loginfo('FRS: waited for %s, but did not find anyone in %s' % (duration, names))
+                ans = ""
             else:
-                rospy.loginfo('waited for %s, but did not find anyone in %s' % (duration, names))
-                ans = False
+                rospy.loginfo('FRS: look_for_face was canceled')
+                ans = None
+
 
             self.stop_pub()
-            self.kill_everything() # Releases the lock
+            self.kill_nodes() # Releases the lock
         else:
             rospy.info('Tried to look for face, but Face Detection Service is busy!')
         return ans
+    
+    # Primitive Action: Trains a face upon the message 'go'
+    def train_face(self, name):
+        # Start the face recognition
+        if not self.is_busy:
+            self.init_nodes() 
+            self.start_pub()
+            
+            # Start face recognition upon hearing the command 'start'
+            sub = rospy.Subscriber('/recognizer/output', String, self.recognizer_cb)
+            rospy.loginfo('FRS: Ready to record face. Please say "start" to start training your face')
 
+            self.training_flag = False
+            # Block until recognizer_cb sets the training flag to be true. Also checks the interrupt flag. 
+            while (self.training_flag is not True):
+                # Check for interrupts
+                if self.is_interrupted:
+                    self.is_interrupted = False
+                    self.stop_pub()
+                    self.unregister()
+                    self.kill_nodes()
+                    return None
+                rospy.sleep(0.1)
+            
+            # Train and block for the duration of the trianing (can't be interrupted)
+            subprocess.call("rostopic pub -1 /fr_order face_recognition/FRClientGoal -- 4 \"none\"", shell=True )
+            rospy.sleep(2.5)
+
+            self.stop_pub()
+            self.kill_nodes()
+            sub.unregister()
+            rospy.loginfo('FRS: Done recording face.')
+            return True
+
+    # Call back function 
+    def recognizer_cb(self, data):
+        if data.data == 'start':
+            self.training_flag = True
 
     # get the camera up and running
     def launch_gscam(self):
@@ -134,7 +183,7 @@ class face_recognition_spawner:
 
 
     # stop all the processes
-    def kill_everything(self):
+    def kill_nodes(self):
         if self.is_busy:
             rospy.loginfo('Shutting down gscam, fclient, fquan, and response')
             os.killpg(self.gscam.pid, signal.SIGTERM)  
@@ -143,13 +192,21 @@ class face_recognition_spawner:
 #             os.killpg(self.response.pid, signal.SIGTERM)  
             self.is_busy=False
         else:
-            rospy.loginfo("face_detection_spawner tried to kill nodes that were already dead")
+            rospy.loginfo("FRS: face_detection_spawner tried to kill nodes that were already dead")
 
-    # get the face recognition client up and running
+    # Cleanup
     def cleanup(self):
-        # when shutting down be sure to stop the robot! 
-        self.kill_everything()
-    
+        self.kill_nodes()
+        self.is_interrupted = False
+        self.face_recorded = False
+
+
+    # For canceling the thread
+    def handle_mission_control(self, data):
+        if data.data == 'cancel':
+            self.is_interrupted = True
+
+
     # ---- data structure for remembering faces-----
     class face_queue():
         def __init__(self):
@@ -165,13 +222,13 @@ if __name__=="__main__":
     frs.init_nodes() # launches all the necessary processes
     frs.start_pub()  # starts scanning for faces by publishing to fr_order -- 1 "none"
 
-    if frs.watch_for(['Quan'], 10):
+    if frs.spin_and_monitor(['Quan'], 10):
         rospy.loginfo('Quan Found')
     else:
         rospy.loginfo('Quan Not found in 10 seconds')
 
     frs.stop_pub()
-    frs.kill_everything() # 
+    frs.kill_nodes() # 
 # if __name__== "__main__":
 #     frs = face_recognition_spawner()
 #     frs.launch_gscam()

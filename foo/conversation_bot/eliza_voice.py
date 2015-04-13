@@ -26,15 +26,20 @@ def initiate_doctor():
     r.energy_threshold = 4000 # quiet room, medium distance, normal volume
 
     query = ''
-    while query != 'I am satisfied with my care':
+    while True:
         # Record and get response
         query = mic_to_text(r, verbose=True)
-        if query == "": continue
-
-        resp  = therapist.respond(query)
+        if query == "": 
+            continue
 
         # Displayh results
         print colored("you said> %s" % (query), 'red')
+        
+        # Check if patient is satisifed 
+        if query.lower() in ['i am satisfied with my care', "i'm satisfied with my care", "satisifed with my care"]:
+            break
+        resp  = therapist.respond(query)
+
         time.sleep(1)    
         print colored("eliza responded> %s" % (resp), 'green')
         print colored(">", "red"),

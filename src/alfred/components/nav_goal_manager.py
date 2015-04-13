@@ -18,8 +18,8 @@ from move_base_msgs.msg import *
 from tf import transformations, TransformListener
 from termcolor import colored
 
-# For extended callback functions
-
+# For mission control
+from std_msgs.msg import String
 
 # Create a node and manages goals
 class nav_goal_manager:
@@ -32,8 +32,9 @@ class nav_goal_manager:
         self.marks = []                           # User defined locations
         self.tfl = TransformListener()
 
-        self.cbf = {}                             # Dictionary of Callback Functions
-        self.cba = {}                             # Dictionary of Callback Parameters
+        rospy.Subscriber('/alfred/mission_control', String, self.handle_mission_control)
+        self.active_goal = None
+
 
     def add_mark(self, x=0, y=0, z=0, w=0):
         # Addes a mark to user defined coordinates
@@ -73,10 +74,14 @@ class nav_goal_manager:
         loc_z = goal.target_pose.pose.position.z
 
         rospy.loginfo('Sending goal with (x,y,z) =[%s, %s, %s]' % (loc_x, loc_y, loc_z))
-
+        
+        # Issue a command with ROS's SimpleActionClient
         self.sac.send_goal(goal)
-        self.sac.wait_for_result()
+        self.active_goal = goal
+        self.sac.wait_for_result() # Spin here
+        self.active_goal = None
         ans = self.sac.get_state()
+        
         
         if ans == 3:
             rospy.loginfo('Goal Success: reached goal at location [%s, %s, %s]' % self.get_current_position())
@@ -104,7 +109,15 @@ class nav_goal_manager:
 
     def cancel_all_goals(self):
         self.sac.cancel_all_goals()
+    
+    # Cancels goals
+    def handle_mission_control(self, data):
+        command = data.data
+        rospy.loginfo('nav_goal_manager: /alfred/mission_control issued %s' % command)
 
+        # Map command to action
+        if command in ['cancel']:
+            self.sac.cancel_all_goals()
 
 def form_goal(x=0, y=0, z=0, w=0):
     # Create a goal and return it

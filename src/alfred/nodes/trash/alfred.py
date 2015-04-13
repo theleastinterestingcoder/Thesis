@@ -8,34 +8,36 @@
    Sends navigation goals based on key words. When it reaches goal, face recognition software
      is launched. 
 """
+# Some standard imports
+import os, sys, subprocess, signal, time, pdb
 
-import roslib; roslib.load_manifest('pi_speech_tutorial')
+# ROS imports
 import rospy
-import pdb, time
 from geometry_msgs.msg import Twist
 from std_msgs.msg import String
-from math import copysign
+
+# For colorful output
 from termcolor import colored
 
 # Some of my own packages
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "components"))
 from nav_goal_manager import nav_goal_manager
 from face_recognition_spawner import face_recognition_spawner
 from kobuki_sound_manager import kobuki_sound_manager
-from simple_nav_commander import simple_nav_commander
-
-import os, subprocess, time, signal
+from raw_vel_commander import raw_vel_commander
 
 # Import auxiliary functions
 from callback_function import cb_func
 from mission_thread import mission_thread
 
-class voice_cmd:
+
+class alfred:
     loc = {}
     loc['alpha'] = [3, 2, 0]
     loc['beta']  = [4, 4, 0]
     loc['home']  = [1.178, -0.43365, 0.010]
 
-    def __init__(self, name = 'voice_cmd'):
+    def __init__(self, name = 'alfred'):
         # Initialize this node if it has not been initialized already
         if not rospy.core.is_initialized():
             rospy.init_node(name)
@@ -48,19 +50,24 @@ class voice_cmd:
         # A mapping from keywords to commands.
         self.keywords = {'ngm' : ['go to alpha', 'go to beta', 'go home', 'abort goals'], 
                          'rvc' : ['move foward', 'move right', 'turn left', 'turn right', 'stop', 'stop broadcast', 'start broadcast'],
-                         'aux' : ['cancel', 'set mark alpha', 'set mark beta']}
+                         'aux' : ['cancel', 'set mark alpha', 'set mark beta', 'pause speech', 'continue speech'],
+                         'frs' : ['start face recognition', 'stop face recognition'],
+                         'eliza' : ['start psychotherapist']}
 
         # Get copies of default locations of alpha and beta
-        self.loc = voice_cmd.loc
+        self.loc = alfred.loc
 
         # Core processes
         self.ngm = nav_goal_manager()
         self.fds = face_recognition_spawner()
         self.ksm = kobuki_sound_manager()
-#         self.rvc = subprocess.Popen("rosrun alfred simple_nav_commander.py", stdout=subprocess.PIPE, preexec_fn=os.setsid, shell=True)
         
         # Setup a publisher for simple navigation commander (note: raw_vel_cmd.py must be running)
         self.rvc_pub = rospy.Publisher('/alfred/raw_vel_commander/', String, queue_size=1)
+
+        # Setup the resouces for missions
+        self.missions = []   # A list of threads
+        self.resources = {}  # A dictionary of arguments
 
         # Some other stuff
         time.sleep(0.1)
@@ -83,15 +90,16 @@ class voice_cmd:
         rospy.loginfo("Command: " + str(command))
 
         # Goes to the goal and then beeps
-        success_cb =   cb_func(function=self.ksm.beep, **{'val': 1, 'done_cb': None})
-        fail_cb =   cb_func(function=self.ksm.beep, **{'val': 2, 'done_cb': None})
-        secondary = cb_func(function=self.ngm.go_to_location, *[2,2] , success_cb = success_cb, fail_cb = fail_cb)
+#         success_cb =   cb_func(function=self.ksm.beep, **{'val': 1, 'done_cb': None})
+#         fail_cb =   cb_func(function=self.ksm.beep, **{'val': 2, 'done_cb': None})
+#         secondary = cb_func(function=self.ngm.go_to_location, *[2,2] , success_cb = success_cb, fail_cb = fail_cb)
+
         # An example of chaining (note, has to go backwards b/c of the first needs to reference the next)
-#         fail_cb = cb_func(function=self.ksm.beep, val = 2, done_cb=None)
-#         finish_cb = cb_func(function=self.ksm.beep, val= 1, done_cb= None)
-#         return_cb = cb_func(function=self.ngm.go_to_location, *self.loc['home'], success_cb = finish_cb, fail_cb = fail_cb)
-#         face_cb   = cb_func(function=self.fds.look_for_face, names=['Quan'], duration=10, success_cb = return_cb, fail_cb=fail_cb)
-#         done_cb = cb_func(function=self.ksm.beep, val=1, success_cb=face_cb)
+        fail_cb = cb_func(function=self.ksm.beep, val = 2, done_cb=None)
+        finish_cb = cb_func(function=self.ksm.beep, val= 1, done_cb= None)
+        return_cb = cb_func(function=self.ngm.go_to_location, *self.loc['home'], success_cb = finish_cb, fail_cb = fail_cb)
+        face_cb   = cb_func(function=self.fds.look_for_face, names=['Quan'], duration=10, success_cb = return_cb, fail_cb=fail_cb)
+        success_cb = cb_func(function=self.ksm.beep, val=1, success_cb=face_cb)
 
 #         done_cb = cb_func(**{'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})
 #         done_cb = cb_func(**{'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})
@@ -124,7 +132,11 @@ class voice_cmd:
         # If a mission has been formed, then execute the thread
         if 'mission_f' in locals():
             mission_t = mission_thread(name=command, cb = mission_f) 
+            self.missions.append(mission_t)
+            
             mission_t.start()
+
+
 
         print colored('>', 'green'),
 
@@ -140,12 +152,12 @@ class voice_cmd:
         try:
             os.killpg(self.rvc, signal.SIGTERM)
         except:
-            rospy.loginfo('Error, Could not kill simple_nav_commander for some reason')
+            rospy.loginfo('Error, Could not kill raw_vel_commander for some reason')
   
 
           
 
 if __name__=="__main__":
-    voice_cmd()
+    alfred()
     
 
