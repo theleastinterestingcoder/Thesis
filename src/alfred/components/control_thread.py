@@ -3,17 +3,23 @@
 
     written by: Quan Zhou on April 8th, 2015
 
-    Watches and times out a missionprocess 
+    Watches and times out a mission_thread. Takes two parameters:
+    - a mission_thread to watch
+    - A timeout:
+        'time': time in seconds (int)
+        'mission': 
+            'name': String
+            'start_node' : 
 '''
-import time, multiprocessing
+import time, threading
 import rospy
 
-class control_process():
+class control_process(threading.Thread):
     mission_manager = None
     
-    def __init__(self, mission_process, timeout):
-        self.process = multiprocessing.Process(target=cb.callback) 
-        self.mission_process = mission_process
+    def __init__(self, mission_thread, timeout):
+        threading.Thread.__init__(self) 
+        self.mission_thread = mission_thread
         self.timeout = timeout
     
 
@@ -23,10 +29,10 @@ class control_process():
         time.sleep(timeout['time'])
     
         # Kill mission process if it is still running
-        if mission_process.is_alive():
-            self.mission_process.stop()
+        if mission_thread.is_alive():
+            self.mission_thread.stop()
             self.mission_manager.cleanup()
-            rospy.loginfo('mission "%s" has been timed out (%s s)' % (self.mission_process.name, timeout['time']))
+            rospy.loginfo('mission "%s" has been timed out (%s s)' % (self.mission_thread.name, timeout['time']))
         else:
             return None
 

@@ -5,21 +5,26 @@
 
     Mission manager contains a list of mission_queue and executes them one by one. 
     
+    Constructor takes:
+    - core_module as the input
+
     Missions contain:
-        - a chained callback function
-        - an optional timeout for the callback function
+        - a start node
+        - an optional timeout for the execute function
+
+    IMPORTANT: Mission manager needs the core module to call core_module.cleanup()
 
 '''
 import rospy
 
 from mission_thread import mission_thread, mp_set_mission_manager
-from control_process import control_process, cp_set_mission_manager
+from control_thread import control_thread, cp_set_mission_manager
 
 class mission_manager():
     def __init__(self, core_module):
         # Instance Variables
         self.mission_thread = None  # executes the mission 
-        self.control_process = None  # contains timers
+        self.control_thread = None  # contains timers
         self.core_module = core_module
         
         # Assign this mission manager to fields of the followign classes
@@ -29,11 +34,9 @@ class mission_manager():
         # List of (mission_t, timeout) tuples
         self.mission_queue =[]           
 
-        # A pubisher to mission_control
-
-   # Handle requests from the core module
-    def handle_request(self, name, cb, timeout=None, do_now=False): 
-       mission_t = mission_thread(name, cb)
+   # Handle requests from the core module. This function is exposed ot the core_module
+    def handle_request(self, name, start_node, timeout=None, do_now=False): 
+       mission_t = mission_thread(name, start_node)
        # Drop everything and do this mission
        if do_now or not self.mission_queue:
            self.mission_queue.insert(0, (mission_t, timeout))
@@ -44,24 +47,22 @@ class mission_manager():
 
     # start the mission on the queue
     def execute_next_mission(self, forced=False):
-        # Do not execute mission_queue on empty queue or active queue
+        # Do not execute mission_queue on empty queue or if there is an active mission
         if not self.mission_queue:
             return None
-        # Avoid executing more than one mission at a time
         if not forced and self.mission_thread and self.mission_thread.is_active():
             return None
        
        #Execute the mission
-#         self.cleanup()
+        self.cleanup()
         mission_t, timeout = self.mission_queue.pop(0)
         self.mission_thread = mission_t
         self.mission_thread.start()
         
-
         # If there is a timeout, then wait 
         if timeout and timeout['time'] > 0:
-            self.control_process = control_process(mission_t, timeout)
-            self.control_process.start()
+            self.control_thread = control_thread(mission_t, timeout)
+            self.control_thread.start()
 
         return True
    
@@ -76,22 +77,18 @@ class mission_manager():
     def stop(self):
         if self.mission_thread:
             self.mission_thread.stop()
-        if self.control_process:
-            self.control_process.stop()
+        if self.control_thread:
+            self.control_thread.stop()
             
     def is_active(self):
         return self.mission_thread.is_alive()
-
-    def pause(self):
-        self.mission_thread.join()
-        self.control_process.join()
 
     # Clear resources (be careful of infinite loop here)
     def cleanup(self):
         self.stop()
         self.core_module.cleanup()
         self.mission_thread = None
-        self.control_process = None
+        self.control_thread = None
 
 
 

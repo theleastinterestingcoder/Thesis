@@ -8,16 +8,13 @@
    Sends navigation goals based on key words. When it reaches goal, face recognition software
      is launched. 
 """
-# Some standard imports
+# standard pythonic libraries
 import os, sys, subprocess, signal, time, pdb
 
 # ROS imports
 import rospy
 from geometry_msgs.msg import Twist
 from std_msgs.msg import String
-
-# For colorful output
-from termcolor import colored
 
 # Some of my own packages
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "components"))
@@ -27,10 +24,11 @@ from kobuki_sound_manager import kobuki_sound_manager
 from raw_vel_commander import raw_vel_commander
 
 # Import auxiliary functions
-from callback_function import cb_func
+from mission_node import node
 from mission_manager import mission_manager
 
-import mission_thread
+# For colorful output
+from termcolor import colored
 
 class alfred:
     loc = {}
@@ -42,8 +40,6 @@ class alfred:
         # Initialize this node if it has not been initialized already
         if not rospy.core.is_initialized():
             rospy.init_node(name)
-        # Initialize the Twist message we will publish.
-        self.msg = Twist()
 
         # Subscribe to the /recognizer/output topic to receive voice commands.
         rospy.Subscriber('/recognizer/output', String, self.speechCb)
@@ -57,6 +53,7 @@ class alfred:
 
         # Get copies of default locations of alpha and beta
         self.loc = alfred.loc
+        self.pause_speech = False
 
         # Core processes
         self.ngm = nav_goal_manager()
@@ -67,8 +64,6 @@ class alfred:
         
         # Setup a publisher for simple navigation commander (note: raw_vel_cmd.py must be running)
         self.rvc_pub = rospy.Publisher('/alfred/raw_vel_commander/', String, queue_size=1)
-
-        # Publisher for 
 
         # Setup the resouces for missions
         self.missions = []   # A list of threads
@@ -95,21 +90,21 @@ class alfred:
         rospy.loginfo("Command: " + str(command))
 
         # Goes to the goal and then beeps
-        success_cb =   cb_func(function=self.ksm.beep, **{'val': 1, 'done_cb': None})
-        fail_cb =   cb_func(function=self.ksm.beep, **{'val': 2, 'done_cb': None})
-        secondary = cb_func(function=self.ngm.go_to_location, *[2,2] , success_cb = success_cb, fail_cb = fail_cb)
+        success_cb =   node(function=self.ksm.beep, **{'val': 1, 'done_cb': None})
+        fail_cb =   node(function=self.ksm.beep, **{'val': 2, 'done_cb': None})
+        secondary = node(function=self.ngm.go_to_location, *[2,2] , success_cb = success_cb, fail_cb = fail_cb)
 
         # An example of chaining (note, has to go backwards b/c of the first needs to reference the next)
-#         fail_cb = cb_func(function=self.ksm.beep, val = 2, done_cb=None)
-#         finish_cb = cb_func(function=self.ksm.beep, val= 1, done_cb= None)
-#         return_cb = cb_func(function=self.ngm.go_to_location, *self.loc['home'], success_cb = finish_cb, fail_cb = fail_cb)
-#         face_cb   = cb_func(function=self.fds.look_for_face, names=['Quan'], duration=10, success_cb = return_cb, fail_cb=fail_cb)
-#         success_cb = cb_func(function=self.ksm.beep, val=1, success_cb=face_cb)
+#         fail_cb = node(function=self.ksm.beep, val = 2, done_cb=None)
+#         finish_cb = node(function=self.ksm.beep, val= 1, done_cb= None)
+#         return_cb = node(function=self.ngm.go_to_location, *self.loc['home'], success_cb = finish_cb, fail_cb = fail_cb)
+#         face_cb   = node(function=self.fds.look_for_face, names=['Quan'], duration=10, success_cb = return_cb, fail_cb=fail_cb)
+#         success_cb = node(function=self.ksm.beep, val=1, success_cb=face_cb)
 
-#         done_cb = cb_func(**{'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})
-#         done_cb = cb_func(**{'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})
-#         done_cb = cb_func(**{'cb_f': self.look_for_face, 'name' : ['Quan'], 'duration' : 10})
-#         return_cb = cb_func(**{'cb_f': self.go_to_location}, *self.loc['alpha']}) 
+#         done_cb = node(**{'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})
+#         done_cb = node(**{'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})
+#         done_cb = node(**{'cb_f': self.look_for_face, 'name' : ['Quan'], 'duration' : 10})
+#         return_cb = node(**{'cb_f': self.go_to_location}, *self.loc['alpha']}) 
         
         # Manages which module gets to send messages to raw_vel_cmd 
         if command in self.keywords['ngm']:
@@ -122,11 +117,11 @@ class alfred:
             self.ngm.cancel_all_goals()
             self.rvc_pub.publish('stop')
         elif command == 'go to alpha':
-            mission_f = cb_func(function=self.ngm.go_to_location, *self.loc['alpha'], success_cb=success_cb, fail_cb=fail_cb)
+            mission_f = node(function=self.ngm.go_to_location, *self.loc['alpha'], success_cb=success_cb, fail_cb=fail_cb)
         elif command == 'go to beta':
-            mission_f = cb_func(function=self.ngm.go_to_location, *self.loc['beta'], success_cb=success_cb, fail_cb=fail_cb)
+            mission_f = node(function=self.ngm.go_to_location, *self.loc['beta'], success_cb=success_cb, fail_cb=fail_cb)
         elif command == 'go home':
-            mission_f = cb_func(function=self.ngm.go_to_location, *self.loc['home'], success_cb=success_cb, fail_cb=fail_cb)
+            mission_f = node(function=self.ngm.go_to_location, *self.loc['home'], success_cb=success_cb, fail_cb=fail_cb)
         elif command == 'set mark alpha':
             self.loc['alpha'] = self.ngm.get_current_position()
         elif command == 'set mark beta':
@@ -136,13 +131,12 @@ class alfred:
         
         # If a mission has been formed, then execute the thread
         if 'mission_f' in locals():
-#             self.mission_manager.handle_request(command, mission_f)
-#             self.mission_manager.start()
+            self.mission_manager.handle_request(command, mission_f)
+            self.mission_manager.start()
 
-#             mission_f.callback()
-            mission_thread.mp_set_mission_manager(self.mission_manager)
-            mp = mission_thread.mission_thread(name=command, cb=mission_f)
-            mp.start()
+#             mission_thread.mp_set_mission_manager(self.mission_manager)
+#             mp = mission_thread.mission_thread(name=command, cb=mission_f)
+#             mp.start()
 
 
         print colored('>', 'green'),

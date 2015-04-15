@@ -15,20 +15,21 @@ import threading
 class mission_thread(threading.Thread):
     mission_manager = None
 
-    def __init__(self, name, cb):
+    def __init__(self, name, start_node):
         threading.Thread.__init__(self) 
         self.name = name
-        self.cb = cb
+        self.start_node = start_node
 
         # Publisher to mission control
-        self.pub = rospy.Publisher('/alfred/mission_control/', String, queue_size=1)
-    
+        self.pub = None
     
     # Execute thread. When completed, ask the mission manager to execute the next one
     def run(self):
+        self.pub =  rospy.Publisher('/alfred/mission_control/', String, queue_size=1)
+
         # Execute thread
         rospy.loginfo('Starting thread with ID = %s' % self.name)
-        self.cb.callback()
+        self.start_node.execute()
         rospy.loginfo('Finished thread with ID = %s' % self.name)
         
         # Execute next mission in mission manager's queue
@@ -38,15 +39,13 @@ class mission_thread(threading.Thread):
     # Is this mission_thread alive?
     def is_alive(self):
         return self.thread.is_alive() 
-    
-    def join(self):
-        return self.thread.join()
 
+    # Stop by publishing 'cancel'  
     def stop(self):
         return self.pub.Publish('cancel')
         
     def __repr__(self):
-        return 'name=%s, cb=%s' % (self.name, self.cb)
+        return 'name=%s, start_node=%s' % (self.name, self.start_node)
 
 # Sets the mission manager for all mission_threades
 def mp_set_mission_manager(mm):
