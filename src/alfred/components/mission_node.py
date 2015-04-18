@@ -18,6 +18,7 @@ class node:
     # First strip special arguments, then deliver rest as payload
     def __init__(self, *args, **kwargs):
         self.function = kwargs.pop('function')
+        self.name = kwargs.pop('name')
         self.ps_nd = kwargs.pop('success_nd', None)
         self.pf_nd = kwargs.pop('fail_nd', None)
 
@@ -40,5 +41,5 @@ class node:
             return self.pf_nd.execute()
 
     def __repr__(self):
-        return "{function: %s\nargs: %s\n kwargs: %s}\n" % (self.function, self.p_args, self.p_kwargs)
+        return "Node '%s' with {function: %s\nargs: %s\n kwargs: %s}\n" % (self.name, self.function, self.p_args, self.p_kwargs)
 

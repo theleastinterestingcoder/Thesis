@@ -1,5 +1,5 @@
 '''
-    control_process.py
+    control_thread.py
 
     written by: Quan Zhou on April 8th, 2015
 
@@ -9,42 +9,53 @@
         'time': time in seconds (int)
         'mission': 
             'name': String
-            'start_node' : 
+            'start_node' : node
+            'do_now' : Boolean
 '''
 import time, threading
 import rospy
 
-class control_process(threading.Thread):
+class control_thread(threading.Thread):
     mission_manager = None
     
     def __init__(self, mission_thread, timeout):
         threading.Thread.__init__(self) 
         self.mission_thread = mission_thread
         self.timeout = timeout
+
+        self.is_interrupted = False
     
 
     def run(self):
         # Set the timer
-        rospy.loginfo('Setting timeout with time=%s seconds')
-        time.sleep(timeout['time'])
+        rospy.loginfo('Setting timeout with time=%s seconds' % self.timeout['time'])
+
+        start = rospy.Time.now()
+        
+        # Check for interrupts on the Control Thread
+        while ((rospy.Time.now() - start).to_sec() < self.timeout['time']):
+            if self.is_interrupted:
+                self.is_interrupted = False
+                return None
+            time.sleep(0.1)
+
     
         # Kill mission process if it is still running
-        if mission_thread.is_alive():
-            self.mission_thread.stop()
-            self.mission_manager.cleanup()
-            rospy.loginfo('mission "%s" has been timed out (%s s)' % (self.mission_thread.name, timeout['time']))
+        if self.mission_thread.is_alive():
+            self.mission_manager.reset()
+            rospy.loginfo('mission "%s" has been timed out (%s s)' % (self.mission_thread.name, self.timeout['time']))
         else:
             return None
 
         # Execute next mission
-        if timeout['mission']:
-            control_process.mission_manager.handle_request(*timeout['mission'], do_now=True)
+        if self.timeout['mission']:
+            control_thread.mission_manager.handle_request(**self.timeout['mission'])
 
-    def is_alive(self):
-        return self.process.is_alive()
+    def stop(self):
+        rospy.loginfo('mission_manager.control_thread: timeout %s has been canceled' % self.timeout['mission']['name'])
+        self.is_interrupted = True
 
-    def start(self):
-        return self.process.start()
-# Sets the mission manager for all control_processes
+
+# Sets the mission manager for all control_threades
 def cp_set_mission_manager(mm):
-    control_process.mission_manager = mm
+    control_thread.mission_manager = mm

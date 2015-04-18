@@ -34,7 +34,7 @@ class alfred:
     loc = {}
     loc['alpha'] = [3, 2, 0]
     loc['beta']  = [4, 4, 0]
-    loc['home']  = [1.178, -0.43365, 0.010]
+    loc['home']  = [2.059158, -0.0460, 1.981]
 
     def __init__(self, name = 'alfred'):
         # Initialize this node if it has not been initialized already
@@ -90,16 +90,23 @@ class alfred:
         rospy.loginfo("Command: " + str(command))
 
         # Goes to the goal and then beeps
-        success_cb =   node(function=self.ksm.beep, **{'val': 1, 'done_cb': None})
-        fail_cb =   node(function=self.ksm.beep, **{'val': 2, 'done_cb': None})
-        secondary = node(function=self.ngm.go_to_location, *[2,2] , success_cb = success_cb, fail_cb = fail_cb)
+        success_nd =   node(function=self.ksm.beep, **{'val': 1, 'done_cb': None})
+        fail_nd =   node(function=self.ksm.beep, **{'val': 2, 'done_cb': None})
+        secondary = node(function=self.ngm.go_to_location, *[2,2] , success_nd = success_nd, fail_nd = fail_nd)
+
+        home_nd = node(function=self.ngm.go_to_location, *self.loc['home'], success_nd = success_nd, fail_nd = fail_nd)
+        
+        timeout = {}
+        timeout['time'] = 5
+        timeout['mission'] = {'name': 'timeout go home', 'start_node':home_nd, 'do_now':True}
+
 
         # An example of chaining (note, has to go backwards b/c of the first needs to reference the next)
-#         fail_cb = node(function=self.ksm.beep, val = 2, done_cb=None)
+#         fail_nd = node(function=self.ksm.beep, val = 2, done_cb=None)
 #         finish_cb = node(function=self.ksm.beep, val= 1, done_cb= None)
-#         return_cb = node(function=self.ngm.go_to_location, *self.loc['home'], success_cb = finish_cb, fail_cb = fail_cb)
-#         face_cb   = node(function=self.fds.look_for_face, names=['Quan'], duration=10, success_cb = return_cb, fail_cb=fail_cb)
-#         success_cb = node(function=self.ksm.beep, val=1, success_cb=face_cb)
+#         return_cb = node(function=self.ngm.go_to_location, *self.loc['home'], success_nd = finish_cb, fail_nd = fail_nd)
+#         face_cb   = node(function=self.fds.look_for_face, names=['Quan'], duration=10, success_nd = return_cb, fail_nd=fail_nd)
+#         success_nd = node(function=self.ksm.beep, val=1, success_nd=face_cb)
 
 #         done_cb = node(**{'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})
 #         done_cb = node(**{'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})
@@ -110,28 +117,27 @@ class alfred:
         if command in self.keywords['ngm']:
             self.rvc_pub.publish('stop broadcast')
         elif command in self.keywords['rvc']:
-            self.ngm.cancel_all_goals()
+            self.ngm.cancel_goals()
+
         # Symbol -> Semantics; Syntax is almost a little bit too expresive, but understandable
         #   once you pick it apart
         if command == 'cancel' or command == 'abort goals':
-            self.ngm.cancel_all_goals()
-            self.rvc_pub.publish('stop')
+            self.mission_manager.reset()
         elif command == 'go to alpha':
-            mission_f = node(function=self.ngm.go_to_location, *self.loc['alpha'], success_cb=success_cb, fail_cb=fail_cb)
+            mission_f = node(function=self.ngm.go_to_location, *self.loc['alpha'], success_nd=success_nd, fail_nd=fail_nd)
         elif command == 'go to beta':
-            mission_f = node(function=self.ngm.go_to_location, *self.loc['beta'], success_cb=success_cb, fail_cb=fail_cb)
+            mission_f = node(function=self.ngm.go_to_location, *self.loc['beta'], success_nd=success_nd, fail_nd=fail_nd)
         elif command == 'go home':
-            mission_f = node(function=self.ngm.go_to_location, *self.loc['home'], success_cb=success_cb, fail_cb=fail_cb)
+            mission_f = node(function=self.ngm.go_to_location, *self.loc['home'], success_nd=success_nd, fail_nd=fail_nd)
         elif command == 'set mark alpha':
             self.loc['alpha'] = self.ngm.get_current_position()
         elif command == 'set mark beta':
             self.loc['beta'] = self.ngm.get_current_position()
         elif command in self.keywords['rvc']:
             self.rvc_pub.publish(command)
-        
         # If a mission has been formed, then execute the thread
         if 'mission_f' in locals():
-            self.mission_manager.handle_request(command, mission_f)
+            self.mission_manager.handle_request(command, mission_f, timeout=timeout)
             self.mission_manager.start()
 
 #             mission_thread.mp_set_mission_manager(self.mission_manager)
@@ -149,11 +155,13 @@ class alfred:
        
     def cleanup(self):
         # When shutting down be sure to stop the robot! 
-        self.ngm.cancel_all_goals()
-        try:
-            os.killpg(self.rvc, signal.SIGTERM)
-        except:
-            rospy.loginfo('Error, Could not kill raw_vel_commander for some reason')
+        self.ngm.cancel_goals()
+        self.rvc_pub.publish('stop')
+
+    # Resets the resources available to the robot
+    def reset(self):
+        self.ngm.cancel_goals()
+        self.rvc_pub.publish('stop')
   
 
           

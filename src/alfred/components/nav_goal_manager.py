@@ -13,6 +13,7 @@ import pdb, time
 
 #move_base_msgs
 from move_base_msgs.msg import *
+from geometry_msgs.msg import Quaternion
 
 # Transformations
 from tf import transformations, TransformListener
@@ -61,9 +62,9 @@ class nav_goal_manager:
             self.go_to_location(self.marks[mark_num])
             rospy.loginfo('Sending Goal with mark_num=%s with (x,y,z,w) = %s' % (mark_num, self.marks[mark_num]))
 
-    def go_to_location(self, x=0, y=0, z=0, w=0, done_cb=None):
+    def go_to_location(self, x=0, y=0, w=0, done_cb=None):
         # Wrapper for go_to_goal
-        goal = form_goal(x,y,z,w)
+        goal = form_goal(x,y,w)
         return self.go_to_goal(goal, done_cb=done_cb)
 
     def go_to_goal(self, goal, done_cb=None):
@@ -71,9 +72,9 @@ class nav_goal_manager:
         self.sac.wait_for_server()
         loc_x = goal.target_pose.pose.position.x
         loc_y = goal.target_pose.pose.position.y
-        loc_z = goal.target_pose.pose.position.z
+        loc_w = get_w_from_goal(goal)
 
-        rospy.loginfo('Sending goal with (x,y,z) =[%s, %s, %s]' % (loc_x, loc_y, loc_z))
+        rospy.loginfo('Sending goal with (x,y,w) =[%s, %s, %s]' % (loc_x, loc_y, loc_w))
         
         # Issue a command with ROS's SimpleActionClient
         self.sac.send_goal(goal)
@@ -87,10 +88,10 @@ class nav_goal_manager:
             rospy.loginfo('Goal Success: reached goal at location [%s, %s, %s]' % self.get_current_position())
             return True
         elif ans == 2:
-            rospy.loginfo('Goal Cancel: goal to location [%s, %s, %s] was canceled' % self.get_current_position())
+            rospy.loginfo('Goal Canceled: goal to location [%s, %s, %s] was canceled' % self.get_current_position())
             return None
         else:
-            rospy.loginfo('Goal Failure: Unable to reach goal [%s, %s, %s]' % (loc_x, loc_y, loc_z))
+            rospy.loginfo('Goal Failure: Unable to reach goal [%s, %s, %s]' % (loc_x, loc_y, loc_w))
             return False
 
     def done_goal_callback(self, a,b):
@@ -107,8 +108,13 @@ class nav_goal_manager:
         euler = transformations.euler_from_quaternion(quat)
         return (pos[0], pos[1], euler[2])
 
-    def cancel_all_goals(self):
-        self.sac.cancel_all_goals()
+    def cancel_goals(self, time=None):
+        short_d = rospy.Duration(0.1) # A buffer time
+        rospy.loginfo('NGM: Canceling Goals at time %s' % rospy.Time.now())
+        if not time:
+            self.sac.cancel_goals_at_and_before_time(rospy.Time.now()-short_d)
+        else:
+            self.sac.cancel_goals_at_and_before_time(time-short_d)
     
     # Cancels goals
     def handle_mission_control(self, data):
@@ -117,15 +123,15 @@ class nav_goal_manager:
 
         # Map command to action
         if command in ['cancel']:
-            self.sac.cancel_all_goals()
+            self.cancel_goals()
 
-def form_goal(x=0, y=0, z=0, w=0):
+def form_goal(x=0, y=0, w=0):
     # Create a goal and return it
     goal = MoveBaseGoal()
     
     goal.target_pose.pose.position.x = x
     goal.target_pose.pose.position.y = y
-    goal.target_pose.pose.position.z = z
+    goal.target_pose.pose.position.z = 0
     
     quat = transformations.quaternion_from_euler(0,0,w)
     goal.target_pose.pose.orientation.x = quat[0]
@@ -137,6 +143,15 @@ def form_goal(x=0, y=0, z=0, w=0):
     goal.target_pose.header.stamp = rospy.Time.now()
 
     return goal
+
+def get_w_from_goal(goal):
+    quat = []
+    quat.append(goal.target_pose.pose.orientation.x)
+    quat.append(goal.target_pose.pose.orientation.y)
+    quat.append(goal.target_pose.pose.orientation.z)
+    quat.append(goal.target_pose.pose.orientation.w)
+
+    return transformations.euler_from_quaternion(quat)[-1]
 
 
 

@@ -36,14 +36,14 @@ class mission_thread(threading.Thread):
         if mission_thread.mission_manager:
             mission_thread.mission_manager.execute_next_mission(forced=True)
     
-    # Is this mission_thread alive?
-    def is_alive(self):
-        return self.thread.is_alive() 
-
     # Stop by publishing 'cancel'  
     def stop(self):
-        return self.pub.Publish('cancel')
-        
+        return self.pub.publish('cancel')
+
+    # Check if the thread is currently executing a task
+    def is_active(self):
+        return self.is_alive()
+
     def __repr__(self):
         return 'name=%s, start_node=%s' % (self.name, self.start_node)
 
