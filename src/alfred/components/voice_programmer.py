@@ -1,38 +1,73 @@
+# data = '''
+# free speech. 
+# Define program
+# Define Mission 'first mission'
+#     New Node 'go home'
+#         Action 'go to location'
+#         Arguments Five comma six comma one
+#         If success, execute Node 'success beep'
+#         If fail, execute Node 'fail beep'
+#     End Node
+# 
+#     start node 'go to alpha'.-
+#         Action 'go to alpha'.-
+#         If success, execute Node 'success beep'
+#         If fail, execute Node 'fail beep'
+#     End Node
+# 
+#     Edit Node 'go to alpha':
+#         If success, execute Node 'Go Home'
+#     End node
+# 
+# End Mission
+# 
+# Define Timeout 'steep hill'
+#     Start Node 'go home two':
+#         Action: 'go home'
+#     End Node
+#     Time 10 minutes
+# End Timeout
+# 
+# Define Modifier
+#     Do Now equals True
+# End Modifier
+# End Program 
+# end free speech
+# '''
+
 data = '''
-free speech. 
-Define program
-Define Mission 'first mission'
-    New Node 'go home'
-        Action 'go to location'
-        Arguments Five comma six comma one
-        If success, execute Node 'success beep'
-        If fail, execute Node 'fail beep'
-    End Node
+define program 
+define mission patrol
+    start node init
+        action 'go home'
+        if success execute node 'go to point a'
+        if fail go home
+    end node
 
-    start node 'go to alpha'.-
-        Action 'go to alpha'.-
-        If success, execute Node 'success beep'
-        If fail, execute Node 'fail beep'
-    End Node
+    new node go to point a
+        action 'go to alpha'
+        if success go to point b
+        if fail go home
+    end node
 
-    Edit Node 'go to alpha':
-        If success, execute Node 'Go Home'
-    End node
+    new node go to point b
+        action 'go to beta'
+        if success go to point a
+        if fail go home
+    end node
 
-End Mission
+    new node go home
+        action 'go home'
+    end node
 
-Define Timeout 'steep hill'
-    Start Node 'go home two':
-        Action: 'go home'
-    End Node
-    Time 10 minutes
-End Timeout
+end mission
 
-Define Modifier
-    Do Now equals True
-End Modifier
-End Program 
-end free speech
+define timeout
+    time twenty minutes
+    start node fail beep
+        action 'fail beep'
+    end node
+end timeout
 '''
 
 # data = '''
@@ -52,6 +87,20 @@ from json import JSONEncoder
 
 ns = numbers.NumberService()
 
+class foo_component:
+    def __init__(self):
+        self.ngm = foo_component.ngm()
+        self.loc = {}
+        self.loc['alpha'] = [1,1,1]
+        self.loc['beta']  = [2,2,2]
+        self.loc['home']  = [0,0,0]
+
+    class ngm:
+        def go_to_location(self):
+            pass
+    class ksm:
+        def beep(self):
+            pass
 class voice_programmer:
     keywords = {}
     keywords['definition'] = ['define program']
@@ -66,13 +115,13 @@ class voice_programmer:
     keywords['all'] = [item for sublist in temp for item in sublist] # Flattens the list
 
 
-    def __init__(self, core_component=None):
+    def __init__(self, core_component=foo_component()):
         # instantiates local variables
         self.reset()
 
         # Do the subscriber thing
         # self.sub = rospy.Subscriber('/alfred/voice_programmer', Some sthring thingy, stuff)
-        self.core_component = foo_component()
+        self.core_component = core_component
 
         self.action_to_node_dic = {
             'go to alpha' : node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['alpha']),
@@ -136,7 +185,7 @@ class voice_programmer:
         return ans
 
     def update_chunks(self, data):
-        self.raw_speech = data
+        self.raw_speech = data.replace('time out', 'timeout')
         reg = re.compile('\w+')
         self.speech_chunks += reg.findall(data.lower()) # Remember to clean the data
         self.digest_chunks()
@@ -185,6 +234,7 @@ class voice_programmer:
             'program'       : self.handle_state_program,
         }
         
+        pdb.set_trace() 
         # Check triggered keywords first
         if keyword in keyword_to_func:
             return keyword_to_func[keyword](keyword, argument)
@@ -392,8 +442,6 @@ class voice_programmer:
             raise Exception('Unrecognized keyword "%s" in handle_state_mission')
 
     def parse_node_alias_from_argument(self, keyword, argument):
-        if 'node' not in argument:
-            raise Exception('No node was specified in the argument for ("%s", "%s")' % (keyword, argument))
         ans = argument.replace('execute node', '').replace('node', '')
         return ans.strip()
 
@@ -490,20 +538,6 @@ def get_num_digits(num):
         raise Exception('Error: Function does not work for decimal numbers or negative number (num=%s'%num)
     return math.floor(math.log(num)/math.log(10)) + 1
 
-class foo_component:
-    def __init__(self):
-        self.ngm = foo_component.ngm()
-        self.loc = {}
-        self.loc['alpha'] = [1,1,1]
-        self.loc['beta']  = [2,2,2]
-        self.loc['home']  = [0,0,0]
-
-    class ngm:
-        def go_to_location(self):
-            pass
-    class ksm:
-        def beep(self):
-            pass
 
 if __name__=="__main__":
     vp = voice_programmer() 

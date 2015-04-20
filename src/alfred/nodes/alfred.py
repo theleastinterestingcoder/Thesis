@@ -55,16 +55,18 @@ class alfred:
         self.loc = alfred.loc
         self.pause_speech = False
 
-        # Core processes
+        # Functional Modules
         self.ngm = nav_goal_manager()
         self.fds = face_recognition_spawner()
         self.ksm = kobuki_sound_manager()
 
-        self.mission_manager = mission_manager(core_module=self)
-        
         # Setup a publisher for simple navigation commander (note: raw_vel_cmd.py must be running)
         self.rvc_pub = rospy.Publisher('/alfred/raw_vel_commander/', String, queue_size=1)
 
+        # Auxiluary Modules
+        self.mission_manager = mission_manager(core_module=self)
+        
+        
         # Setup the resouces for missions
         self.missions = []   # A list of threads
         self.resources = {}  # A dictionary of arguments
