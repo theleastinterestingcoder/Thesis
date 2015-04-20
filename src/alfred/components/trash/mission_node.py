@@ -12,13 +12,13 @@
         'fail_nd' : pointer to call upon failure
 '''
 
-import json
+import rospy, actionlib
 
 class node:
     # First strip special arguments, then deliver rest as payload
     def __init__(self, *args, **kwargs):
         self.function = kwargs.pop('function')
-        self.name = kwargs.pop('name', "")
+        self.name = kwargs.pop('name')
         self.ps_nd = kwargs.pop('success_nd', None)
         self.pf_nd = kwargs.pop('fail_nd', None)
 
@@ -41,15 +41,5 @@ class node:
             return self.pf_nd.execute()
 
     def __repr__(self):
-        if not self.ps_nd:
-            success_func = None
-        else:
-            success_func = self.ps_nd.__dict__.get('function', None)
-        if not self.pf_nd:
-            fail_func = None
-        else:
-            fail_func = self.pf_nd.__dict__.get('function', None)
-        ans =  '\nObject Node with name "%s" \n{\n function="%s",\n args="%s",\n kwargs"%s",\n success_nd.function="%s",\n fail_nd.function="%s",\n}\n' % (self.name, self.function, self.p_args, self.p_kwargs, success_func, fail_func)
-
-        return ans
+        return "Node '%s' with {function: %s\nargs: %s\n kwargs: %s}\n" % (self.name, self.function, self.p_args, self.p_kwargs)
 
