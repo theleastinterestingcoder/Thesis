@@ -1,84 +1,65 @@
-# data = '''
-# free speech. 
-# Define program
-# Define Mission 'first mission'
-#     New Node 'go home'
-#         Action 'go to location'
-#         Arguments Five comma six comma one
-#         If success, execute Node 'success beep'
-#         If fail, execute Node 'fail beep'
-#     End Node
-# 
-#     start node 'go to alpha'.-
-#         Action 'go to alpha'.-
-#         If success, execute Node 'success beep'
-#         If fail, execute Node 'fail beep'
-#     End Node
-# 
-#     Edit Node 'go to alpha':
-#         If success, execute Node 'Go Home'
-#     End node
-# 
-# End Mission
-# 
-# Define Timeout 'steep hill'
-#     Start Node 'go home two':
-#         Action: 'go home'
-#     End Node
-#     Time 10 minutes
-# End Timeout
-# 
-# Define Modifier
-#     Do Now equals True
-# End Modifier
-# End Program 
-# end free speech
-# '''
-
 data = '''
-define program 
-define mission patrol
-    start node init
-        action 'go home'
-        if success execute node 'go to point a'
-        if fail go home
-    end node
+Define Program 'Patrol Two Points'
+    Define Comment
+        This is an example of a program that tells the turtlebot to 
+        patrol between two points
+    End Comment
 
-    new node go to point a
-        action 'go to alpha'
-        if success go to point b
-        if fail go home
-    end node
+    Define Mission 'first mission'
+        Start Node 'go to first location'
+            Action 'go to location'
+            Arguments [5,6,7]
+            If success, execute Node 'go to second location'
+            If fail, execute Node 'fail beep'
+        End Node
 
-    new node go to point b
-        action 'go to beta'
-        if success go to point a
-        if fail go home
-    end node
+        Define Node 'go to second location'
+            Action 'go to location'
+            Arguments eight comma one point twenty one comma three point forty one
+            If success, execute Node 'go to second location'
+            If fail, execute Node 'fail beep'
+        End Node
 
-    new node go home
-        action 'go home'
-    end node
+        Edit Node 'go to first location':
+            Arguments one comma two comma three comma four
+        End node
+    End Mission
 
-end mission
-
-define timeout
-    time twenty minutes
-    start node fail beep
-        action 'fail beep'
-    end node
-end timeout
+    Define Modifier
+        Do Now equals True
+        Clear Mission Queue equals true
+    End Modifier
+    
+        Define Timeout 'go home'
+        Start Node 'go home':
+        End Node
+        Time 10 minutes
+    End Timeout
+End Program 
 '''
 
 # data = '''
-# define program patrol
-# define mission 
-#     new node point a
-#     action go to alpha
+# define program
+# define mission patrol
+#     new node go to point a
+#         action 'go to alpha'
+#         if success 'go to point b'
+#     end node
+
+#     start node 'go home'
+#         action 'go home'
+#         if success 'go to point a'
+#     end node
 
 
+#     new node go to point b
+#         action 'go to beta'
+#         if success 'go to point a'
+#     end node
+# end mission
+# end program
 
-# '''
+# # '''
 import re, math, pdb, json
 from semantic import numbers
 from mission_node import node
@@ -196,7 +177,6 @@ class voice_programmer:
 
         while raw:
             keyword, argument, raw = vp.get_keyword_argument(raw)
-
             if not keyword and not argument:
                 return
             print "keyword=%s\nargument=%s\n" % (keyword, argument)
@@ -233,8 +213,8 @@ class voice_programmer:
             'timeout'       : self.handle_state_timeout,
             'program'       : self.handle_state_program,
         }
-        
-        pdb.set_trace() 
+
+
         # Check triggered keywords first
         if keyword in keyword_to_func:
             return keyword_to_func[keyword](keyword, argument)
@@ -259,12 +239,13 @@ class voice_programmer:
 
             # Check for arguments
             nextkey, loc2 = self.get_keyword(words[loc1+1:])
+        
             if nextkey:
                 idx2 = phrase[idx1+len(keyword):].index(nextkey)
             else:
                 return keyword, "", words[loc1+1:]
             argument = phrase[idx1+len(keyword):idx1+idx2+len(keyword)]
-
+        
         return keyword.strip(), argument.strip(), words[loc1+loc2:]
 
 
@@ -325,6 +306,7 @@ class voice_programmer:
     def compile_nodes(self, node_space):
         if not node_space:
             return 
+
         # For each node, do a name lookup in the node space and the library
         for n in node_space:
             if n.ps_nd:
@@ -336,9 +318,11 @@ class voice_programmer:
             if n.pf_nd:
                 found = self.find_node(n.pf_nd,  node_space, include_library=True)
                 if not found:
-                    raise Exception('Could not not dereference the pointer "%s" for node "%s"' % (n.ps_nd, n.name))
+                    raise Exception('Could not not dereference the pointer "%s" for node "%s"' % (n.pf_nd, n.name))
                 else:
                     n.pf_nd = found
+        
+
     def handle_start_node(self, keyword, argument):
         self.handle_new_node(keyword, argument, is_start=True)
 
