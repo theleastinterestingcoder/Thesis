@@ -18,7 +18,7 @@ import rospy
 class control_thread(threading.Thread):
     mission_manager = None
     
-    def __init__(self, mission_thread, timeout):
+    def __init__(self, mission_thread, timeout=None):
         threading.Thread.__init__(self) 
         self.mission_thread = mission_thread
         self.timeout = timeout
@@ -27,6 +27,9 @@ class control_thread(threading.Thread):
     
 
     def run(self):
+        # If there is no timeout, then do nothing
+        if not self.timeout:
+            return
         # Set the timer
         rospy.loginfo('Setting timeout with time=%s seconds' % self.timeout['time'])
 
