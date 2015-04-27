@@ -30,7 +30,6 @@ class face_recognition_spawner:
         self.face_recorded = False
 
         rospy.on_shutdown(self.cleanup)
-        rospy.Subscriber('/alfred/mission_control', String, self.handle_mission_control)
     
     # Initialize all the nodes required for core processes
     def init_nodes(self):
@@ -74,6 +73,8 @@ class face_recognition_spawner:
 
     # Primitive Action: a wrapped version of spin and monitor that has the properties of a primitive action
     def look_for_face(self, names = ['Quan'], duration=10, done_cb=None):
+
+        sub = rospy.Subscriber('/alfred/mission_control', String, self.handle_mission_control)
         # Allow only face recognition function to be working at a time
         if not self.is_busy:
             self.init_nodes() # Locks the fds
@@ -94,6 +95,7 @@ class face_recognition_spawner:
 
             self.stop_pub()
             self.kill_nodes() # Releases the lock
+            sub.unregister()
         else:
             rospy.info('Tried to look for face, but Face Detection Service is busy!')
         return ans

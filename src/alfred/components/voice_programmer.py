@@ -155,20 +155,25 @@ class voice_programmer:
 
     # Returns the current model of oneself
     def get_model_as_dict(self):
-        ans = {}
-        ans['modifier']           = self.modifier
-        ans['timeout']            = self.timeout
-        ans['mission_nodes']      = self.mission_nodes  
-        ans['timeout_nodes']      = self.timeout_nodes  
-        ans['mission_start_node'] = self.mission_start
-        ans['timeout_start_node'] = self.timeout_start     
+        if self.is_compiled:
+            ans = {}
+            ans['modifier']           = self.modifier
+            ans['timeout']            = self.timeout
+            ans['mission_nodes']      = self.mission_nodes  
+            ans['timeout_nodes']      = self.timeout_nodes  
+            ans['mission_start_node'] = self.mission_start
+            ans['timeout_start_node'] = self.timeout_start     
+        else:
+            throw Exception("VP Error: Program has not been compiled. Please publish 'end program' to compile.")
 
         return ans
 
-    def update_chunks(self, data):
+    def input_buffer(self, data):
         self.raw_speech = data.replace('time out', 'timeout')
         reg = re.compile('\w+')
         self.speech_chunks += reg.findall(data.lower()) # Remember to clean the data
+        
+    def advance_state(self):
         self.digest_chunks()
 
     def digest_chunks(self):
@@ -180,7 +185,9 @@ class voice_programmer:
             if not keyword and not argument:
                 return
             print "keyword=%s\nargument=%s\n" % (keyword, argument)
+            self.is_compiled = False
             self.update_state(keyword, argument)
+
 
     def update_state(self, keyword, argument):
         # Check if keyword argument is valid
@@ -286,7 +293,6 @@ class voice_programmer:
         self.state.append('program')
 
     def handle_end_program(self, keyword, argument):
-        
         self.compile_nodes(self.mission_nodes)
         self.compile_nodes(self.timeout_nodes)
 
@@ -329,6 +335,10 @@ class voice_programmer:
     def handle_new_node(self, keyword, argument, is_start=False):
         self.node_c = node(function=None, name="")
         self.node_c.name = argument
+
+        node_space = self.get_node_space()
+        if self.find_node(argument, node_space):
+            raise Exception("VP Error: node name '%s' already exists in node space '%s'" % self.state[-2])
         self.state.append('node')
 
         if is_start:
@@ -526,7 +536,7 @@ def get_num_digits(num):
 if __name__=="__main__":
     vp = voice_programmer() 
     print voice_programmer.keywords['all']
-    vp.update_chunks(data.lower())
+    vp.input_buffer(data.lower())
     print vp.get_model_as_dict()
 
 
