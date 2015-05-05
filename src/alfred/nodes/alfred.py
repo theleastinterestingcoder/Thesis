@@ -52,7 +52,9 @@ class alfred:
         self.ngm = nav_goal_manager()
         self.fds = face_recognition_spawner()
         self.ksm = kobuki_sound_manager()
+        self.rvc = raw_velocity_client()
 
+        
         # Setup a publisher for simple navigation commander (note: raw_vel_cmd.py must be running)
         self.rvc_pub = rospy.Publisher('/alfred/raw_vel_commander/', String, queue_size=1)
 
@@ -76,13 +78,13 @@ class alfred:
             'go to beta' :    node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['beta']), 
             'go to home' :    node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['home']),
             'go home' :       node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['home']),
-            'move foward':    node(function=self.rvc_pub.publish,  *['move_foward']), 
-            'move right':     node(function=self.rvc_pub.publish,  *['turn_right']), 
-            'turn left':      node(function=self.rvc_pub.publish,  *['turn_left']),
-            'turn right':     node(function=self.rvc_pub.publish,  *['turn_right']), 
-            'stop':           node(function=self.rvc_pub.publish,  *['stop']), 
-            'stop broadcast': node(function=self.rvc_pub.publish,  *['stop_broadcast']), 
-            'start broadcast':node(function=self.rvc_pub.publish,  *['start_broadcast']), 
+            'move foward':    node(function=self.rvc.move_foward), 
+            'move right':     node(function=self.rvc.turn_right), 
+            'turn left':      node(function=self.rvc.turn_left),
+            'turn right':     node(function=self.rvc.turn_right), 
+            'stop':           node(function=self.rvc.stop), 
+            'stop broadcast': node(function=self.rvc.stop_broadcast), 
+            'start broadcast':node(function=self.rvc.start_broadcast), 
             'cancel' :        node(function=self.mission_manager.reset), 
             'set mark alpha' : None, 
             'set mark beta' : None, 
