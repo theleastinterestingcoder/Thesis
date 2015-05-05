@@ -18,10 +18,12 @@ from std_msgs.msg import String
 
 # Some of my own packages
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "components"))
-from nav_goal_manager import nav_goal_manager
-from face_recognition_spawner import face_recognition_spawner
-from kobuki_sound_manager import kobuki_sound_manager
-from raw_vel_commander import raw_vel_commander
+# from nav_goal_manager import nav_goal_manager
+# from face_recognition_spawner import face_recognition_spawner
+# from kobuki_sound_manager import kobuki_sound_manager
+# from raw_vel_commander import raw_vel_commander
+from raw_velocity_client import raw_velocity_client
+from middle_manager_coordinator import coordinator
 
 # Import auxiliary functions
 from mission_node import node
@@ -53,10 +55,7 @@ class alfred:
         self.fds = face_recognition_spawner()
         self.ksm = kobuki_sound_manager()
         self.rvc = raw_velocity_client()
-
-        
-        # Setup a publisher for simple navigation commander (note: raw_vel_cmd.py must be running)
-        self.rvc_pub = rospy.Publisher('/alfred/raw_vel_commander/', String, queue_size=1)
+        self.coordinator = coordinator()
 
         # Auxiluary Modules
         self.mission_manager = mission_manager(core_module=self)
@@ -66,51 +65,45 @@ class alfred:
         self.missions = []   # A list of threads
         self.resources = {}  # A dictionary of arguments
 
-        # A mapping from keywords to commands.
-        self.keywords = {'ngm' : ['go to alpha', 'go to beta', 'go home', 'abort goals'], 
-                         'rvc' : ['move foward', 'move right', 'turn left', 'turn right', 'stop', 'stop broadcast', 'start broadcast'],
-                         'aux' : ['cancel', 'set mark alpha', 'set mark beta', 'pause speech', 'continue speech'],
-                         'frs' : ['start face recognition', 'stop face recognition'],
-                         'eliza' : ['start psychotherapist']}
-        # Map actions
         self.keyword_to_node = {
-            'go to alpha' :   node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['alpha']),
-            'go to beta' :    node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['beta']), 
-            'go to home' :    node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['home']),
-            'go home' :       node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['home']),
+            # 'cancel' :        node(function=self.mission_manager.reset), 
+
+            # 'go to alpha' :   node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['alpha']),
+            # 'go to beta' :    node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['beta']), 
+            # 'go to home' :    node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['home']),
+            # 'go home' :       node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['home']),
+            'cancel':         node(self.coordinator.cancel),
+            # Raw Velocity Client
             'move foward':    node(function=self.rvc.move_foward), 
             'move right':     node(function=self.rvc.turn_right), 
             'turn left':      node(function=self.rvc.turn_left),
             'turn right':     node(function=self.rvc.turn_right), 
             'stop':           node(function=self.rvc.stop), 
-            'stop broadcast': node(function=self.rvc.stop_broadcast), 
-            'start broadcast':node(function=self.rvc.start_broadcast), 
-            'cancel' :        node(function=self.mission_manager.reset), 
-            'set mark alpha' : None, 
-            'set mark beta' : None, 
-            'pause speech' : None, 
-            'continue speech' : None, 
-            'start face recognition' : None, 
-            'stop face recognition' : None, 
-            'start psychotherapist' : None, 
-            'success beep':   node(function=self.core_component.ksm.beep, val = 1, done_cb=None),  
-            'fail beep':      node(function=self.core_component.ksm.beep, val = 2, done_cb=None), 
-            'go to location': node(function=self.core_component.ngm.go_to_location), 
+
+            
+            # 'set mark alpha' : None, 
+            # 'set mark beta' : None, 
+            # 'pause speech' : None, 
+            # 'continue speech' : None, 
+            # 'start face recognition' : None, 
+            # 'stop face recognition' : None, 
+            # 'start psychotherapist' : None, 
+            # 'success beep':   node(function=self.core_component.ksm.beep, val = 1, done_cb=None),  
+            # 'fail beep':      node(function=self.core_component.ksm.beep, val = 2, done_cb=None), 
+            # 'go to location': node(function=self.core_component.ngm.go_to_location), 
         } 
 
         # Some other stuff
         time.sleep(0.1)
         rospy.loginfo("Ready to receive voice commands")
         rospy.on_shutdown(self.cleanup)
-
-
         rospy.spin()
 
     def get_command(self, data):
         # Convert a string into a command
-        for module, commands in self.keywords.iteritems():
-            if data in commands:
-                return data
+        if data.data in keyword_to_node:
+            return data
+        
         rospy.loginfo('Warning: command not recognized "%s"' % data)
         return None
         
@@ -170,13 +163,12 @@ class alfred:
             
     def cleanup(self):
         # When shutting down be sure to stop the robot! 
-        self.ngm.cancel_goals()
-        self.rvc_pub.publish('stop')
+        self.reset()
 
     # Resets the resources available to the robot
     def reset(self):
         self.ngm.cancel_goals()
-        self.rvc_pub.publish('stop')
+        self.rvc.stop()
 
 if __name__=="__main__":
     alfred()
