@@ -12,6 +12,16 @@ class coordinator():
         self.core_component = cc
 
     # handles the cancel command
-    def cancel():
+    def cancel(self):
         cc.cancel()
+        return True
+
+    # Stops the base
+    def stop_motion(self):
+        self.core_component.rvc.stop()
+        return True
+    
+    # Cleans up all the resources
+    def reset(self):
+        self.stop_motion()
         return True

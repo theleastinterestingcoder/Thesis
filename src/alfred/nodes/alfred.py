@@ -51,14 +51,14 @@ class alfred:
         self.pause_speech = False
 
         # Functional Modules
-        self.ngm = nav_goal_manager()
-        self.fds = face_recognition_spawner()
-        self.ksm = kobuki_sound_manager()
-        self.rvc = raw_velocity_client()
-        self.coordinator = coordinator()
+#         self.ngm = nav_goal_manager()
+#         self.fds = face_recognition_spawner()
+#         self.ksm = kobuki_sound_manager()
+        self.coordinator = coordinator(self)
+        self.rvc = raw_velocity_client(self.coordinator)
 
         # Auxiluary Modules
-        self.mission_manager = mission_manager(core_module=self)
+        self.mission_manager = mission_manager(coordinator=self.coordinator)
         
         
         # Setup the resouces for missions
@@ -72,7 +72,7 @@ class alfred:
             # 'go to beta' :    node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['beta']), 
             # 'go to home' :    node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['home']),
             # 'go home' :       node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['home']),
-            'cancel':         node(self.coordinator.cancel),
+            'cancel':         node(function=self.coordinator.cancel),
             # Raw Velocity Client
             'move foward':    node(function=self.rvc.move_foward), 
             'move right':     node(function=self.rvc.turn_right), 
@@ -101,15 +101,15 @@ class alfred:
 
     def get_command(self, data):
         # Convert a string into a command
-        if data.data in keyword_to_node:
-            return data
+        if data.data in self.keyword_to_node:
+            return data.data.strip()
         
         rospy.loginfo('Warning: command not recognized "%s"' % data)
         return None
         
     def speechCb(self, msg):        
         # Triggers on messages to /recognizer/output
-        command = self.get_command(msg.data)
+        command = self.get_command(msg)
         rospy.loginfo("Command: " + str(command))
 
         # # Goes to the goal and then beeps
@@ -154,7 +154,8 @@ class alfred:
         mission_f = self.keyword_to_node[command]
         # If a mission has been formed, then execute the thread
         if 'mission_f' in locals():
-            self.mission_manager.handle_request(command, mission_f, timeout=timeout)
+#             self.mission_manager.handle_request(command, mission_f, timeout=timeout)
+            self.mission_manager.handle_request(command, mission_f, timeout=None)
             self.mission_manager.start()
 
         print colored('>', 'green'),

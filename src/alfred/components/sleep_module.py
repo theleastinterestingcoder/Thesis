@@ -18,6 +18,7 @@
                 return "I was not interrupted"
 '''
 import rospy
+from std_msgs.msg import String
 
 class sleep_module:
     def __init__(self, manager):
@@ -28,13 +29,13 @@ class sleep_module:
     
     # Handle that triggers on messages published to '/alfred/mission_control'
     def handle_mission_control(self, data):
-        if data.data = 'cancel':
+        if data.data == 'cancel':
             if self.can_be_interrupted:
                 self.is_interrupted=True
             else:
-                rospy.loginfo("'%s'Sleep Module: Attempt to cancel a command while it is not in interruptable phase." % manager.name)
+                rospy.loginfo("'%s'Sleep Module: Attempt to cancel a command while it is not in interruptable phase." % self.manager.name)
         else:
-             rospy.loginfo("'%s'Sleep Module: Unrecognized command '%s' " % (manager.name, data.data))   
+             rospy.loginfo("'%s'Sleep Module: Unrecognized command '%s' " % (self.manager.name, data.data))   
 
     # Sleep until condition is fulfilled. Returns true if interrupted, false if not
     def interruptable_sleep(self, duration):

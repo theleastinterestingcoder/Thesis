@@ -6,7 +6,7 @@
     Mission manager contains a list of mission_queue and executes them one by one. 
     
     Constructor takes:
-    - core_module as the input
+    - coordinator as the input
 
     Missions contain:
         'name' : String
@@ -19,7 +19,7 @@
             'start_node': starting node
             
 
-    IMPORTANT: Mission manager needs the core module to call core_module.reset()
+    IMPORTANT: Mission manager needs the core module to call coordinator.reset()
 
 '''
 import rospy, pdb
@@ -28,11 +28,11 @@ from mission_thread import mission_thread, mp_set_mission_manager
 from control_thread import control_thread, cp_set_mission_manager
 
 class mission_manager():
-    def __init__(self, core_module):
+    def __init__(self, coordinator):
         # Instance Variables
         self.mission_thread = None  # executes the mission 
         self.control_thread = None  # contains timers
-        self.core_module = core_module
+        self.coordinator = coordinator
         
         # Assign this mission manager to fields of the followign classes
         mp_set_mission_manager(self)
@@ -41,7 +41,7 @@ class mission_manager():
         # List of (mission_t, timeout) tuples
         self.mission_queue =[]           
 
-   # Handle requests from the core module. This function is exposed ot the core_module
+   # Handle requests from the core module. This function is exposed ot the coordinator
     def handle_request(self, name, start_node, timeout=None, do_now=False): 
        mission_t = mission_thread(name, start_node)
        # Drop everything and do this mission
@@ -98,7 +98,7 @@ class mission_manager():
     # Clear resources (be careful of infinite loop here)
     def reset(self):
         self.stop()
-        self.core_module.reset()
+        self.coordinator.reset()
         self.mission_thread = None
         self.control_thread = None
 
