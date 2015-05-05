@@ -66,13 +66,15 @@ class alfred:
         self.missions = []   # A list of threads
         self.resources = {}  # A dictionary of arguments
         
+        # Setup the standard set of nodes
+        success_beep = node(function=self.core_component.ksm.beep, val = 1),  
+        fail_beep    = node(function=self.core_component.ksm.beep, val = 2),  
         self.keyword_to_node = {
             # 'cancel' :        node(function=self.mission_manager.reset), 
 
             'control' : {
-                'cancel':         node(function=self.coordinator.cancel),
-                'stop':           node(function=self.coordinator.cancel),
-                'stop motion':    node(function=self.coordinator.stop_motion),
+                'cancel':         node(function=self.coordinator.cancel, success_nd=fail_beep),
+                'stop':           node(function=self.coordinator.cancel, success_nd=fail_beep),
             },
 
             'raw_velocity_client': {
@@ -87,11 +89,16 @@ class alfred:
             },
 
             'navigation_goal_manager': {
-                'go to alpha' :   node(function=self.ngm.go_to_location, *self.loc['alpha']),
-                'go to beta' :    node(function=self.ngm.go_to_location, *self.loc['beta']), 
-                'go to home' :    node(function=self.ngm.go_to_location, *self.loc['home']),
-                'go home' :       node(function=self.ngm.go_to_location, *self.loc['home']),
-            }
+                'go to alpha' :   node(function=self.ngm.go_to_location, *self.loc['alpha'], success_nd=success_beep, fail_nd=fail_beep),
+                'go to beta' :    node(function=self.ngm.go_to_location, *self.loc['beta'], success_nd=success_beep, fail_nd=fail_beep), 
+                'go to home' :    node(function=self.ngm.go_to_location, *self.loc['home'], success_nd=success_beep, fail_nd=fail_beep), 
+                'go home' :       node(function=self.ngm.go_to_location, *self.loc['home'], success_nd=success_beep, fail_nd=fail_beep),
+            },
+
+            'aux' : {
+                'fail beep' : fail_beep,
+                'success beep': success_beep,
+            },
 
             
             # 'set mark alpha' : None, 
