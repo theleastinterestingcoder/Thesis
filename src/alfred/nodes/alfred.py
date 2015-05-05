@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-   nav_goals_with_face.py
+   alfred.py
 
    Written by Quan Zhou on 3/13
 
@@ -104,17 +104,9 @@ class alfred:
 
 
         # An example of chaining (note, has to go backwards b/c of the first needs to reference the next)
-#         fail_nd = node(function=self.ksm.beep, val = 2, done_cb=None)
-#         finish_cb = node(function=self.ksm.beep, val= 1, done_cb= None)
-#         return_cb = node(function=self.ngm.go_to_location, *self.loc['home'], success_nd = finish_cb, fail_nd = fail_nd)
-#         face_cb   = node(function=self.fds.look_for_face, names=['Quan'], duration=10, success_nd = return_cb, fail_nd=fail_nd)
-#         success_nd = node(function=self.ksm.beep, val=1, success_nd=face_cb)
+        fail_nd = node(function=self.ksm.beep, val = 2)
+        success_nd = node(function=self.ksm.beep, val=1)
 
-#         done_cb = node(**{'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})
-#         done_cb = node(**{'cb_f': self.look_for_face, 'name': ['Quan'], 'duration': 10})
-#         done_cb = node(**{'cb_f': self.look_for_face, 'name' : ['Quan'], 'duration' : 10})
-#         return_cb = node(**{'cb_f': self.go_to_location}, *self.loc['alpha']}) 
-        
         # Manages which module gets to send messages to raw_vel_cmd 
         if command in self.keywords['ngm']:
             self.rvc_pub.publish('stop broadcast')
@@ -142,19 +134,10 @@ class alfred:
             self.mission_manager.handle_request(command, mission_f, timeout=timeout)
             self.mission_manager.start()
 
-#             mission_thread.mp_set_mission_manager(self.mission_manager)
-#             mp = mission_thread.mission_thread(name=command, cb=mission_f)
-#             mp.start()
-
-
         print colored('>', 'green'),
 
         return
-        
             
-    def print_greeting(self, greeting='foo'):
-        print "I think this works! %s" % greeting
-       
     def cleanup(self):
         # When shutting down be sure to stop the robot! 
         self.ngm.cancel_goals()
@@ -164,9 +147,6 @@ class alfred:
     def reset(self):
         self.ngm.cancel_goals()
         self.rvc_pub.publish('stop')
-  
-
-          
 
 if __name__=="__main__":
     alfred()

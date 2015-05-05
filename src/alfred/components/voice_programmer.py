@@ -1,65 +1,11 @@
-data = '''
-Define Program 'Patrol Two Points'
-    Define Comment
-        This is an example of a program that tells the turtlebot to 
-        patrol between two points
-    End Comment
-
-    Define Mission 'first mission'
-        Start Node 'go to first location'
-            Action 'go to location'
-            Arguments [5,6,7]
-            If success, execute Node 'go to second location'
-            If fail, execute Node 'fail beep'
-        End Node
-
-        Define Node 'go to second location'
-            Action 'go to location'
-            Arguments eight comma one point twenty one comma three point forty one
-            If success, execute Node 'go to second location'
-            If fail, execute Node 'fail beep'
-        End Node
-
-        Edit Node 'go to first location':
-            Arguments one comma two comma three comma four
-        End node
-    End Mission
-
-    Define Modifier
-        Do Now equals True
-        Clear Mission Queue equals true
-    End Modifier
-    
-        Define Timeout 'go home'
-        Start Node 'go home':
-        End Node
-        Time 10 minutes
-    End Timeout
-End Program 
 '''
+  voice_programmer.py
 
-# data = '''
-# define program
-# define mission patrol
-#     new node go to point a
-#         action 'go to alpha'
-#         if success 'go to point b'
-#     end node
+  written by Quan Zhou on April 15th, 2015
 
-#     start node 'go home'
-#         action 'go home'
-#         if success 'go to point a'
-#     end node
+  The compiler for the Alfred system. 
 
-
-#     new node go to point b
-#         action 'go to beta'
-#         if success 'go to point a'
-#     end node
-# end mission
-# end program
-
-# # '''
+'''
 import re, math, pdb, json
 from semantic import numbers
 from mission_node import node

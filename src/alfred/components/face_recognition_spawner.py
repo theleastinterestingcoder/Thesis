@@ -231,12 +231,6 @@ if __name__=="__main__":
 
     frs.stop_pub()
     frs.kill_nodes() # 
-# if __name__== "__main__":
-#     frs = face_recognition_spawner()
-#     frs.launch_gscam()
-#     fclient = subprocess.Popen("rosrun face_recognition Fserver", stdout=subprocess.PIPE, preexec_fn=os.setsid, shell=True)
-#     fquan   = subprocess.Popen("rosrun face_recognition Fpublisher", stdout=subprocess.PIPE, preexec_fn=os.setsid, shell=True)
-#     subprocess.call("rostopic pub -1 /fr_order face_recognition/FRClientGoal -- 1 \"none\"", shell=True )
 
 
     
