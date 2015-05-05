@@ -31,6 +31,7 @@ class raw_velocity_client():
         self.stop()
 
         if is_interrupted:
+            rospy.loginfo('move foward was interrupted')
             return None
         return True
 
@@ -41,12 +42,13 @@ class raw_velocity_client():
         self.stop()
 
         if is_interrupted:
+            rospy.loginfo('move backward  was interrupted')
             return None
         return True
 
     def turn_left(self, duration=None):
         self.coordinator.stop_motion()
-        self.pub.publish('move backward')
+        self.pub.publish('turn left')
         is_interrupted = self.sleep_module.interruptable_sleep(duration)
         self.stop()
 
@@ -56,7 +58,7 @@ class raw_velocity_client():
 
     def turn_right(self, duration=None):
         self.coordinator.stop_motion()
-        self.pub.publish('move backward')
+        self.pub.publish('turn right')
         is_interrupted = self.sleep_module.interruptable_sleep(duration)
         self.stop()
 
@@ -67,7 +69,3 @@ class raw_velocity_client():
     def stop(self):
         self.pub.publish('stop')
         return True
-
-if __name__ == "__main__":
-    rvc = raw_velocity_client()
-    rvc.move_foward()

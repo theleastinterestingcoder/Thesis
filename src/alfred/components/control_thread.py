@@ -22,17 +22,15 @@ class control_thread(threading.Thread):
         threading.Thread.__init__(self) 
         self.mission_thread = mission_thread
         self.timeout = timeout
-
-        self.is_interrupted = False
-    
+        self.time_left = timeout
 
     def run(self):
+        self.is_interrupted = False
         # If there is no timeout, then do nothing
         if not self.timeout:
             return
         # Set the timer
-        rospy.loginfo('Setting timeout with time=%s seconds' % self.timeout['time'])
-
+        rospy.loginfo('Setting time with name="%s" with time=%s seconds' % (self.timeout['mission']['name'], self.timeout['time']))
         start = rospy.Time.now()
         
         # Check for interrupts on the Control Thread
@@ -40,23 +38,25 @@ class control_thread(threading.Thread):
             if self.is_interrupted:
                 self.is_interrupted = False
                 return None
+            self.time_left = self.timeout['time'] - (rospy.Time.now() - start).to_sec()
             time.sleep(0.1)
 
-    
+        self.timeout['mission']['do_now'] = True  
         # Kill mission process if it is still running
-        if self.mission_thread.is_alive():
+        if self.mission_thread.is_alive() and self.mission_thread == control_thread.mission_manager.mission_thread:
             self.mission_manager.reset()
             rospy.loginfo('mission "%s" has been timed out (%s s)' % (self.mission_thread.name, self.timeout['time']))
-        else:
-            return None
-
-        # Execute next mission
-        if self.timeout['mission']:
             control_thread.mission_manager.handle_request(**self.timeout['mission'])
+
+        self.is_interrupted = False
 
     def stop(self):
         rospy.loginfo('mission_manager.control_thread: timeout %s has been canceled' % self.timeout['mission']['name'])
         self.is_interrupted = True
+
+    def __repr__(self):
+        return "%s with %s" % (self.timeout['mission']['name'], self.time_left) 
+    
 
 
 # Sets the mission manager for all control_threades

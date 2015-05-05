@@ -23,7 +23,6 @@ from std_msgs.msg import String
 class sleep_module:
     def __init__(self, manager):
         self.manager = manager
-        self.is_interrupted = False
     
     # Handle that triggers on messages published to '/alfred/mission_control'
     def handle_mission_control(self, data):
@@ -34,9 +33,11 @@ class sleep_module:
 
     # Sleep for the specified timeout. If duration=None is specified, then goes into infinite loop.  Returns true if interrupted, false if not
     def interruptable_sleep(self, duration):
+        self.is_interrupted = False
         self.sub = rospy.Subscriber('/alfred/mission_control', String, self.handle_mission_control)
         ans = self.wait_and_listen_for_interrupt(duration)
         self.sub.unregister()
+        self.is_interrupted = False
         return ans
 
     # -- Private functions -----

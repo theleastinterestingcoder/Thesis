@@ -13,6 +13,7 @@
 '''
 
 import json
+import rospy
 
 class node:
     # First strip special arguments, then deliver rest as payload
@@ -31,8 +32,7 @@ class node:
         
         # None is a signal for a Canceled function
         if ans == None:
-            rospy.loginfo('Mission_node: Mission Ended with an canceled Action')
-            return False
+            return None
         
         # Call the successful action
         if ans and self.ps_nd:

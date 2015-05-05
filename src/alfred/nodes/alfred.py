@@ -19,7 +19,7 @@ from std_msgs.msg import String
 # Some of my own packages
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "components"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "components/middle_managers"))
-# from nav_goal_manager import nav_goal_manager
+from nav_goal_manager import nav_goal_manager
 # from face_recognition_spawner import face_recognition_spawner
 # from kobuki_sound_manager import kobuki_sound_manager
 # from raw_vel_commander import raw_vel_commander
@@ -52,7 +52,7 @@ class alfred:
         self.pause_speech = False
 
         # Functional Modules
-#         self.ngm = nav_goal_manager()
+        self.ngm = nav_goal_manager()
 #         self.fds = face_recognition_spawner()
 #         self.ksm = kobuki_sound_manager()
         self.coordinator = coordinator(self)
@@ -65,22 +65,33 @@ class alfred:
         # Setup the resouces for missions
         self.missions = []   # A list of threads
         self.resources = {}  # A dictionary of arguments
-
+        
         self.keyword_to_node = {
             # 'cancel' :        node(function=self.mission_manager.reset), 
 
-            # 'go to alpha' :   node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['alpha']),
-            # 'go to beta' :    node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['beta']), 
-            # 'go to home' :    node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['home']),
-            # 'go home' :       node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['home']),
-            'cancel':         node(function=self.coordinator.cancel),
-            'stop motion':    node(function=self.coordinator.stop_motion),
-            # Raw Velocity Client
-            'move foward':    node(function=self.rvc.move_foward), 
-            'move right':     node(function=self.rvc.turn_right), 
-            'turn left':      node(function=self.rvc.turn_left),
-            'turn right':     node(function=self.rvc.turn_right), 
-            'stop':           node(function=self.rvc.stop), 
+            'control' : {
+                'cancel':         node(function=self.coordinator.cancel),
+                'stop':           node(function=self.coordinator.cancel),
+                'stop motion':    node(function=self.coordinator.stop_motion),
+            },
+
+            'raw_velocity_client': {
+                'move fowards':   node(function=self.rvc.move_foward), 
+                'move foward':    node(function=self.rvc.move_foward), 
+                'move backwards': node(function=self.rvc.move_backward), 
+                'move backward':  node(function=self.rvc.move_backward),
+                'move right':     node(function=self.rvc.turn_right), 
+                'turn left':      node(function=self.rvc.turn_left),
+                'turn right':     node(function=self.rvc.turn_right), 
+                'stop':           node(function=self.rvc.stop), 
+            },
+
+            'navigation_goal_manager': {
+                'go to alpha' :   node(function=self.ngm.go_to_location, *self.loc['alpha']),
+                'go to beta' :    node(function=self.ngm.go_to_location, *self.loc['beta']), 
+                'go to home' :    node(function=self.ngm.go_to_location, *self.loc['home']),
+                'go home' :       node(function=self.ngm.go_to_location, *self.loc['home']),
+            }
 
             
             # 'set mark alpha' : None, 
@@ -98,21 +109,21 @@ class alfred:
         # Some other stuff
         time.sleep(0.1)
         rospy.loginfo("Ready to receive voice commands")
-        rospy.on_shutdown(self.cleanup)
+        rospy.on_shutdown(self.coordinator.cleanup)
         rospy.spin()
 
     def get_command(self, data):
         # Convert a string into a command
-        if data.data in self.keyword_to_node:
-            return data.data.strip()
-        
+        for tyype, mapping in self.keyword_to_node.iteritems():
+            if data.data in mapping:
+                return tyype, data.data
         rospy.loginfo('Warning: command not recognized "%s"' % data)
-        return None
+        return None, None
         
     def speechCb(self, msg):        
         # Triggers on messages to /recognizer/output
-        command = self.get_command(msg)
-        rospy.loginfo("Command: " + str(command))
+        module, command = self.get_command(msg)
+        rospy.loginfo("--- Command: %s ---" % str(command))
 
         # # Goes to the goal and then beeps
         # success_nd =   node(function=self.ksm.beep, **{'val': 1, 'done_cb': None})
@@ -121,9 +132,9 @@ class alfred:
 
         # home_nd = node(function=self.ngm.go_to_location, *self.loc['home'], success_nd = success_nd, fail_nd = fail_nd)
         
-        # timeout = {}
-        # timeout['time'] = 5
-        # timeout['mission'] = {'name': 'timeout go home', 'start_node':home_nd, 'do_now':True}
+        timeout = {}
+        timeout['time'] = 30
+        timeout['mission'] = {'name': 'timeout go backward', 'start_node': self.keyword_to_node['navigation_goal_manager']['go home'], 'do_now':True}
 
 
         # # An example of chaining (note, has to go backwards b/c of the first needs to reference the next)
@@ -148,19 +159,29 @@ class alfred:
         #     mission_f = node(function=self.ngm.go_to_location, *self.loc['home'], success_nd=success_nd, fail_nd=fail_nd)
         # elif command == 'set mark alpha':
         #     self.loc['alpha'] = self.ngm.get_current_position()
-        # elif command == 'set mark beta':
+        # elif command == 'set mark beta'n
         #     self.loc['beta'] = self.ngm.get_current_position()
         # elif command in self.keywords['rvc']:
         #     self.rvc_pub.publish(command)
+        do_now = True
+        
+        if module == None:
+            return
 
-        mission_f = self.keyword_to_node[command]
+        mission_t = self.keyword_to_node[module][command]
+        # If it is a control keyword, then execute it now
+        if module == 'control':
+            mission_t.execute()
+            return
+        if do_now:
+            self.coordinator.cancel()
+            self.mission_manager.clear_mission_queue()
+
         # If a mission has been formed, then execute the thread
-        if 'mission_f' in locals():
-#             self.mission_manager.handle_request(command, mission_f, timeout=timeout)
-            self.mission_manager.handle_request(command, mission_f, timeout=None)
-            self.mission_manager.start()
-
-        print colored('>', 'green'),
+        if command == 'turn right':
+            self.mission_manager.handle_request(command, mission_t, timeout=timeout2)
+        else:
+            self.mission_manager.handle_request(command, mission_t, timeout=timeout)
 
         return
             

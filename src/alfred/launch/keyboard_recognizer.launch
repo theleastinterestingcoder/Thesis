@@ -1,0 +1,7 @@
+<!-- simple_nav_commands.launch is for navigating with goals -->
+<launch>
+  <!-- It launches pocket sphinx recognition, turtlebot minimal.launch, and amcl stuff -->
+  <node name="recognizer_publisher" pkg="alfred" type="recognizer_publisher.py" output="screen">
+  </node>
+
+</launch>

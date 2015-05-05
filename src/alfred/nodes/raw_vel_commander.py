@@ -117,5 +117,5 @@ if __name__=="__main__":
     snc = raw_vel_commander()
     # From the command prompt:
     # $ python raw_cmd_comander.py
-    # $ rostopic pub -1 /alfred/raw_cmd_comander std_msgs/String -- "move foward"
-    # $ rostopic pub -1 /alfred/raw_cmd_comander std_msgs/String -- "stop""
+    # $ rostopic pub -1 /alfred/raw_vel_commander std_msgs/String -- "move foward" 
+    # $ rostopic pub -1 /alfred/raw_vel_commander std_msgs/String -- "stop" 

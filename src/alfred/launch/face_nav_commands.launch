@@ -4,7 +4,7 @@
   <node name="alfred" pkg="alfred" type="alfred.py" output="screen">
   </node>
 
-  <node name="raw_vel_cmd" pkg="alfred" type="raw_vel_commander.py">
+  <node name="alfred_raw_vel_cmd" pkg="alfred" type="raw_vel_commander.py">
     <param name="max_speed" value="0.6"/>
     <param name= "~max_angular_speed" value="1.5" />
     <param name= "start_speed" value="0.15" />
