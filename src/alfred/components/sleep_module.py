@@ -37,7 +37,7 @@ class sleep_module:
         else:
              rospy.loginfo("'%s'Sleep Module: Unrecognized command '%s' " % (self.manager.name, data.data))   
 
-    # Sleep until condition is fulfilled. Returns true if interrupted, false if not
+    # Sleep for the specified timeout. If duration=None is specified, then goes into infinite loop.  Returns true if interrupted, false if not
     def interruptable_sleep(self, duration):
         self.can_be_interrupted = True
         ans = self.wait_and_listen_for_interrupt(duration)
@@ -50,8 +50,18 @@ class sleep_module:
         rate = rospy.rate(10) # 10 Hz
         start = ropsy.Time.now()
         elapsed = (rospy.Time.now() - start).to_sec()
-        while (elapsed < duration):
-            if self.is_interrupted:
-                return True
-            rate.sleep()
+
+        # If no duration is specified, go to infinite sleep
+        if duration == None:
+            while True:
+                if self.is_interrupted:
+                    return True
+                rate.sleep()
+        else:           
+            while (elapsed < duration):
+                if self.is_interrupted:
+                    return True
+                rate.sleep()
         return False
+
+

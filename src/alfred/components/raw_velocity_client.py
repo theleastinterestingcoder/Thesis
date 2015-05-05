@@ -21,15 +21,12 @@ class raw_velocity_client():
         self.coordinator = coordinator
     
     # ---- primitive actions ----- 
+
+    #If no duration is specified, then spin forever until it is canceled
     def move_foward(self, duration=None):
         self.coordinator.stop_motion()
         self.pub.publish('move foward')
-        if duration:
-            # If the module is interrupted in sleep, flag it here
-            is_interrupted = self.sleep_module.interruptable_sleep(self, duration)
-        else:
-            is_interrupted = False
-
+        is_interrupted = self.sleep_module.interruptable_sleep(self, duration)
         self.stop()
 
         if is_interrupted:
@@ -39,10 +36,7 @@ class raw_velocity_client():
     def move_backward(self, duration=None):
         self.coordinator.stop_motion()
         self.pub.publish('move backward')
-        if duration:
-            is_interrupted = self.sleep_module.interruptable_sleep(self, duration)
-        else:
-            is_interrupted = False
+        is_interrupted = self.sleep_module.interruptable_sleep(self, duration)
         self.stop()
 
         if is_interrupted:
@@ -52,11 +46,7 @@ class raw_velocity_client():
     def turn_left(self, duration=None):
         self.coordinator.stop_motion()
         self.pub.publish('move backward')
-        if duration:
-            is_interrupted = self.sleep_module.interruptable_sleep(self, duration)
-        else:
-            is_interrupted = False
-
+        is_interrupted = self.sleep_module.interruptable_sleep(self, duration)
         self.stop()
 
         if is_interrupted:
@@ -66,10 +56,7 @@ class raw_velocity_client():
     def turn_right(self, duration=None):
         self.coordinator.stop_motion()
         self.pub.publish('move backward')
-        if duration:
-            is_interrupted = self.sleep_module.interruptable_sleep(self, duration)
-        else:
-            is_interrupted = False
+        is_interrupted = self.sleep_module.interruptable_sleep(self, duration)
         self.stop()
 
         if is_interrupted:
