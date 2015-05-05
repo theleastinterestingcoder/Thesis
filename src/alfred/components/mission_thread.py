@@ -13,8 +13,6 @@ import threading
 
 
 class mission_thread(threading.Thread):
-    mission_manager = None
-
     def __init__(self, name, start_node):
         threading.Thread.__init__(self) 
         self.name = name
@@ -32,10 +30,6 @@ class mission_thread(threading.Thread):
         self.start_node.execute()
         rospy.loginfo('Finished thread with ID = %s' % self.name)
         
-        # Execute next mission in mission manager's queue
-        if mission_thread.mission_manager:
-            mission_thread.mission_manager.execute_next_mission(forced=True)
-    
     # Stop by publishing 'cancel'  
     def stop(self):
         return self.pub.publish('cancel')
@@ -47,6 +41,3 @@ class mission_thread(threading.Thread):
     def __repr__(self):
         return 'name=%s, start_node=%s' % (self.name, self.start_node)
 
-# Sets the mission manager for all mission_threades
-def mp_set_mission_manager(mm):
-    mission_thread.mission_manager = mm

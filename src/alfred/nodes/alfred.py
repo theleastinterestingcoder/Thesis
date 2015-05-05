@@ -18,6 +18,7 @@ from std_msgs.msg import String
 
 # Some of my own packages
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "components"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "components/middle_managers"))
 # from nav_goal_manager import nav_goal_manager
 # from face_recognition_spawner import face_recognition_spawner
 # from kobuki_sound_manager import kobuki_sound_manager
@@ -73,6 +74,7 @@ class alfred:
             # 'go to home' :    node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['home']),
             # 'go home' :       node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['home']),
             'cancel':         node(function=self.coordinator.cancel),
+            'stop motion':    node(function=self.coordinator.stop_motion),
             # Raw Velocity Client
             'move foward':    node(function=self.rvc.move_foward), 
             'move right':     node(function=self.rvc.turn_right), 

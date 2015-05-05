@@ -24,7 +24,6 @@
 '''
 import rospy, pdb
 
-from mission_thread import mission_thread, mp_set_mission_manager
 from control_thread import control_thread, cp_set_mission_manager
 
 class mission_manager():
@@ -34,12 +33,18 @@ class mission_manager():
         self.control_thread = None  # contains timers
         self.coordinator = coordinator
         
-        # Assign this mission manager to fields of the followign classes
-        mp_set_mission_manager(self)
+        # Give the pointer to the thread manager to allow thread manager to manage missiosn
         cp_set_mission_manager(self)
 
         # List of (mission_t, timeout) tuples
         self.mission_queue =[]           
+    
+    # Asks mission manager to constantly poll itself for new missinos 
+    def mm_thread_init(self):
+        r = rospy.Rate(10)
+        while (True):
+            self.start()
+            r.sleep()
 
    # Handle requests from the core module. This function is exposed ot the coordinator
     def handle_request(self, name, start_node, timeout=None, do_now=False): 
@@ -53,12 +58,12 @@ class mission_manager():
             self.mission_queue.append((mission_t, timeout))
 
     # start the mission on the queue
-    def execute_next_mission(self, forced=False):
+    def execute_next_mission(self):
         # Do not execute mission_queue on empty queue or if there is an active mission
         if not self.mission_queue:
             rospy.loginfo('Mission Manager: mission queue is empty')
             return None
-        if not forced and self.mission_thread and self.mission_thread.is_active():
+        if self.mission_thread and self.mission_thread.is_active():
             rospy.loginfo('Mission thread is current active with mission name=%s and start_node=%s' %\
                           (self.mission_thread.name, self.mission_thread.start_node)) 
             return None

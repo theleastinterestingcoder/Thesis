@@ -5,15 +5,18 @@
 
     A module for managing resources via primitive actions
 '''
+import rospy
+from std_msgs.msg import String
 
 class coordinator():
     def __init__(self, cc):
         self.name = 'aux_manager'
+        self.pub = rospy.Publisher('/alfred/mission_control', String, queue_size=1)
         self.core_component = cc
 
     # handles the cancel command
     def cancel(self):
-        cc.cancel()
+        self.pub.publish('cancel')
         return True
 
     # Stops the base
