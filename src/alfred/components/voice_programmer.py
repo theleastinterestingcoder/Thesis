@@ -50,31 +50,8 @@ class voice_programmer:
         # self.sub = rospy.Subscriber('/alfred/voice_programmer', Some sthring thingy, stuff)
         self.core_component = core_component
 
-        self.action_to_node_dic = {
-            'go to alpha' : node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['alpha']),
-            'go to beta' :  node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['beta']), 
-            'go to home' :  node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['home']),
-            'go home' :     node(function=self.core_component.ngm.go_to_location, *self.core_component.loc['home']),
-            'abort goals': None, 
-            'move foward': None, 
-            'move right': None, 
-            'turn left': None, 
-            'turn right': None, 
-            'stop': None, 
-            'stop broadcast': None, 
-            'start broadcast': None, 
-            'cancel' : None, 
-            'set mark alpha' : None, 
-            'set mark beta' : None, 
-            'pause speech' : None, 
-            'continue speech' : None, 
-            'start face recognition' : None, 
-            'stop face recognition' : None, 
-            'start psychotherapist' : None, 
-            'success beep':   node(function=self.core_component.ksm.beep, val = 1, done_cb=None),  
-            'fail beep':      node(function=self.core_component.ksm.beep, val = 2, done_cb=None), 
-            'go to location': node(function=self.core_component.ngm.go_to_location), 
-        }    
+        self.action_to_node_dic = core_component.keyword_to_node   
+
     # cleans up the variables in this function
     def reset(self):
         # State Variables
