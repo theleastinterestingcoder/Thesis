@@ -9,7 +9,7 @@
      is launched. 
 """
 # standard pythonic libraries
-import os, sys, subprocess, signal, time, pdb
+import os, sys, subprocess, signal, time, pdb, re
 
 # ROS imports
 import rospy
@@ -32,6 +32,10 @@ from mission_manager import mission_manager
 
 # For colorful output
 from termcolor import colored
+
+# For semantic parsing
+from semantic import numbers
+ns = numbers.NumberService()
 
 class alfred:
     loc = {}
@@ -69,36 +73,42 @@ class alfred:
         # Setup the standard set of nodes
         success_beep = node(function=self.core_component.ksm.beep, val = 1),  
         fail_beep    = node(function=self.core_component.ksm.beep, val = 2),  
+
         self.keyword_to_node = {
             # 'cancel' :        node(function=self.mission_manager.reset), 
 
             'control' : {
-                'cancel':         node(function=self.coordinator.cancel, success_nd=fail_beep),
-                'stop':           node(function=self.coordinator.cancel, success_nd=fail_beep),
+                r'cancel':         node(function=self.coordinator.cancel, success_nd=fail_beep),
+                r'stop':           node(function=self.coordinator.cancel, success_nd=fail_beep),
             },
 
             'raw_velocity_client': {
-                'move fowards':   node(function=self.rvc.move_foward), 
-                'move foward':    node(function=self.rvc.move_foward), 
-                'move backwards': node(function=self.rvc.move_backward), 
-                'move backward':  node(function=self.rvc.move_backward),
-                'move right':     node(function=self.rvc.turn_right), 
-                'turn left':      node(function=self.rvc.turn_left),
-                'turn right':     node(function=self.rvc.turn_right), 
-                'stop':           node(function=self.rvc.stop), 
+                r'move fowards':   node(function=self.rvc.move_foward), 
+                r'move foward':    node(function=self.rvc.move_foward), 
+                r'move backwards': node(function=self.rvc.move_backward), 
+                r'move backward':  node(function=self.rvc.move_backward),
+                r'move right':     node(function=self.rvc.turn_right), 
+                r'turn left':      node(function=self.rvc.turn_left),
+                r'turn right':     node(function=self.rvc.turn_right), 
+                r'stop':           node(function=self.rvc.stop), 
             },
 
             'navigation_goal_manager': {
-                'go to alpha' :   node(function=self.ngm.go_to_location, *self.loc['alpha'], success_nd=success_beep, fail_nd=fail_beep),
-                'go to beta' :    node(function=self.ngm.go_to_location, *self.loc['beta'], success_nd=success_beep, fail_nd=fail_beep), 
-                'go to home' :    node(function=self.ngm.go_to_location, *self.loc['home'], success_nd=success_beep, fail_nd=fail_beep), 
-                'go home' :       node(function=self.ngm.go_to_location, *self.loc['home'], success_nd=success_beep, fail_nd=fail_beep),
+                r'go to alpha' :   node(function=self.ngm.go_to_location, *self.loc['alpha'], success_nd=success_beep, fail_nd=fail_beep),
+                r'go to beta' :    node(function=self.ngm.go_to_location, *self.loc['beta'], success_nd=success_beep, fail_nd=fail_beep), 
+                r'go to home' :    node(function=self.ngm.go_to_location, *self.loc['home'], success_nd=success_beep, fail_nd=fail_beep), 
+                r'go home' :       node(function=self.ngm.go_to_location, *self.loc['home'], success_nd=success_beep, fail_nd=fail_beep),
             },
 
             'aux' : {
-                'fail beep' : fail_beep,
-                'success beep': success_beep,
+                r'fail beep'   : fail_beep,
+                r'success beep': success_beep,
+                r'do nothing'  : 
             },
+
+            'face_recognition_spawner' : {
+                r'look for (\w+)': node(function=self.frs.look_for_face, success_nd=success_beep, fail_nd=fail_beep),
+            }
 
             
             # 'set mark alpha' : None, 
@@ -113,7 +123,8 @@ class alfred:
             # 'go to location': node(function=self.core_component.ngm.go_to_location), 
         } 
 
-        # Some other stuff
+
+        # ---- Wrap up this long constructor -----
         time.sleep(0.1)
         rospy.loginfo("Ready to receive voice commands")
         rospy.on_shutdown(self.coordinator.cleanup)
@@ -122,15 +133,17 @@ class alfred:
     def get_command(self, data):
         # Convert a string into a command
         for tyype, mapping in self.keyword_to_node.iteritems():
-            if data.data in mapping:
-                return tyype, data.data
+            for keyword in mapping.keys():
+                if keyword in data.data:
+                    return tyype, keyword
         rospy.loginfo('Warning: command not recognized "%s"' % data)
         return None, None
-        
+            
+
     def speechCb(self, msg):        
         # Triggers on messages to /recognizer/output
         module, command = self.get_command(msg)
-        rospy.loginfo("--- Command: %s ---" % str(command))
+        
 
         # # Goes to the goal and then beeps
         # success_nd =   node(function=self.ksm.beep, **{'val': 1, 'done_cb': None})
@@ -184,11 +197,9 @@ class alfred:
             self.coordinator.cancel()
             self.mission_manager.clear_mission_queue()
 
+        rospy.loginfo("--- Command: %s ---" % str(command))
         # If a mission has been formed, then execute the thread
-        if command == 'turn right':
-            self.mission_manager.handle_request(command, mission_t, timeout=timeout2)
-        else:
-            self.mission_manager.handle_request(command, mission_t, timeout=timeout)
+        self.mission_manager.handle_request(command, mission_t, timeout=timeout)
 
         return
             
@@ -200,6 +211,9 @@ class alfred:
     def reset(self):
         self.ngm.cancel_goals()
         self.rvc.stop()
+            }
+            }
+            }
 
 if __name__=="__main__":
     alfred()
