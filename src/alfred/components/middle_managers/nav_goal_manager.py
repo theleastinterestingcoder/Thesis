@@ -90,7 +90,7 @@ class nav_goal_manager:
             rospy.loginfo('Goal Success: reached goal at location [%s, %s, %s]' % self.get_current_position())
             return True
         elif ans == 2:
-            rospy.loginfo('Goal Canceled: goal to location [%s, %s, %s] was canceled' % self.get_current_position())
+            rospy.loginfo('Goal Canceled: goal to location [%s, %s, %s] was canceled' % (loc_x, loc_y, loc_w))
             return None
         else:
             rospy.loginfo('Goal Failure: Unable to reach goal [%s, %s, %s]' % (loc_x, loc_y, loc_w))
@@ -108,6 +108,7 @@ class nav_goal_manager:
         self.tfl.waitForTransform(map_f, base_f, now, rospy.Duration(4.0))
         (pos,quat) = self.tfl.lookupTransform(map_f, base_f, now)
         euler = transformations.euler_from_quaternion(quat)
+        rospy.loginfo('NGM: current_location is at (x,y,w) = (%s, %s, %s)' % (pos[0], pos[1], euler[2]))
         return (pos[0], pos[1], euler[2])
 
     def cancel_goals(self, time=None):

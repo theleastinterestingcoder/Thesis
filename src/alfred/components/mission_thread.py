@@ -28,11 +28,10 @@ class mission_thread(threading.Thread):
         self.pub =  rospy.Publisher('/alfred/mission_control/', String, queue_size=1)
 
         # Execute thread
-        rospy.loginfo('Starting thread with ID = %s' % self.name)
-        ans = self.start_node.execute()
-        rospy.loginfo('Finished thread with ID = %s with flag=%s' % (self.name, ans))
+        rospy.loginfo('Starting thread with ID = %s.' % self.name)
+        self.start_node.execute()
+        rospy.loginfo('Finished thread with ID = %s.' % (self.name))
         mission_thread.mission_manager.reset()
-        print "mission_manager has been stopped"
         
     # Stop by publishing 'cancel'  
     def stop(self):

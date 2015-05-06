@@ -24,24 +24,25 @@ class node:
         self.pf_nd = kwargs.pop('fail_nd', None)
 
         # Get the arguments and keyword arguments for function
-        if 'p_args' in kwargs:
-            self.p_args = kwargs.pop('p_args')
-            self.p_args.extend(args)
-        else:
-            self.p_args = args
-
-        if 'p_kwargs' in kwargs:
-            self.p_kwargs = kwargs.pop('p_kwargs')
-            self.p_kwargs.update(kwargs)
-        else:
-            self.p_kwargs = kwargs
+#         if 'p_args' in kwargs:
+#             self.p_args = kwargs.pop('p_args')
+#             self.p_args.extend(args)
+#         else:
+#             self.p_args = args
+# 
+#         if 'p_kwargs' in kwargs:
+#             self.p_kwargs = kwargs.pop('p_kwargs')
+#             self.p_kwargs.update(kwargs)
+#         else:
+#             self.p_kwargs = kwargs
+        self.p_args = args
+        self.p_kwargs = kwargs
 
 
     
     # Call the function, and then depending on the results, call the successor function
     def execute(self, *args, **kwargs):
         ans =  self.function(*self.p_args, **self.p_kwargs)
-        
         # None is a signal for a Canceled function
         if ans == None:
             return None

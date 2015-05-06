@@ -214,6 +214,19 @@ class verbal_tokenizer():
             raise Exception("Parsing Error: no expression of time found in '%s'" % string)
 
         return ns.parse(group.replace(key, '').strip()) * val
+
+    def parse_string(self, group):
+        # This function is built only for one grouop
+        if not group:
+            raise Exception('verbal_tokenizer: expected group but got none')
+
+        return group.strip()
+
+    def parse_tuple(self, group):
+        if not group:
+            raise Exception('verbal_tokenizer: expected group but got none')
+        return tuple([g.strip() for g in group])
+
 # if __name__=='__main__':
 #     vt = verbal_tokenizer()
 #     # text='go home now look for Quan'

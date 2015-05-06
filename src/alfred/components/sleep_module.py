@@ -46,7 +46,6 @@ class sleep_module:
         rate = rospy.Rate(10) # 10 Hz
         start = rospy.Time.now()
         elapsed = (rospy.Time.now() - start).to_sec()
-
         # If no duration is specified, go to infinite sleep
         if duration == None:
             while True:
@@ -57,6 +56,7 @@ class sleep_module:
             while (elapsed < duration):
                 if self.is_interrupted:
                     return True
+                elapsed = (rospy.Time.now() - start).to_sec()
                 rate.sleep()
         return False
 

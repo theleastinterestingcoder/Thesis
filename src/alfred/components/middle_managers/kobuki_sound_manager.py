@@ -17,7 +17,7 @@ class kobuki_sound_manager:
         self.pub = rospy.Publisher('/mobile_base/commands/sound', msg.Sound, queue_size=10, latch=True)
 
 
-    def beep(self, val=1, done_cb=None):
+    def beep(self, val, done_cb=None):
         m = msg.Sound()
         m.value = val
         self.pub.publish(m)
@@ -29,5 +29,5 @@ if __name__=='__main__':
     ksm = kobuki_sound_manager()
     rospy.loginfo('Asking Kobuki Base to Beep')
     
-    ksm.beep(1)
+    ksm.beep(3)
     rospy.spin()  #Puts the main in an infinite loop so it doesn't exit too quickly

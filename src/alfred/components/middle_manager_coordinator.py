@@ -31,6 +31,7 @@ class coordinator():
     # Cleans up all the resources
     def reset(self):
         self.cancel()
+        self.core_component.frs.cleanup()
         return True
     
     # Cleanup
