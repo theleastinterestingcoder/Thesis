@@ -14,20 +14,6 @@ from json import JSONEncoder
 
 ns = numbers.NumberService()
 
-class foo_component:
-    def __init__(self):
-        self.ngm = foo_component.ngm()
-        self.loc = {}
-        self.loc['alpha'] = [1,1,1]
-        self.loc['beta']  = [2,2,2]
-        self.loc['home']  = [0,0,0]
-
-    class ngm:
-        def go_to_location(self):
-            pass
-    class ksm:
-        def beep(self):
-            pass
 class voice_programmer:
     keywords = {}
     keywords['definition'] = ['define program']
@@ -42,15 +28,27 @@ class voice_programmer:
     keywords['all'] = [item for sublist in temp for item in sublist] # Flattens the list
 
 
-    def __init__(self, core_component=foo_component()):
+    def __init__(self, core_component):
         # instantiates local variables
         self.reset()
 
         # Do the subscriber thing
-        # self.sub = rospy.Subscriber('/alfred/voice_programmer', Some sthring thingy, stuff)
+        self.sub = rospy.Subscriber('/alfred/voice_programmer', Some sthring thingy, stuff)
         self.core_component = core_component
 
         self.action_to_node_dic = core_component.keyword_to_node   
+
+        self.queue_watcher = threading.Thread(target=self.vp_thread_init)
+        self.is_watching = True
+        self.queue_watcher.start()
+        rospy.on_shutdown(self.cleanup)
+
+    # constantly tries to advance the state
+    def vp_thread_init(self):
+        r = rospy.Rate(3)
+        while (self.is_watching):
+            self.advance_state()
+            r.sleep()
 
     # cleans up the variables in this function
     def reset(self):
@@ -71,6 +69,10 @@ class voice_programmer:
         self.mission_start = None
         self.timeout_start = None
         
+    # ends this module
+    def cleanup(self):
+        self.reset()
+        self.is_watching = False
 
     # Returns the current model as a string
     def get_model_as_string(self):
@@ -87,7 +89,7 @@ class voice_programmer:
             ans['mission_start_node'] = self.mission_start
             ans['timeout_start_node'] = self.timeout_start     
         else:
-            throw Exception("VP Error: Program has not been compiled. Please publish 'end program' to compile.")
+            raise Exception("VP Error: Program has not been compiled. Please publish 'end program' to compile.")
 
         return ans
 
@@ -95,6 +97,7 @@ class voice_programmer:
         self.raw_speech = data.replace('time out', 'timeout')
         reg = re.compile('\w+')
         self.speech_chunks += reg.findall(data.lower()) # Remember to clean the data
+        
         
     def advance_state(self):
         self.digest_chunks()
@@ -108,8 +111,8 @@ class voice_programmer:
             if not keyword and not argument:
                 return
             print "keyword=%s\nargument=%s\n" % (keyword, argument)
-            self.is_compiled = False
-            self.update_state(keyword, argument)
+            # self.is_compiled = False
+            # self.update_state(keyword, argument)
 
 
     def update_state(self, keyword, argument):
@@ -161,7 +164,6 @@ class voice_programmer:
     def get_keyword_argument(self, words):
         phrase = " ".join(words)
         keyword, loc1 = self.get_keyword(words)
-
         if not keyword:
             return None, None, None
         else:
@@ -176,7 +178,12 @@ class voice_programmer:
                 return keyword, "", words[loc1+1:]
             argument = phrase[idx1+len(keyword):idx1+idx2+len(keyword)]
         
-        return keyword.strip(), argument.strip(), words[loc1+loc2:]
+        
+        if loc2 == 0:
+            monkey_patch = words[loc1+loc2+1:]
+        else:
+            monkey_patch = words[loc1+loc2:]
+        return keyword.strip(), argument.strip(), monkey_patch
 
 
     # Go through the list of words until you hit a key word
@@ -457,6 +464,77 @@ def get_num_digits(num):
 
 
 if __name__=="__main__":
+    data = '''
+    Define program
+    Define Mission 'first mission'
+        New Node 'go home'
+            Action 'go to location'
+            Arguments Five comma six comma one
+            If success, execute Node 'success beep'
+            If fail, execute Node 'fail beep'
+        End Node
+
+        start node 'go to alpha'
+            Action 'go to alpha'
+            If success, execute Node 'success beep'
+            If fail, execute Node 'fail beep'
+        End Node
+
+        Edit Node 'go to alpha':
+            If success, execute Node 'Go Home'
+        End node
+
+    End Mission
+
+    Define Timeout 'steep hill'
+        Start Node 'go home two':
+            Action: 'go home'
+        End Node
+        Time 10 minutes
+    End Timeout
+
+    Define Modifier
+        Do Now equals True
+    End Modifier
+    End Program 
+    '''
+
+    # data = '''
+    #     define timeout
+    #     time twenty minutes
+    #     start node fail beep
+    #         action 'fail beep'
+    #     end node
+    # end timeout
+    # define program 
+    # define mission patrol
+    #     start node init
+    #         action 'go home'
+    #         if success execute node 'go to point a'
+    #         if fail go home
+    #     end node
+
+    #     new node go to point a
+    #         action 'go to alpha'
+    #         if success go to point b
+    #         if fail go home
+    #     end node
+
+    #     new node go to point b
+    #         action 'go to beta'
+    #         if success go to point a
+    #         if fail go home
+    #     end node
+
+    #     new node go home
+    #         action 'go home'
+    #     end node
+
+    # end mission
+
+
+    # '''
+
     vp = voice_programmer() 
     print voice_programmer.keywords['all']
     vp.input_buffer(data.lower())

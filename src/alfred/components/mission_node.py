@@ -13,7 +13,7 @@
 '''
 
 import json, pdb
-import rospy
+# import rospy
 
 class node:
     # First strip special arguments, then deliver rest as payload

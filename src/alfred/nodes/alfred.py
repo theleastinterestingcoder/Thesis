@@ -145,6 +145,7 @@ class alfred:
 
         # For parsing commands
         self.vt = verbal_tokenizer(self)
+        self.vp = voice_programmer(self)
 
         self.keyword_groups = {
             r'beep with value (\w+)': self.vt.parse_numeric,
