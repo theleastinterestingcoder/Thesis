@@ -52,10 +52,10 @@ class mission_manager():
     def mm_thread_init(self):
         r = rospy.Rate(5)
         while (self.is_watching):
-            rospy.loginfo('mission_queue=%s' % self.mission_queue)
+            # rospy.loginfo('mission_queue=%s' % self.mission_queue)
             if self.mission_thread or not self.mission_queue:
-                rospy.loginfo('mission_thread = %s' % str(self.mission_thread))
-                rospy.loginfo('control_thread = %s' % str(self.control_thread))
+                # rospy.loginfo('mission_thread = %s' % str(self.mission_thread))
+                # rospy.loginfo('control_thread = %s' % str(self.control_thread))
                 pass
             else:
                 self.execute_next_mission()

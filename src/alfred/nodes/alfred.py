@@ -20,11 +20,11 @@ from std_msgs.msg import String
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "components"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "components/middle_managers"))
 from nav_goal_manager import nav_goal_manager
-# from face_recognition_spawner import face_recognition_spawner
-# from kobuki_sound_manager import kobuki_sound_manager
-# from raw_vel_commander import raw_vel_commander
+from face_recognition_spawner import face_recognition_spawner
+from kobuki_sound_manager import kobuki_sound_manager
 from raw_velocity_client import raw_velocity_client
 from middle_manager_coordinator import coordinator
+from verbal_tokenizer import verbal_tokenizer
 
 # Import auxiliary functions
 from mission_node import node
@@ -57,8 +57,8 @@ class alfred:
 
         # Functional Modules
         self.ngm = nav_goal_manager()
-#         self.fds = face_recognition_spawner()
-#         self.ksm = kobuki_sound_manager()
+        self.frs = face_recognition_spawner()
+        self.ksm = kobuki_sound_manager()
         self.coordinator = coordinator(self)
         self.rvc = raw_velocity_client(self.coordinator)
 
@@ -71,9 +71,10 @@ class alfred:
         self.resources = {}  # A dictionary of arguments
         
         # Setup the standard set of nodes
-        success_beep = node(function=self.core_component.ksm.beep, val = 1),  
-        fail_beep    = node(function=self.core_component.ksm.beep, val = 2),  
+        success_beep = node(function=self.ksm.beep, val = 1)
+        fail_beep    = node(function=self.ksm.beep, val = 2)  
 
+        time_expression = r'(.+' + '|'.join(verbal_tokenizer.time_words.keys()) + r')';
         self.keyword_to_node = {
             # 'cancel' :        node(function=self.mission_manager.reset), 
 
@@ -99,16 +100,24 @@ class alfred:
                 r'go to home' :    node(function=self.ngm.go_to_location, *self.loc['home'], success_nd=success_beep, fail_nd=fail_beep), 
                 r'go home' :       node(function=self.ngm.go_to_location, *self.loc['home'], success_nd=success_beep, fail_nd=fail_beep),
             },
-
-            'aux' : {
+            
+            'kobuki_sound_manager' : {
                 r'fail beep'   : fail_beep,
                 r'success beep': success_beep,
-                r'do nothing'  : 
+                r'beep with val (\w+)' : node(function=self.ksm.beep, val = 4),
             },
 
-            'face_recognition_spawner' : {
-                r'look for (\w+)': node(function=self.frs.look_for_face, success_nd=success_beep, fail_nd=fail_beep),
-            }
+            'aux' : {
+                # wait for <time val> 
+                r'wait for ' + time_expression  : node(function=self.ksm.beep, val = 5),
+            },
+
+            # 'face_recognition_spawner' : {
+            #     r'look for (\w+)':  node(function=self.frs.look_for_face, success_nd=success_beep, fail_nd=fail_beep),
+            # }
+        }
+
+
 
             
             # 'set mark alpha' : None, 
@@ -118,90 +127,99 @@ class alfred:
             # 'start face recognition' : None, 
             # 'stop face recognition' : None, 
             # 'start psychotherapist' : None, 
-            # 'success beep':   node(function=self.core_component.ksm.beep, val = 1, done_cb=None),  
-            # 'fail beep':      node(function=self.core_component.ksm.beep, val = 2, done_cb=None), 
-            # 'go to location': node(function=self.core_component.ngm.go_to_location), 
-        } 
+            # 'success beep':   node(function=self.ksm.beep, val = 1, done_cb=None),  
+            # 'fail beep':      node(function=self.ksm.beep, val = 2, done_cb=None), 
+            # 'go to location': node(function=self.ngm.go_to_location), 
+        
 
+        # For parsing commands
+        self.vt = verbal_tokenizer(self)
 
+        self.keyword_groups = {
+            r'beep with val (\w+)': self.vt.parse_numeric,
+            r'wait for '+ time_expression : self.vt.parse_time
+        }
+        
         # ---- Wrap up this long constructor -----
         time.sleep(0.1)
         rospy.loginfo("Ready to receive voice commands")
         rospy.on_shutdown(self.coordinator.cleanup)
         rospy.spin()
 
-    def get_command(self, data):
-        # Convert a string into a command
+    def parse_node_from_command_token(self, token):
+        # Convert a token into a node
+        module, command, node = self.get_items_from_keyword_commands(token)
+
+        # Deal with capture groups, if need be
+        if re.search(r'\(.*\)', command):
+            groups = re.search(command, token).groups()
+
+            p_args = self.keyword_groups['command'](groups)
+            node.p_args = p_args
+
+        return node
+
+    def get_items_from_keyword_commands(self, token):
         for tyype, mapping in self.keyword_to_node.iteritems():
             for keyword in mapping.keys():
-                if keyword in data.data:
-                    return tyype, keyword
-        rospy.loginfo('Warning: command not recognized "%s"' % data)
-        return None, None
-            
+                if keyword in token:
+                    return tyype, keyword, mapping[keyword]
+
+        raise Exception('Warning: command token not recognized "%s"' % token)
+
+                
+    def parse_environment_from_modifier(self, modifier):
+        ans = {'do_now' : True, 'timeout' : None}
+
+        # No modifiers
+        if not modifier:
+            return ans
+
+        if 'then' in modifier:
+            ans['do_now'] = False
+        if 'for' in modifier:
+            tm = self.vt.parse_time(modifier.replace('for', '').replace('now', '').replace('then', ''))
+            ans['timeout'] = {
+                'time' : tm,
+                'mission' : {
+                    'name' : 'modifier timeout',
+                    'start_node': self.keyword_to_node['kobuki_sound_manager']['fail beep'], 
+                    'do_now':  True,
+                }
+            }
+        return ans
+        
 
     def speechCb(self, msg):        
         # Triggers on messages to /recognizer/output
-        module, command = self.get_command(msg)
-        
+        tokens, color = self.vt.tokenize_string(msg.data)
 
-        # # Goes to the goal and then beeps
-        # success_nd =   node(function=self.ksm.beep, **{'val': 1, 'done_cb': None})
-        # fail_nd =   node(function=self.ksm.beep, **{'val': 2, 'done_cb': None})
-        # secondary = node(function=self.ngm.go_to_location, *[2,2] , success_nd = success_nd, fail_nd = fail_nd)
+        # For each token, do a request
+        for t,c in zip(tokens, color):
+            rospy.loginfo('handing token %s as %s' % (t,c))
+            modifier = self.parse_environment_from_modifier(t[0])
+            module, command, foo = self.get_items_from_keyword_commands(t)
+            node = self.parse_node_from_command_token(t[1])
 
-        # home_nd = node(function=self.ngm.go_to_location, *self.loc['home'], success_nd = success_nd, fail_nd = fail_nd)
-        
-        timeout = {}
-        timeout['time'] = 30
-        timeout['mission'] = {'name': 'timeout go backward', 'start_node': self.keyword_to_node['navigation_goal_manager']['go home'], 'do_now':True}
+            self.handle_command(modifier, node, module, command)
 
-
-        # # An example of chaining (note, has to go backwards b/c of the first needs to reference the next)
-        # fail_nd = node(function=self.ksm.beep, val = 2)
-        # success_nd = node(function=self.ksm.beep, val=1)
-
-        # # Manages which module gets to send messages to raw_vel_cmd 
-        # if command in self.keywords['ngm']:
-        #     self.rvc_pub.publish('stop broadcast')
-        # elif command in self.keywords['rvc']:
-        #     self.ngm.cancel_goals()
-
-        # # Symbol -> Semantics; Syntax is almost a little bit too expresive, but understandable
-        # #   once you pick it apart
-        # if command == 'cancel' or command == 'abort goals':
-        #     self.mission_manager.reset()
-        # elif command == 'go to alpha':
-        #     mission_f = node(function=self.ngm.go_to_location, *self.loc['alpha'], success_nd=success_nd, fail_nd=fail_nd)
-        # elif command == 'go to beta':
-        #     mission_f = node(function=self.ngm.go_to_location, *self.loc['beta'], success_nd=success_nd, fail_nd=fail_nd)
-        # elif command == 'go home':
-        #     mission_f = node(function=self.ngm.go_to_location, *self.loc['home'], success_nd=success_nd, fail_nd=fail_nd)
-        # elif command == 'set mark alpha':
-        #     self.loc['alpha'] = self.ngm.get_current_position()
-        # elif command == 'set mark beta'n
-        #     self.loc['beta'] = self.ngm.get_current_position()
-        # elif command in self.keywords['rvc']:
-        #     self.rvc_pub.publish(command)
-        do_now = True
-        
+    def handle_command(self, modifier, node, module, command):
         if module == None:
             return
-
         mission_t = self.keyword_to_node[module][command]
         # If it is a control keyword, then execute it now
         if module == 'control':
             mission_t.execute()
             return
-        if do_now:
+        if module == 'control' and modifier['do_now'] == False:
+            raise Exception('Error: control-typed command "%s" placed in a chain of verbal commands' % command)
+        if modifier['do_now']:
             self.coordinator.cancel()
             self.mission_manager.clear_mission_queue()
 
         rospy.loginfo("--- Command: %s ---" % str(command))
         # If a mission has been formed, then execute the thread
-        self.mission_manager.handle_request(command, mission_t, timeout=timeout)
-
-        return
+        self.mission_manager.handle_request(command, mission_t, timeout=modifier['timeout'])
             
     def cleanup(self):
         # When shutting down be sure to stop the robot! 
@@ -211,9 +229,6 @@ class alfred:
     def reset(self):
         self.ngm.cancel_goals()
         self.rvc.stop()
-            }
-            }
-            }
 
 if __name__=="__main__":
     alfred()

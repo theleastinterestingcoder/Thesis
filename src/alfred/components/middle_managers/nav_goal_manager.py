@@ -112,7 +112,6 @@ class nav_goal_manager:
 
     def cancel_goals(self, time=None):
         short_d = rospy.Duration(0.1) # A buffer time
-        rospy.loginfo('NGM: Canceling Goals at time %s' % rospy.Time.now())
         if not time:
             self.sac.cancel_goals_at_and_before_time(rospy.Time.now()-short_d)
         else:

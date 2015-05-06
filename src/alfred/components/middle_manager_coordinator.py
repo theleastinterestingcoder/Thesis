@@ -17,18 +17,20 @@ class coordinator():
     # handles the cancel command
     def cancel(self):
         self.pub.publish('cancel')
+        self.stop_motion()
         rospy.sleep(0.1)
         return True
 
     # Stops the base
     def stop_motion(self):
         self.core_component.rvc.stop()
+        self.core_component.ngm.cancel_goals()
         rospy.sleep(0.1)
         return True
     
     # Cleans up all the resources
     def reset(self):
-        self.stop_motion()
+        self.cancel()
         return True
     
     # Cleanup
