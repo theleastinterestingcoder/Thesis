@@ -1,0 +1,24 @@
+Define Program 'Patrol Two Points'
+    Define Mission 'first mission'
+        Start Node 'go to alpha'
+            If success, execute Node 'go to beta'
+            If fail, execute Node 'fail beep'
+        End Node
+
+        New Node 'go to beta'
+            If success, execute Node 'go to alpha'
+            If fail, execute Node 'fail beep'
+        End Node
+    End Mission
+
+    Define Modifier
+        Do Now equals True
+        Clear Mission Queue equals true
+    End Modifier
+    
+    Define Timeout 'go home'
+        Start Node 'go home':
+        End Node
+        Time 10 minutes
+    End Timeout
+End Program 

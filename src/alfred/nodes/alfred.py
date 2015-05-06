@@ -24,6 +24,8 @@ from face_recognition_spawner import face_recognition_spawner
 from kobuki_sound_manager import kobuki_sound_manager
 from raw_velocity_client import raw_velocity_client
 from middle_manager_coordinator import coordinator
+
+from voice_programmer import voice_programmer
 from verbal_tokenizer import verbal_tokenizer
 
 # Import auxiliary functions
@@ -120,6 +122,7 @@ class alfred:
                 r'set mark beta'  : node(function=self.set_mark, target='beta'), 
                 r'set resource (\w+) as (\w+)' : node(function=self.save_keyword_variable),
                 r'check resource (\w+) as (\w+)' : node(function=self.check_keyword_variable),
+                r'execute program (\w+)' : node(function=self.execute_program),
 
             },
 
@@ -129,30 +132,19 @@ class alfred:
         }
 
 
-
-            
-            # 'set mark alpha' : None, 
-            # 'set mark beta' : None, 
-            # 'pause speech' : None, 
-            # 'continue speech' : None, 
-            # 'start face recognition' : None, 
-            # 'stop face recognition' : None, 
-            # 'start psychotherapist' : None, 
-            # 'success beep':   node(function=self.ksm.beep, val = 1, done_cb=None),  
-            # 'fail beep':      node(function=self.ksm.beep, val = 2, done_cb=None), 
-            # 'go to location': node(function=self.ngm.go_to_location), 
-        
-
         # For parsing commands
         self.vt = verbal_tokenizer(self)
         self.vp = voice_programmer(self)
 
+        self.programs = self.vp.compile_written_programs()
+
         self.keyword_groups = {
-            r'beep with value (\w+)': self.vt.parse_numeric,
-            r'wait for '+ time_expression : self.vt.parse_time, 
-            r'look for (\w+)' : self.vt.parse_string, 
-            r'set resource (\w+) as (\w+)' : self.vt.parse_tuple,
+            r'beep with value (\w+)'         : self.vt.parse_numeric,
+            r'wait for '+ time_expression    : self.vt.parse_time, 
+            r'look for (\w+)'                : self.vt.parse_string, 
+            r'set resource (\w+) as (\w+)'   : self.vt.parse_tuple,
             r'check resource (\w+) as (\w+)' : self.vt.parse_tuple,
+            r'execute program (\w+)'         : self.vt.parse_string,
         }
         
         # ---- Wrap up this long constructor -----
@@ -180,7 +172,10 @@ class alfred:
                 node.p_args = p_args
             else:
                 node.p_args = (p_args,)
-                
+
+        # A little bit hacky for updating the location of alpha, but it works
+        if command in ['go to alpha', 'go to beta', 'go home', 'go to home']:
+            node.p_args = self.resources[command.replace('go','').replace('to','').strip()]
 
         return node
 
@@ -239,13 +234,9 @@ class alfred:
             return
         if module == 'control' and modifier['do_now'] == False:
             raise Exception('Error: control-typed command "%s" placed in a chain of verbal commands' % command)
-        if command in ['go to alpha', 'go to beta', 'go home', 'go to home']:
-            node.p_args = self.resources[command.replace('go','').replace('to','').strip()]
-            mission_t = self.keyword_to_node[module][command]
         if modifier['do_now']:
             self.coordinator.cancel()
             self.mission_manager.clear_mission_queue()
-
         rospy.loginfo("--- Command: %s ---" % str(command))
         # If a mission has been formed, then execute the thread
         self.mission_manager.handle_request(command, mission_t, timeout=modifier['timeout'])
@@ -268,7 +259,35 @@ class alfred:
         rospy.loginfo(str(self.resources))
         return True
 
+    def execute_program(self, target):
+        if target in self.programs.keys():
+            modifier = self.programs[target]['modifier']
             
+            # Handle the request
+            if modifier['do_now']:
+                self.coordinator.cancel()
+                self.mission_manager.clear_mission_queue()
+
+            
+            # Handle timeouts
+            if self.programs[target]['timeout']:
+                timeout = {}
+                timeout['time'] = self.programs[target]['timeout']['time']
+                timeout['mission'] = {'name' : 'timeout for program %s.afd' % target, 
+                                      'start_node' : self.programs[target]['timeout_start_node'],
+                                      'do_now' : True}
+            else:
+                timeout = None
+            # Handle the program 
+            name = 'timeout for "%s"' % target
+            mission_t = self.programs[target]['mission_start_node']
+            
+            self.mission_manager.handle_request(name, mission_t, timeout=timeout)
+
+            rospy.loginfo('found program!')
+        else:
+            rospy.loginfo('Fatal error: cannot find program "%s" amongst %s"' % (target, self.programs.keys()))
+
     def cleanup(self):
         # When shutting down be sure to stop the robot! 
         self.reset()

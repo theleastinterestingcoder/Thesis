@@ -6,13 +6,14 @@
   The compiler for the Alfred system. 
 
 '''
-import re, math, pdb, json
+import re, math, pdb, json, rospy, os, time
 from semantic import numbers
 from mission_node import node
 
 from json import JSONEncoder
 
 ns = numbers.NumberService()
+from std_msgs.msg import String
 
 class voice_programmer:
     keywords = {}
@@ -20,7 +21,7 @@ class voice_programmer:
     keywords['program'] = ['define mission', 'define timeout', 'define modifier', 'end program']
     keywords['node']    = ['action', 'if success', 'if failure', 'if fail' , 'arguments', 'argument', 'keyword arguments','keyword argument', 'end node']
     keywords['mission'] = ['new node', 'start node', 'edit node', 'edit start node', 'end mission', ]
-    keywords['modifier'] = ['do now', 'do now is', 'end modifier']
+    keywords['modifier'] = ['do now', 'do now is', 'clear mission queue equals', 'clear mission queue', 'end modifier']
     keywords['timeout'] = ['time', 'new node', 'start node',  'edit node', 'edit start node', 'end timeout']
 
 
@@ -33,22 +34,26 @@ class voice_programmer:
         self.reset()
 
         # Do the subscriber thing
-        self.sub = rospy.Subscriber('/alfred/voice_programmer', Some sthring thingy, stuff)
+        self.sub = rospy.Subscriber('/alfred/voice_programmer', String, self.input_buffer)
         self.core_component = core_component
 
-        self.action_to_node_dic = core_component.keyword_to_node   
+        self.action_to_node_dic = {}
+        tmp = core_component.keyword_to_node  
 
-        self.queue_watcher = threading.Thread(target=self.vp_thread_init)
-        self.is_watching = True
-        self.queue_watcher.start()
-        rospy.on_shutdown(self.cleanup)
+        for module, dic in tmp.iteritems():
+            self.action_to_node_dic.update(dic)
 
-    # constantly tries to advance the state
-    def vp_thread_init(self):
-        r = rospy.Rate(3)
-        while (self.is_watching):
-            self.advance_state()
-            r.sleep()
+#         self.queue_watcher = threading.Thread(target=self.vp_thread_init)
+#         self.is_watching = True
+#         self.queue_watcher.start()
+#         rospy.on_shutdown(self.cleanup)
+
+#     # constantly tries to advance the state
+#     def vp_thread_init(self):
+#         r = rospy.Rate(3)
+#         while (self.is_watching):
+#             self.advance_state()
+#             r.sleep()
 
     # cleans up the variables in this function
     def reset(self):
@@ -73,10 +78,33 @@ class voice_programmer:
     def cleanup(self):
         self.reset()
         self.is_watching = False
+    
+    # Looks in the folder for any afds files
+    def compile_written_programs(self):
+        programs = {}
+        path = '/home/alfred/quan_ws/src/alfred/programs/'
+        stuff = os.listdir(path)
+        stuff = [s for s in stuff if s[0] != '.']
+        self.content_pub = rospy.Publisher('/alfred/voice_programmer', String, queue_size=1)
+        time.sleep(0.5)
+        
+        rospy.loginfo('found %s programs: %s' % (len(stuff), stuff))
+        # for each file, compile it
+        for f in stuff:
+            contents= "".join(open(path + f,'r').readlines())
+            rospy.loginfo('publishing contents')
+            self.content_pub.publish(contents)
+            rospy.loginfo('contents=%s' % contents)
+            name = f.replace('.afd', '')
+            time.sleep(0.3)
+            programs[name] = self.get_model_as_dict()
+
+        return programs
+        
 
     # Returns the current model as a string
     def get_model_as_string(self):
-        print json.dumps(self.get_model_as_dict())
+        return json.dumps(self.get_model_as_dict())
 
     # Returns the current model of oneself
     def get_model_as_dict(self):
@@ -94,28 +122,29 @@ class voice_programmer:
         return ans
 
     def input_buffer(self, data):
-        self.raw_speech = data.replace('time out', 'timeout')
+        self.raw_speech = data.data.replace('time out', 'timeout')
         reg = re.compile('\w+')
-        self.speech_chunks += reg.findall(data.lower()) # Remember to clean the data
-        
-        
+        self.speech_chunks += reg.findall(str(data).lower()) # Remember to clean the data
+        time.sleep(0.1)
+        self.advance_state()
+         
     def advance_state(self):
         self.digest_chunks()
 
     def digest_chunks(self):
         words = self.speech_chunks
         raw = words
-
         while raw:
-            keyword, argument, raw = vp.get_keyword_argument(raw)
+            keyword, argument, raw = self.get_keyword_argument(raw)
             if not keyword and not argument:
                 return
-            print "keyword=%s\nargument=%s\n" % (keyword, argument)
-            # self.is_compiled = False
-            # self.update_state(keyword, argument)
+#             rospy.loginfo( "keyword=%s\nargument=%s\n" % (keyword, argument))
+            self.is_compiled = False
+            self.update_state(keyword, argument)
 
 
     def update_state(self, keyword, argument):
+#         rospy.loginfo('state=%s' % self.state)
         # Check if keyword argument is valid
         if keyword not in voice_programmer.keywords[self.state[-1]]:
             res =  'VP Error: Invalid Syntax - keyword "%s" is not recognized in state "%s"' % (keyword, self.state[-1])
@@ -223,6 +252,7 @@ class voice_programmer:
         self.state.append('program')
 
     def handle_end_program(self, keyword, argument):
+
         self.compile_nodes(self.mission_nodes)
         self.compile_nodes(self.timeout_nodes)
 
@@ -234,8 +264,6 @@ class voice_programmer:
             raise Exception('VP Error: No start node was specified for mission')
         if not self.modifier:
             self.modifier = {'do now': False}
-
-
         self.is_compiled=True
 
     # Compile string->references
@@ -269,6 +297,15 @@ class voice_programmer:
         node_space = self.get_node_space()
         if self.find_node(argument, node_space):
             raise Exception("VP Error: node name '%s' already exists in node space '%s'" % self.state[-2])
+        if self.find_node(argument, node_space, include_library=True):
+            hit = self.find_node(argument, node_space, include_library=True)
+            self.node_c.function = hit.function
+            self.node_c.p_args = hit.p_args
+            self.node_c.p_kwargs = hit.p_kwargs
+            self.node_c.name = argument
+            self.node_c.ps_nd = None
+            self.node_c.pf_nd = None
+
         self.state.append('node')
 
         if is_start:
@@ -356,6 +393,11 @@ class voice_programmer:
                 self.modifier['do_now'] = False
             else:
                 raise Exception('Invalid argument "%s" for "%s"' % (argument, keyword))
+        elif keyword in ['clear mission queue equals' or 'clear mission queue']:
+            if argument in ['true', 'equal true']:
+                self.modifier['clear_mission_queue'] = True
+            else:
+                self.modifier['clear_mission_queue'] = False
         else:
             raise Exception('Unrecognized keyword "%s" in handle_state_mission')
 
