@@ -1,0 +1,9 @@
+<!-- simple_demo_commands.launch is for navigating with goals -->
+<launch>
+  <!-- It launches pocket sphinx recognition, turtlebot minimal.launch, and amcl stuff -->
+  <node name="recognizer" pkg="pocketsphinx" type="recognizer.py" output="screen">
+    <param name="lm" value="$(find alfred)/config/demo_commands/demo_commands.lm"/>
+    <param name="dict" value="$(find alfred)/config/demo_commands/demo_commands.dic"/>
+  </node>
+
+</launch>
