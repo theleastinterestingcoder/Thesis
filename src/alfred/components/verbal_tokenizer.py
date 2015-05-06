@@ -86,6 +86,7 @@ class verbal_tokenizer():
         tokenized      = self.tokenize_by_list(string, all_tokens)
         colored_tokens = self.color_tokens(tokenized)
 
+
         print tokenized
         print colored_tokens
 

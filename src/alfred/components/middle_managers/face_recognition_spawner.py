@@ -83,7 +83,7 @@ class face_recognition_spawner:
             if person:                                                                                                                                
                 rospy.loginfo('FRS: %s has been found' % person)
                 ans = True
-            if person == "":
+            elif person == "":
                 rospy.loginfo('FRS: waited for %s, but did not find anyone in %s' % (duration, names))
                 ans = False
             else:

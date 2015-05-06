@@ -41,9 +41,13 @@ ns = numbers.NumberService()
 
 class alfred:
     loc = {}
-    loc['alpha'] = [3, 2, 0]
-    loc['beta']  = [4, 4, 0]
-    loc['home']  = [2.059158, -0.0460, 1.981]
+#     loc['alpha'] = [3, 2, 0]
+#     loc['beta']  = [4, 4, 0]
+#     loc['home']  = [2.059158, -0.0460, 1.981]
+
+    loc['alpha'] = [11.5065189101, 4.72770245195, 0.67383157635]
+    loc['beta']  = [14.5325239431, 5.67256267138, -2.76295673204]
+    loc['home']  = [10.2305996097, 7.14252686295, -0.721237700285]
 
     def __init__(self, name = 'alfred'):
         # Initialize this node if it has not been initialized already
@@ -81,6 +85,16 @@ class alfred:
         success_beep = node(function=self.ksm.beep, *[1] )
         fail_beep    = node(function=self.ksm.beep, *[2] )  
 
+
+        go_home_n      = node(function=self.ngm.go_to_location, *self.resources['home'], success_nd=success_beep, fail_nd=fail_beep)
+        look_for_quan1 = node(function=self.frs.look_for_face, names=['Quan'], success_nd=go_home_n, fail_nd=fail_beep)
+        look_for_quan2 = node(function=self.frs.look_for_face, names=['Quan'], success_nd=go_home_n, fail_nd=fail_beep)
+        go_to_alpha_n1 = node(function=self.ngm.go_to_location, *self.resources['alpha'], success_nd=look_for_quan1, fail_nd=look_for_quan1)
+        go_to_beta_n1  = node(function=self.ngm.go_to_location, *self.resources['beta'], success_nd=look_for_quan2, fail_nd=look_for_quan2)
+        look_for_quan1.pf_nd = go_to_beta_n1
+        look_for_quan2.pf_nd = go_to_alpha_n1
+
+
         time_expression = r'(.+(?:' + '|'.join(verbal_tokenizer.time_words.keys()) + r'))';
         self.keyword_to_node = {
             # 'cancel' :        node(function=self.mission_manager.reset), 
@@ -106,7 +120,7 @@ class alfred:
                 r'go to beta' :    node(function=self.ngm.go_to_location, *self.resources['beta'], success_nd=success_beep, fail_nd=fail_beep), 
                 r'go to home' :    node(function=self.ngm.go_to_location, *self.resources['home'], success_nd=success_beep, fail_nd=fail_beep),
                 r'go home' :       node(function=self.ngm.go_to_location, *self.resources['home'], success_nd=success_beep, fail_nd=fail_beep),
-                r'get current location' : node(function=self.ngm.get_current_position),
+                r'current location' : node(function=self.ngm.get_current_position),
             },
             
             'kobuki_sound_manager' : {
@@ -122,12 +136,14 @@ class alfred:
                 r'set mark beta'  : node(function=self.set_mark, target='beta'), 
                 r'set resource (\w+) as (\w+)' : node(function=self.save_keyword_variable),
                 r'check resource (\w+) as (\w+)' : node(function=self.check_keyword_variable),
-                r'execute program (\w+)' : node(function=self.execute_program),
+                # r'execute program (\w+)' : node(function=self.execute_program),
+                r'execute program sentinel' : go_to_alpha_n1,
 
             },
 
             'face_recognition_spawner' : {
                 r'look for (\w+)':  node(function=self.frs.look_for_face, success_nd=success_beep, fail_nd=fail_beep),
+                r'look for quan':  node(function=self.frs.look_for_face, names=['Quan'], success_nd=success_beep, fail_nd=fail_beep),
             }
         }
 
@@ -144,7 +160,7 @@ class alfred:
             r'look for (\w+)'                : self.vt.parse_string, 
             r'set resource (\w+) as (\w+)'   : self.vt.parse_tuple,
             r'check resource (\w+) as (\w+)' : self.vt.parse_tuple,
-            r'execute program (\w+)'         : self.vt.parse_string,
+            # r'execute program (\w+)'         : self.vt.parse_string,
         }
         
         # ---- Wrap up this long constructor -----
@@ -213,7 +229,11 @@ class alfred:
 
     def speechCb(self, msg):        
         # Triggers on messages to /recognizer/output
-        tokens, color = self.vt.tokenize_string(msg.data)
+        try:
+            tokens, color = self.vt.tokenize_string(msg.data)
+        except Exception as e:
+            rospy.loginfo(e.message)
+            return
 
         # For each token, do a request
         for t,c in zip(tokens, color):
