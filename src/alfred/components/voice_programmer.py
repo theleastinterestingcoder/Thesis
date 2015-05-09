@@ -79,26 +79,28 @@ class voice_programmer:
         self.reset()
         self.is_watching = False
    
+   # Compiles a program
+   def compile_program(self, string):
+        self.set_and_clean_data(string)
+        self.digest_chunks()
+        return self.get_model_as_dict()
 
     # Looks in the folder for any afds files
     def compile_written_programs(self):
         programs = {}
-        path = '/home/alfred/quan_ws/src/alfred/programs/'
+
+        # Grab all the programs
+        path = os.path.join(os.path.dirname(__file__), "..", "programs")
         stuff = os.listdir(path)
-        stuff = [s for s in stuff if s[0] != '.']
-        self.content_pub = rospy.Publisher('/alfred/voice_programmer', String, queue_size=1)
-        time.sleep(0.5)
-        
-        rospy.loginfo('found %s programs: %s' % (len(stuff), stuff))
+        stuff = [s for s in stuff if s[0] != '.'] # ignore the hiddle programs
+
+        rospy.loginfo('Found %s programs: %s' % (len(stuff), stuff))
         # for each file, compile it
         for f in stuff:
             contents= "".join(open(path + f,'r').readlines())
-            rospy.loginfo('publishing contents')
-            self.content_pub.publish(contents)
             rospy.loginfo('contents=%s' % contents)
             name = f.replace('.afd', '')
-            time.sleep(0.3)
-            programs[name] = self.get_model_as_dict()
+            programs[name] = self.compile_program(contents)
 
         return programs
         
@@ -122,16 +124,13 @@ class voice_programmer:
 
         return ans
 
-    def input_buffer(self, data):
+    def set_and_clean_data(self, data):
         self.raw_speech = data.data.replace('time out', 'timeout')
         reg = re.compile('\w+')
         self.speech_chunks += reg.findall(str(data).lower()) # Remember to clean the data
         time.sleep(0.1)
         self.advance_state()
          
-    def advance_state(self):
-        self.digest_chunks()
-
     def digest_chunks(self):
         words = self.speech_chunks
         raw = words
