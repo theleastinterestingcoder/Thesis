@@ -35,10 +35,13 @@ class verbal_tokenizer():
             self.keywords.extend(dic.keys())
 
 
-
-        self.modifiers = ['now', 'then']
-        for_regex = r'\bfor\s+.+(' + '|'.join(verbal_tokenizer.time_words.keys()) + r')\b'
+        self.modifiers = []
+        # use a non-greedy capture group 
+        for_regex = r'\bfor\s+(?:.+?)(' + '|'.join(verbal_tokenizer.time_words.keys()) + r')\b'
+        self.modifiers.append("then " + for_regex) 
+        self.modifiers.append("now " + for_regex) 
         self.modifiers.append(for_regex)
+        self.modifiers.extend(["now", "then"])
     # def __init__(self):
     #     self.keywords =  [
     #      r'cancel',

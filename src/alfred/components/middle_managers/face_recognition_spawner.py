@@ -43,6 +43,7 @@ class face_recognition_spawner:
     
     # Blocks this function until we see a name of a person
     def spin_and_monitor(self, names, duration):
+        names = [n.lower() for n in names]
         # everytime you see a face, add it to the queue
         fq = self.face_queue()
         sub = rospy.Subscriber('recognized_face', String, fq.add)
@@ -61,7 +62,7 @@ class face_recognition_spawner:
 
             while len(fq.queue) > 0:
                 item = fq.queue[0]
-                if item[0] in names:
+                if item[0].lower() in names:
                     sub.unregister()# unsubscribe from the feed
                     return item[0]
                 else:
@@ -73,6 +74,10 @@ class face_recognition_spawner:
 
     # Primitive Action: a wrapped version of spin and monitor that has the properties of a primitive action
     def look_for_face(self, names = ['Quan'], duration=10, done_cb=None):
+        # Clean the data for a little bit
+        if type(names) == str:
+            names = [names]
+        names = [n.lower() for n in names]
         # Allow only face recognition function to be working at a time
         if not self.is_busy:
             self.init_nodes() # Locks the fds

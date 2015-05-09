@@ -41,13 +41,13 @@ ns = numbers.NumberService()
 
 class alfred:
     loc = {}
-#     loc['alpha'] = [3, 2, 0]
-#     loc['beta']  = [4, 4, 0]
-#     loc['home']  = [2.059158, -0.0460, 1.981]
+    loc['alpha'] = [3, 2, 0]
+    loc['beta']  = [4, 4, 0]
+    loc['home']  = [2.059158, -0.460, 1.541]
 
-    loc['alpha'] = [11.5065189101, 4.72770245195, 0.67383157635]
-    loc['beta']  = [14.5325239431, 5.67256267138, -2.76295673204]
-    loc['home']  = [10.2305996097, 7.14252686295, -0.721237700285]
+#     loc['alpha'] = [11.5065189101, 4.72770245195, 0.67383157635]
+#     loc['beta']  = [14.5325239431, 5.67256267138, -2.76295673204]
+#     loc['home']  = [10.2305996097, 7.14252686295, -0.721237700285]
 
     def __init__(self, name = 'alfred'):
         # Initialize this node if it has not been initialized already
@@ -82,8 +82,8 @@ class alfred:
         }  # A dictionary of arguments
         
         # Setup the standard set of nodes
-        success_beep = node(function=self.ksm.beep, *[1] )
-        fail_beep    = node(function=self.ksm.beep, *[2] )  
+        success_beep = node(function=self.ksm.beep, *[5] )
+        fail_beep    = node(function=self.ksm.beep, *[6] )  
 
 
         go_home_n      = node(function=self.ngm.go_to_location, *self.resources['home'], success_nd=success_beep, fail_nd=fail_beep)
