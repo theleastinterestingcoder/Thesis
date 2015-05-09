@@ -78,7 +78,8 @@ class voice_programmer:
     def cleanup(self):
         self.reset()
         self.is_watching = False
-    
+   
+
     # Looks in the folder for any afds files
     def compile_written_programs(self):
         programs = {}

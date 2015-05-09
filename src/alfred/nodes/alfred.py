@@ -142,10 +142,10 @@ class alfred:
                 r'set resource (\w+) as (\w+)' : node(function=self.save_keyword_variable),
                 r'check resource (\w+) as (\w+)' : node(function=self.check_keyword_variable),
 
-                r'start command' : node(function=self.start_cache),
-                r'clear command' : node(function=self.tx.clear),
-                r'execute command' : node(function=self.execute_cache),
-                r'show command'    : node(function=self.print_cache),
+                r'start buffer' : node(function=self.start_cache),
+                r'clear buffer' : node(function=self.tx.clear),
+                r'execute buffer' : node(function=self.execute_cache),
+                r'show buffer'    : node(function=self.print_cache),
 
                 # r'execute program (\w+)' : node(function=self.execute_program),
                 r'execute program sentinel' : go_to_alpha_n1,
@@ -240,12 +240,12 @@ class alfred:
 
     def speechCb(self, msg):        
         if self.tx.is_active:
-            if msg.data in ['stop command', 'end command']:
-                rospy.loginfo('String command has been stopped')
+            if msg.data in ['stop buffer', 'end buffer']:
+                rospy.loginfo('left string buffer state')
                 return self.tx.deactivate()
-            if msg.data == 'clear command':
+            if msg.data == 'clear buffer':
                 return self.tx.clear()
-            elif msg.data == 'execute command':
+            elif msg.data == 'execute buffer':
                 return self.execute_cache()
             elif msg.data == 'undo':
                 self.tx.undo_insert()
