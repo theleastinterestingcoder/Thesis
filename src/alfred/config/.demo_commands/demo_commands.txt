@@ -34,13 +34,10 @@ check resource as
 execute program 
 look for 
 beep with value 
-wait for
+wait for + time_expression    
 look for 
 set resource 
 check resource 
 execute program 
 sentinel
 quan
-cache
-clear
-

@@ -4,8 +4,10 @@ BACKWARD - Main
 BACKWARDS - Main 
 BEEP - Main 
 BETA - Main 
+CACHE - Main 
 CANCEL - Main 
 CHECK - Main 
+CLEAR - Main 
 CURRENT - Main 
 EXECUTE - Main 
 FAIL - Main 
@@ -29,8 +31,6 @@ SENTINEL - Main
 SET - Main 
 STOP - Main 
 SUCCESS - Main 
-TIME - Main [base] 
-EXPRESSION - Main [base] 
 TO - Main 
 TURN - Main 
 VALUE - Main 

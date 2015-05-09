@@ -34,10 +34,12 @@
 <s> EXECUTE PROGRAM </s>
 <s> LOOK FOR </s>
 <s> BEEP WITH VALUE </s>
-<s> WAIT FOR + TIME_EXPRESSION </s>
+<s> WAIT FOR </s>
 <s> LOOK FOR </s>
 <s> SET RESOURCE </s>
 <s> CHECK RESOURCE </s>
 <s> EXECUTE PROGRAM </s>
 <s> SENTINEL </s>
 <s> QUAN </s>
+<s> CACHE </s>
+<s> CLEAR </s>

@@ -1,3 +1,11 @@
 cancel
 go to alpha
 go to beta
+go home
+set mark alpha
+set mark beta
+move foward
+turn left
+turn right
+stop
+
