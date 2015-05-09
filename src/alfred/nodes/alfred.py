@@ -245,6 +245,8 @@ class alfred:
                 return self.tx.clear()
             elif msg.data == 'execute cache':
                 return self.execute_cache()
+            elif msg.data == 'undo':
+                return self.tx.undo_insert()
             else:
                 return self.tx.update(msg.data)
 

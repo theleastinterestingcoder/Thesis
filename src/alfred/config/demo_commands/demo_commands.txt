@@ -36,6 +36,7 @@ start cache
 stop cache
 clear cache
 execute cache
+undo
 
 now
 then
@@ -81,21 +82,9 @@ seventy
 eighty 
 ninety
 hundred
-thousand
-million
-billion
-trillion
 and
 
 second
 seconds
 minute
 minutes
-hour
-hours
-day
-days
-month
-months
-year
-years
