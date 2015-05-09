@@ -19,12 +19,16 @@ from std_msgs.msg import String
 # Some of my own packages
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "components"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "components/middle_managers"))
+
+# These are middle managers
 from nav_goal_manager import nav_goal_manager
 from face_recognition_spawner import face_recognition_spawner
 from kobuki_sound_manager import kobuki_sound_manager
 from raw_velocity_client import raw_velocity_client
 from middle_manager_coordinator import coordinator
 
+# My own auxilary modules
+from text_cacher import text_cacher
 from voice_programmer import voice_programmer
 from verbal_tokenizer import verbal_tokenizer
 
@@ -68,6 +72,7 @@ class alfred:
         self.frs = face_recognition_spawner(self.coordinator)
         self.ksm = kobuki_sound_manager()
         self.rvc = raw_velocity_client(self.coordinator)
+        self.tx  = text_cacher()
 
         # Auxiluary Modules
         self.mission_manager = mission_manager(coordinator=self.coordinator)
@@ -82,8 +87,8 @@ class alfred:
         }  # A dictionary of arguments
         
         # Setup the standard set of nodes
-        success_beep = node(function=self.ksm.beep, *[5] )
-        fail_beep    = node(function=self.ksm.beep, *[6] )  
+        success_beep = node(function=self.ksm.beep, *[1] )
+        fail_beep    = node(function=self.ksm.beep, *[2] )  
 
 
         go_home_n      = node(function=self.ngm.go_to_location, *self.resources['home'], success_nd=success_beep, fail_nd=fail_beep)
@@ -136,6 +141,10 @@ class alfred:
                 r'set mark beta'  : node(function=self.set_mark, target='beta'), 
                 r'set resource (\w+) as (\w+)' : node(function=self.save_keyword_variable),
                 r'check resource (\w+) as (\w+)' : node(function=self.check_keyword_variable),
+                r'start cache' : node(function=self.start_cache),
+                r'clear cache' : node(function=self.tx.clear),
+                r'get cache'   : node(function=self.tx.print_cache),
+                r'execute cache' : node(function=self.execute_cache),
                 # r'execute program (\w+)' : node(function=self.execute_program),
                 r'execute program sentinel' : go_to_alpha_n1,
 
@@ -228,6 +237,18 @@ class alfred:
         
 
     def speechCb(self, msg):        
+        if self.tx.is_active:
+            if msg.data in ['stop cache', 'end cache']:
+                rospy.loginfo('String cache has been stopped')
+                return self.tx.deactivate()
+            if msg.data == 'clear cache':
+                return self.tx.clear()
+            elif msg.data == 'execute cache':
+                return self.execute_cache()
+            else:
+                return self.tx.update(msg.data)
+
+
         # Triggers on messages to /recognizer/output
         try:
             tokens, color = self.vt.tokenize_string(msg.data)
@@ -307,6 +328,17 @@ class alfred:
             rospy.loginfo('found program!')
         else:
             rospy.loginfo('Fatal error: cannot find program "%s" amongst %s"' % (target, self.programs.keys()))
+
+    def execute_cache(self):
+        text = self.tx.get_cache()
+        rospy.loginfo('publishing "%s"' % text)
+        self.tx.deactivate()
+        pub =  rospy.Publisher('/recognizer/output', String, queue_size=1)
+        time.sleep(0.1)
+        pub.publish(text)
+
+    def start_cache(self):
+        self.tx.activate()
 
     def cleanup(self):
         # When shutting down be sure to stop the robot! 
