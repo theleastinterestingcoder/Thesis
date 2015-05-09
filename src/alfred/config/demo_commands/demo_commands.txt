@@ -32,10 +32,13 @@ beep with value
 wait for
 sentinel
 quan
-start cache
-stop cache
-clear cache
-execute cache
+
+start command
+stop command
+end command
+clear command
+execute command
+show command
 undo
 
 now

@@ -141,10 +141,12 @@ class alfred:
                 r'set mark beta'  : node(function=self.set_mark, target='beta'), 
                 r'set resource (\w+) as (\w+)' : node(function=self.save_keyword_variable),
                 r'check resource (\w+) as (\w+)' : node(function=self.check_keyword_variable),
-                r'start cache' : node(function=self.start_cache),
-                r'clear cache' : node(function=self.tx.clear),
-                r'get cache'   : node(function=self.tx.print_cache),
-                r'execute cache' : node(function=self.execute_cache),
+
+                r'start command' : node(function=self.start_cache),
+                r'clear command' : node(function=self.tx.clear),
+                r'execute command' : node(function=self.execute_cache),
+                r'show command'    : node(function=self.print_cache),
+
                 # r'execute program (\w+)' : node(function=self.execute_program),
                 r'execute program sentinel' : go_to_alpha_n1,
 
@@ -238,15 +240,16 @@ class alfred:
 
     def speechCb(self, msg):        
         if self.tx.is_active:
-            if msg.data in ['stop cache', 'end cache']:
-                rospy.loginfo('String cache has been stopped')
+            if msg.data in ['stop command', 'end command']:
+                rospy.loginfo('String command has been stopped')
                 return self.tx.deactivate()
-            if msg.data == 'clear cache':
+            if msg.data == 'clear command':
                 return self.tx.clear()
-            elif msg.data == 'execute cache':
+            elif msg.data == 'execute command':
                 return self.execute_cache()
             elif msg.data == 'undo':
-                return self.tx.undo_insert()
+                self.tx.undo_insert()
+                return self.tx.print_cache()
             else:
                 return self.tx.update(msg.data)
 
@@ -336,7 +339,7 @@ class alfred:
         rospy.loginfo('publishing "%s"' % text)
         self.tx.deactivate()
         pub =  rospy.Publisher('/recognizer/output', String, queue_size=1)
-        time.sleep(0.1)
+        time.sleep(0.2)
         pub.publish(text)
 
     def start_cache(self):
