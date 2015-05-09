@@ -1,4 +1,3 @@
-<s> CANCEL </s>
 <s> GO TO ALPHA </s>
 <s> GO TO BETA </s>
 <s> GO HOME </s>
@@ -16,10 +15,7 @@
 <s> TURN LEFT </s>
 <s> TURN RIGHT </s>
 <s> STOP </s>
-<s> GO TO ALPHA </s>
-<s> GO TO BETA </s>
-<s> GO TO HOME </s>
-<s> GO HOME </s>
+<s> CANCEL </s>
 <s> GET CURRENT LOCATION </s>
 <s> FAIL BEEP </s>
 <s> SUCCESS BEEP </s>
@@ -27,24 +23,33 @@
 <s> WAIT </s>
 <s> SET MARK ALPHA </s>
 <s> SET MARK BETA </s>
-<s> SET RESOURCE AS </s>
-<s> CHECK RESOURCE AS </s>
+<s> SET RESOURCE </s>
+<s> CHECK RESOURCE </s>
+<s> AS </s>
 <s> EXECUTE PROGRAM </s>
 <s> LOOK FOR </s>
 <s> BEEP WITH VALUE </s>
 <s> WAIT FOR </s>
-<s> LOOK FOR </s>
-<s> SET RESOURCE </s>
-<s> CHECK RESOURCE </s>
-<s> EXECUTE PROGRAM </s>
 <s> SENTINEL </s>
 <s> QUAN </s>
-<s> CACHE </s>
-<s> CLEAR </s>
-<s> START </s>
-<s> END </s>
-<s> THEN </s>
+<s> START CACHE </s>
+<s> STOP CACHE </s>
+<s> CLEAR CACHE </s>
+<s> EXECUTE CACHE </s>
 <s> NOW </s>
+<s> THEN </s>
+<s> THEN FOR </s>
+<s> NOW FOR </s>
+<s> FOR ONE </s>
+<s> FOR TWO </s>
+<s> FOR THREE </s>
+<s> FOR FOUR </s>
+<s> FOR FIVE </s>
+<s> FOR SIX </s>
+<s> FOR SEVEN </s>
+<s> FOR EIGHT </s>
+<s> FOR NINE </s>
+<s> FOR TEN </s>
 <s> ONE </s>
 <s> TWO </s>
 <s> THREE </s>

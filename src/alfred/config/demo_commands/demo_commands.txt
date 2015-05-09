@@ -1,4 +1,3 @@
-cancel
 go to alpha
 go to beta
 go home
@@ -16,10 +15,7 @@ move right
 turn left
 turn right
 stop
-go to alpha 
-go to beta 
-go to home 
-go home 
+cancel
 get current location 
 fail beep   
 success beep
@@ -27,24 +23,35 @@ beep with value
 wait
 set mark alpha
 set mark beta  
-set resource  as 
-check resource as 
+set resource
+check resource
+as
 execute program 
 look for 
 beep with value 
 wait for
-look for 
-set resource 
-check resource 
-execute program 
 sentinel
 quan
-cache
-clear
-start
-end
-then
+start cache
+stop cache
+clear cache
+execute cache
+
 now
+then
+then for
+now for
+
+for one
+for two
+for three
+for four
+for five
+for six
+for seven
+for eight
+for nine
+for ten
 
 one
 two
