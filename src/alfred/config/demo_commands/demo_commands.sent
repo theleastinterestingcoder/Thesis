@@ -36,6 +36,7 @@
 <s> STOP CACHE </s>
 <s> CLEAR CACHE </s>
 <s> EXECUTE CACHE </s>
+<s> UNDO </s>
 <s> NOW </s>
 <s> THEN </s>
 <s> THEN FOR </s>
@@ -78,20 +79,8 @@
 <s> EIGHTY </s>
 <s> NINETY </s>
 <s> HUNDRED </s>
-<s> THOUSAND </s>
-<s> MILLION </s>
-<s> BILLION </s>
-<s> TRILLION </s>
 <s> AND </s>
 <s> SECOND </s>
 <s> SECONDS </s>
 <s> MINUTE </s>
 <s> MINUTES </s>
-<s> HOUR </s>
-<s> HOURS </s>
-<s> DAY </s>
-<s> DAYS </s>
-<s> MONTH </s>
-<s> MONTHS </s>
-<s> YEAR </s>
-<s> YEARS </s>
