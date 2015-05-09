@@ -9,6 +9,7 @@ CANCEL - Main
 CHECK - Main 
 CLEAR - Main 
 CURRENT - Main 
+END - Main 
 EXECUTE - Main 
 FAIL - Main 
 FOR - Main 
@@ -29,6 +30,7 @@ RESOURCE - Main
 RIGHT - Main 
 SENTINEL - Main 
 SET - Main 
+START - Main 
 STOP - Main 
 SUCCESS - Main 
 TO - Main 
