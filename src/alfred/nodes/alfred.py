@@ -162,6 +162,7 @@ class alfred:
                 r'print to console (\w+)' : node(function=self.print_to_console),
 
                 r'execute program (\w+)' : node(function=self.execute_program),
+                r'save program as (\w+)' : node(function=self.save_program),
                 r'recompile programs' : node(function=self.recompile_program),
                 r'recompile program' : node(function=self.recompile_program),
 #                 r'execute program sentinel' : go_to_alpha_n1,
@@ -186,6 +187,7 @@ class alfred:
             r'check keyword (\w+) as (\w+)'  : self.vt.parse_tuple,
             r'print to console (\w+)'        : self.vt.parse_string,
             r'execute program (\w+)'         : self.vt.parse_string,
+            r'save program as (\w+)'         : self.vt.parse_string,
         }
         
         # Now for compiling commands
@@ -349,13 +351,13 @@ class alfred:
             modifier = self.programs[target]['modifier']
             
             # Handle the request
-            if modifier['do_now']:
+            if modifier.get('do_now', True):
                 self.coordinator.cancel()
                 self.mission_manager.clear_mission_queue()
 
             
             # Handle timeouts
-            if self.programs[target]['timeout']:
+            if self.programs[target].get('timeout', None):
                 timeout = {}
                 timeout['time'] = self.programs[target]['timeout']['time']
                 timeout['mission'] = {'name' : 'timeout for program %s.afd' % target, 
@@ -379,6 +381,26 @@ class alfred:
         return True
 
 
+    def save_program(self, name):
+        path = os.path.join(os.path.dirname(__file__), "..", "programs")
+        stuff = os.listdir(path)
+        fname = name.strip() + ".afd"
+        
+        # Check that this program does not exist
+        if fname in stuff:
+            rospy.loginfo('Warning: File with that name already exists. Did not save program')
+            return None
+        if fname in self.programs:
+            rospy.loginfo('Warning: program already exists in the list of compiled programs="%s"' % (self.programs.keys()))
+            return None
+        
+        # if things check out, then go ahead and save the program
+        text = self.tx.get_cache()     
+        self.programs[name] = self.vp.compile_program(text)
+        with open(os.path.join(os.path.dirname(__file__), "..", "programs", fname), 'w') as f:
+            f.write(text)
+
+        return True
 
     def execute_cache(self):
         text = self.tx.get_cache()
