@@ -25,6 +25,7 @@ class coordinator():
     def stop_motion(self):
         self.core_component.rvc.stop()
         self.core_component.ngm.cancel_goals()
+        self.core_component.tfm.unfollow()
         rospy.sleep(0.1)
         return True
     

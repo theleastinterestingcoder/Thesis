@@ -25,9 +25,10 @@ from nav_goal_manager import nav_goal_manager
 from face_recognition_spawner import face_recognition_spawner
 from kobuki_sound_manager import kobuki_sound_manager
 from raw_velocity_client import raw_velocity_client
-from middle_manager_coordinator import coordinator
+from turtlebot_follower_manager import turtlebot_follower_manager
 
 # My own auxilary modules
+from middle_manager_coordinator import coordinator
 from text_cacher import text_cacher
 from voice_programmer import voice_programmer
 from verbal_tokenizer import verbal_tokenizer, TokenException
@@ -67,14 +68,16 @@ class alfred:
 
         # Functional Modules
         self.coordinator = coordinator(self)
-
+        
+        # Middle manager module
         self.ngm = nav_goal_manager()
         self.frs = face_recognition_spawner(self.coordinator)
         self.ksm = kobuki_sound_manager()
         self.rvc = raw_velocity_client(self.coordinator)
-        self.tx  = text_cacher()
+        self.tfm = turtlebot_follower_manager()
 
         # Auxiluary Modules
+        self.tx  = text_cacher()
         self.mission_manager = mission_manager(coordinator=self.coordinator)
         
         
@@ -132,6 +135,10 @@ class alfred:
                 r'fail beep'   : fail_beep,
                 r'success beep': success_beep,
                 r'beep with value (\w+)' : node(function=self.ksm.beep, *[4]),
+            },
+
+            'turtlebot_follower_manager' : {
+                'start following' : node(function=self.tfm.follow, success_nd=success_beep, fail_nd=fail_beep),
             },
 
             'aux' : {
@@ -354,8 +361,7 @@ class alfred:
 
     # Resets the resources available to the robot
     def reset(self):
-        self.ngm.cancel_goals()
-        self.rvc.stop()
+        self.coordinator.reset()
 
 if __name__=="__main__":
     alfred()
