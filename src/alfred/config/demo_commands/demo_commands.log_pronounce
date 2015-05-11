@@ -1,50 +1,74 @@
+ACTION - Main 
 ALPHA - Main 
 AND - Main 
-AS - Main 
 BACKWARD - Main 
 BACKWARDS - Main 
 BEEP - Main 
 BETA - Main 
-CACHE - Main 
+BUFFER - Main 
 CANCEL - Main 
 CHECK - Main 
 CLEAR - Main 
+CONSOLE - Main 
 CURRENT - Main 
+DEFINE - Main 
+DELIVER - Main 
+DO - Main 
+EDIT - Main 
 EIGHT - Main 
 EIGHTEEN - Main 
 EIGHTY - Main 
 ELEVEN - Main 
+END - Main 
+pronounce: verbosity is 1
+EQUEALS - By LtoS rules
 EXECUTE - Main 
 FAIL - Main 
+FAILURE - Main 
+FALSE - Main 
 FIFTEEN - Main 
 FIFTY - Main 
 FIVE - Main 
+FOLLOW - Main 
+FOLLOWING - Main 
 FOR - Main 
 FORTY - Main 
 FOUR - Main 
 FOURTEEN - Main 
-pronounce: verbosity is 1
 FOWARD - By LtoS rules
 FOWARDS - By LtoS rules
 GET - Main 
 GO - Main 
 HOME - Main 
 HUNDRED - Main 
+IF - Main 
+IS - Main 
+KEYWORD - Main 
+KEYWORDS - Main 
 LEFT - Main 
 LOCATION - Main 
 LOOK - Main 
 MARK - Main 
+ME - Main 
 MINUTE - Main 
 MINUTES - Main 
+MISSION - Main 
+MODIFIER - Morpheme: MODIFY ER 
 MOVE - Main 
+NEW - Main 
 NINE - Main 
 NINETEEN - Main 
 NINETY - Main 
+NODE - Main 
 NOW - Main 
 ONE - Main 
+PATROL - Main 
+PRINT - Main 
 PROGRAM - Main 
+PROGRAMS - Main 
 QUAN - Main 
-RESOURCE - Main 
+QUEUE - Main 
+RECOMPILE - Morpheme: RE COM PILE 
 RIGHT - Main 
 SECOND - Main 
 SECONDS - Main 
@@ -53,10 +77,12 @@ SET - Main
 SEVEN - Main 
 SEVENTEEN - Main 
 SEVENTY - Main 
+SHOW - Main 
 SIX - Main 
 SIXTEEN - Main 
 SIXTY - Main 
 START - Main 
+STENGEL - Main 
 STOP - Main 
 SUCCESS - Main 
 TEN - Main 
@@ -64,7 +90,10 @@ THEN - Main
 THIRTEEN - Main 
 THIRTY - Main 
 THREE - Main 
+TIME - Main 
+TIMEOUT - Main 
 TO - Main 
+TRUE - Main 
 TURN - Main 
 TWELVE - Main 
 TWENTY - Main 

@@ -1,5 +1,6 @@
 <s> GO TO ALPHA </s>
 <s> GO TO BETA </s>
+<s> GO TO HOME </s>
 <s> GO HOME </s>
 <s> SET MARK ALPHA </s>
 <s> SET MARK BETA </s>
@@ -16,26 +17,70 @@
 <s> TURN RIGHT </s>
 <s> STOP </s>
 <s> CANCEL </s>
-<s> GET CURRENT LOCATION </s>
+<s> CURRENT LOCATION </s>
 <s> FAIL BEEP </s>
 <s> SUCCESS BEEP </s>
 <s> BEEP WITH VALUE </s>
+<s> START FOLLOWING </s>
+<s> START FOLLOW </s>
+<s> FOLLOW ME </s>
 <s> WAIT </s>
 <s> SET MARK ALPHA </s>
 <s> SET MARK BETA </s>
-<s> SET RESOURCE </s>
-<s> CHECK RESOURCE </s>
-<s> AS </s>
-<s> EXECUTE PROGRAM </s>
+<s> SET KEYWORD </s>
+<s> CHECK KEYWORD </s>
+<s> GET KEYWORDS </s>
+<s> START BUFFER </s>
+<s> CLEAR BUFFER </s>
+<s> EXECUTE BUFFER </s>
+<s> PRINT TO CONSOLE </s>
+<s> TRUE </s>
+<s> FALSE </s>
+<s> RECOMPILE PROGRAM </s>
+<s> RECOMPILE PROGRAMS </s>
+<s> LOOK FOR STENGEL </s>
+<s> LOOK FOR QUAN </s>
 <s> LOOK FOR </s>
-<s> BEEP WITH VALUE </s>
-<s> WAIT FOR </s>
 <s> SENTINEL </s>
+<s> PATROL </s>
+<s> DELIVER </s>
 <s> QUAN </s>
-<s> START CACHE </s>
-<s> STOP CACHE </s>
-<s> CLEAR CACHE </s>
-<s> EXECUTE CACHE </s>
+<s> DEFINE PROGRAM </s>
+<s> DEFINE MISSION </s>
+<s> DEFINE TIMEOUT </s>
+<s> DEFINE MODIFIER </s>
+<s> END PROGRAM </s>
+<s> NEW NODE </s>
+<s> START NODE </s>
+<s> ACTION </s>
+<s> IF SUCCESS </s>
+<s> IF FAIL </s>
+<s> IF FAILURE </s>
+<s> IF SUCCESS THEN EXECUTE </s>
+<s> IF FAIL THEN EXECUTE </s>
+<s> IF FAILURE THEN EXECUTE </s>
+<s> IF SUCCESS THEN EXECUTE NODE </s>
+<s> IF FAIL THEN EXECUTE NODE </s>
+<s> IF FAILURE THEN EXECUTE NODE </s>
+<s> EDIT NODE </s>
+<s> EDIT START NODE </s>
+<s> END MISSION </s>
+<s> DO NOW </s>
+<s> DO NOW IS </s>
+<s> CLEAR MISSION QUEUE EQUEALS </s>
+<s> CLEAR MISSION QUEUE </s>
+<s> TIME </s>
+<s> END NODE </s>
+<s> END TIMEOUT </s>
+<s> END MODIFIER </s>
+<s> END MISSION </s>
+<s> END PROGRAM </s>
+<s> START BUFFER </s>
+<s> STOP BUFFER </s>
+<s> END BUFFER </s>
+<s> CLEAR BUFFER </s>
+<s> EXECUTE BUFFER </s>
+<s> SHOW BUFFER </s>
 <s> UNDO </s>
 <s> NOW </s>
 <s> THEN </s>

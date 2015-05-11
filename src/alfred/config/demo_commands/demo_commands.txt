@@ -1,5 +1,6 @@
 go to alpha
 go to beta
+go to home
 go home
 set mark alpha
 set mark beta
@@ -16,29 +17,77 @@ turn left
 turn right
 stop
 cancel
-get current location 
+current location 
 fail beep   
 success beep
 beep with value 
+start following
+start follow
+follow me
+
 wait
 set mark alpha
 set mark beta  
-set resource
-check resource
-as
-execute program 
-look for 
-beep with value 
-wait for
+set keyword
+check keyword
+get keywords
+
+start buffer
+clear buffer
+execute buffer
+print to console
+true
+false
+recompile program
+recompile programs
+look for stengel
+look for quan
+look for
+
 sentinel
+patrol
+deliver
 quan
 
-start command
-stop command
-end command
-clear command
-execute command
-show command
+define program
+define mission
+define timeout
+define modifier
+end program
+new node
+start node
+action
+if success
+if fail
+if failure
+if success then execute 
+if fail then execute
+if failure then execute
+
+if success then execute node
+if fail then execute node
+if failure then execute node
+
+edit node
+edit start node
+end mission
+do now
+do now is
+clear mission queue equeals
+clear mission queue
+time 
+end node
+end timeout
+end modifier
+end mission
+end program
+
+start buffer
+stop buffer
+end buffer
+clear buffer
+execute buffer
+show buffer
 undo
 
 now
