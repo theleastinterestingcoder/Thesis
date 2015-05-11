@@ -1,0 +1,35 @@
+Define Program 'patrol'
+    Define Mission 'first mission'
+        Start Node 'go to alpha'
+            If success, execute Node 'alpha beep'
+            If fail, execute Node 'fail beep'
+        End Node
+
+        New node 'alpha beep'
+            action 'beep with value two'
+            If success, execute Node 'go to beta'
+        End Node
+
+        New Node 'beta beep'
+            action 'beep with value one'
+            if success, execute node 'go to alpha'
+        End Node
+            
+
+        New Node 'go to beta'
+            If success, execute Node 'beta beep'
+            If fail, execute Node 'fail beep'
+        End Node
+    End Mission
+
+    Define Modifier
+        Do Now equals True
+        Clear Mission Queue equals true
+    End Modifier
+    
+    Define Timeout 'go home'
+        Start Node 'go home':
+        End Node
+        Time one minutes
+    End Timeout
+End Program 

@@ -1,24 +1,24 @@
-Define Program 'Patrol Two Points'
+Define Program 'sentinel'
     Define Mission 'first mission'
         Start Node 'go to alpha'
-            If success, execute Node 'go to beta'
+            If success, execute Node 'look for quan one'
             If fail, execute Node 'fail beep'
         End Node
 
-        Start Node 'look for quan one'
+        New Node 'look for quan one'
             Action 'look for quan'
-            if fail, execute node 'go to beta'
             if success, execute node 'go home'
+            if fail, execute node 'go to beta'
         end node
 
-        Start Node 'look for quan two'
+        New Node 'look for quan two'
             Action 'look for quan'
-            if fail, execute node 'go to alpha'
             if success, execute node 'go home'
+            if fail, execute node 'go to alpha'
         end node
 
         New Node 'go to beta'
-            If success, execute Node 'go to alpha'
+            If success, execute Node 'look for quan two'
             If fail, execute Node 'fail beep'
         End Node
     End Mission

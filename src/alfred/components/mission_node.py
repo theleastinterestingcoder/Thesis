@@ -13,6 +13,8 @@
 '''
 
 import json, pdb
+from types import FunctionType
+
 # import rospy
 
 class node:
@@ -54,12 +56,19 @@ class node:
             return self.pf_nd.execute()
 
     def __repr__(self):
+        # represent pointers to the next nodes
         if not self.ps_nd:
             success_func = None
+        elif type(self.ps_nd) == str:
+            success_func = 'String reference: "%s"' % self.ps_nd
         else:
             success_func = self.ps_nd.__dict__.get('function', None)
+
+        # represent pointers to the next nodes
         if not self.pf_nd:
             fail_func = None
+        elif type(self.pf_nd) == str:
+            fail_func  = 'String reference: "%s"' % self.pf_nd
         else:
             fail_func = self.pf_nd.__dict__.get('function', None)
         ans =  '\nObject Node with name "%s" \n{\n function="%s",\n args="%s",\n kwargs"%s",\n success_nd.function="%s",\n fail_nd.function="%s",\n}\n' % (self.name, self.function, self.p_args, self.p_kwargs, success_func, fail_func)

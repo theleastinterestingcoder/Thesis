@@ -1,0 +1,93 @@
+go to alpha
+go to beta
+go home
+set mark alpha
+set mark beta
+move foward
+turn left
+turn right
+cancel
+move fowards
+move foward
+move backwards
+move backward
+move right
+turn left
+turn right
+stop
+cancel
+get current location 
+fail beep   
+success beep
+beep with value 
+wait
+set mark alpha
+set mark beta  
+set resource
+check resource
+as
+execute program 
+look for 
+beep with value 
+wait for
+sentinel
+quan
+
+start command
+stop command
+end command
+clear command
+execute command
+show command
+undo
+
+now
+then
+then for
+now for
+
+for one
+for two
+for three
+for four
+for five
+for six
+for seven
+for eight
+for nine
+for ten
+
+one
+two
+three
+four
+five
+six
+seven
+eight
+nine
+ten
+eleven
+twelve
+thirteen
+fourteen
+fifteen
+sixteen
+seventeen
+eighteen
+nineteen
+twenty
+thirty
+forty
+fifty
+sixty
+seventy
+eighty 
+ninety
+hundred
+and
+
+second
+seconds
+minute
+minutes

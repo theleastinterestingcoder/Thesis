@@ -26,6 +26,7 @@ class verbal_tokenizer():
         'weeks'        : 60*60*24*7,
         'week'         : 60*60*24*7,   
     }
+
     def __init__(self, core_component):
         self.core_component = core_component
         
@@ -201,6 +202,13 @@ class verbal_tokenizer():
         # This function is built only for one grouop
         if not group:
             raise Exception('verbal_tokenizer: expected group but got none')
+
+        # See if we can natively parse this number
+        try:
+            return int(group.strip())
+        except:
+            pass
+
         return ns.parse(group)
     
     def parse_time(self, group):
@@ -210,14 +218,14 @@ class verbal_tokenizer():
 
         # Now parse the time
         flag = True
-        for key, val in verbal_tokenizer.time_words.iteritems():
+        for key, val in longest_first(verbal_tokenizer.time_words.iteritems()):
             if key in group:
                 flag=False
                 break
         if flag:
             raise Exception("Parsing Error: no expression of time found in '%s'" % string)
 
-        return ns.parse(group.replace(key, '').strip()) * val
+        return self.parse_numeric(group.replace(key, '').strip()) * val
 
     def parse_string(self, group):
         # This function is built only for one grouop
@@ -230,6 +238,18 @@ class verbal_tokenizer():
         if not group:
             raise Exception('verbal_tokenizer: expected group but got none')
         return tuple([g.strip() for g in group])
+
+class TokenException(Exception):
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
+def longest_first(tuplets):
+    ans = sorted(tuplets,key=lambda x: len(x[0]))
+
+    for k,v in reversed(ans):
+        yield k,v
 
 # if __name__=='__main__':
 #     vt = verbal_tokenizer()

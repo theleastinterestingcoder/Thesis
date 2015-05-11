@@ -30,7 +30,7 @@ from middle_manager_coordinator import coordinator
 # My own auxilary modules
 from text_cacher import text_cacher
 from voice_programmer import voice_programmer
-from verbal_tokenizer import verbal_tokenizer
+from verbal_tokenizer import verbal_tokenizer, TokenException
 
 # Import auxiliary functions
 from mission_node import node
@@ -90,14 +90,14 @@ class alfred:
         success_beep = node(function=self.ksm.beep, *[1] )
         fail_beep    = node(function=self.ksm.beep, *[2] )  
 
-
-        go_home_n      = node(function=self.ngm.go_to_location, *self.resources['home'], success_nd=success_beep, fail_nd=fail_beep)
-        look_for_quan1 = node(function=self.frs.look_for_face, names=['Quan'], success_nd=go_home_n, fail_nd=fail_beep)
-        look_for_quan2 = node(function=self.frs.look_for_face, names=['Quan'], success_nd=go_home_n, fail_nd=fail_beep)
-        go_to_alpha_n1 = node(function=self.ngm.go_to_location, *self.resources['alpha'], success_nd=look_for_quan1, fail_nd=look_for_quan1)
-        go_to_beta_n1  = node(function=self.ngm.go_to_location, *self.resources['beta'], success_nd=look_for_quan2, fail_nd=look_for_quan2)
-        look_for_quan1.pf_nd = go_to_beta_n1
-        look_for_quan2.pf_nd = go_to_alpha_n1
+# 
+#         go_home_n      = node(function=self.ngm.go_to_location, *self.resources['home'], success_nd=success_beep, fail_nd=fail_beep)
+#         look_for_quan1 = node(function=self.frs.look_for_face, names=['Quan'], success_nd=go_home_n, fail_nd=fail_beep)
+#         look_for_quan2 = node(function=self.frs.look_for_face, names=['Quan'], success_nd=go_home_n, fail_nd=fail_beep)
+#         go_to_alpha_n1 = node(function=self.ngm.go_to_location, *self.resources['alpha'], success_nd=look_for_quan1, fail_nd=look_for_quan1)
+#         go_to_beta_n1  = node(function=self.ngm.go_to_location, *self.resources['beta'], success_nd=look_for_quan2, fail_nd=look_for_quan2)
+#         look_for_quan1.pf_nd = go_to_beta_n1
+#         look_for_quan2.pf_nd = go_to_alpha_n1
 
 
         time_expression = r'(.+(?:' + '|'.join(verbal_tokenizer.time_words.keys()) + r'))';
@@ -145,10 +145,10 @@ class alfred:
                 r'start buffer' : node(function=self.start_cache),
                 r'clear buffer' : node(function=self.tx.clear),
                 r'execute buffer' : node(function=self.execute_cache),
-                r'show buffer'    : node(function=self.print_cache),
+                r'show buffer'    : node(function=self.tx.print_cache),
 
-                # r'execute program (\w+)' : node(function=self.execute_program),
-                r'execute program sentinel' : go_to_alpha_n1,
+                r'execute program (\w+)' : node(function=self.execute_program),
+#                 r'execute program sentinel' : go_to_alpha_n1,
 
             },
 
@@ -161,9 +161,6 @@ class alfred:
 
         # For parsing commands
         self.vt = verbal_tokenizer(self)
-        self.vp = voice_programmer(self)
-
-        self.programs = self.vp.compile_written_programs()
 
         self.keyword_groups = {
             r'beep with value (\w+)'         : self.vt.parse_numeric,
@@ -171,15 +168,50 @@ class alfred:
             r'look for (\w+)'                : self.vt.parse_string, 
             r'set resource (\w+) as (\w+)'   : self.vt.parse_tuple,
             r'check resource (\w+) as (\w+)' : self.vt.parse_tuple,
-            # r'execute program (\w+)'         : self.vt.parse_string,
+            r'execute program (\w+)'         : self.vt.parse_string,
         }
+        
+        # Now for compiling commands
+        self.vp = voice_programmer(self)
+        self.programs = self.vp.compile_written_programs()
         
         # ---- Wrap up this long constructor -----
         time.sleep(0.1)
         rospy.loginfo("Ready to receive voice commands")
         rospy.on_shutdown(self.coordinator.cleanup)
         rospy.spin()
+    
+    # Call back for each text message
+    def speechCb(self, msg):        
+        if self.tx.is_active:
+            if msg.data in ['stop buffer', 'end buffer']:
+                rospy.loginfo('left string buffer state')
+                return self.tx.deactivate()
+            if msg.data == 'clear buffer':
+                return self.tx.clear()
+            elif msg.data == 'execute buffer':
+                return self.execute_cache()
+            elif msg.data == 'undo':
+                self.tx.undo_insert()
+                return self.tx.print_cache()
+            else:
+                return self.tx.update(msg.data)
 
+        # Triggers on messages to /recognizer/output
+        try:
+            tokens, color = self.vt.tokenize_string(msg.data)
+        except Exception as e:
+            rospy.loginfo(e.message)
+            return
+
+        # For each token, do a request
+        for t,c in zip(tokens, color):
+            rospy.loginfo('handing token %s as %s' % (t,c))
+            modifier = self.parse_environment_from_modifier(t[0])
+            module, command, foo = self.get_items_from_keyword_commands(t[1])
+            node = self.parse_node_from_command_token(t[1])
+
+            self.handle_command(modifier, node, module, command)
     def parse_node_from_command_token(self, token):
         # Convert a token into a node
         module, command, node = self.get_items_from_keyword_commands(token)
@@ -208,12 +240,14 @@ class alfred:
 
     def get_items_from_keyword_commands(self, token):
         for tyype, mapping in self.keyword_to_node.iteritems():
-            for keyword in mapping.keys():
+            # Search by the longest mapping first
+            ordering = sorted(mapping.keys(), key=len, reverse=True)
+            for keyword in ordering:
                 reg = re.compile(r'\b'+keyword+r'\b')
                 if reg.search(token):
                     return tyype, keyword, mapping[keyword]
 
-        raise Exception('Warning: command token not recognized "%s"' % token)
+        raise TokenException('Warning: command token not recognized "%s"' % token)
 
                 
     def parse_environment_from_modifier(self, modifier):
@@ -238,37 +272,6 @@ class alfred:
         return ans
         
 
-    def speechCb(self, msg):        
-        if self.tx.is_active:
-            if msg.data in ['stop buffer', 'end buffer']:
-                rospy.loginfo('left string buffer state')
-                return self.tx.deactivate()
-            if msg.data == 'clear buffer':
-                return self.tx.clear()
-            elif msg.data == 'execute buffer':
-                return self.execute_cache()
-            elif msg.data == 'undo':
-                self.tx.undo_insert()
-                return self.tx.print_cache()
-            else:
-                return self.tx.update(msg.data)
-
-
-        # Triggers on messages to /recognizer/output
-        try:
-            tokens, color = self.vt.tokenize_string(msg.data)
-        except Exception as e:
-            rospy.loginfo(e.message)
-            return
-
-        # For each token, do a request
-        for t,c in zip(tokens, color):
-            rospy.loginfo('handing token %s as %s' % (t,c))
-            modifier = self.parse_environment_from_modifier(t[0])
-            module, command, foo = self.get_items_from_keyword_commands(t[1])
-            node = self.parse_node_from_command_token(t[1])
-
-            self.handle_command(modifier, node, module, command)
 
     def handle_command(self, modifier, node, module, command):
         if module == None:

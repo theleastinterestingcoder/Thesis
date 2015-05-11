@@ -1,0 +1,86 @@
+<s> GO TO ALPHA </s>
+<s> GO TO BETA </s>
+<s> GO HOME </s>
+<s> SET MARK ALPHA </s>
+<s> SET MARK BETA </s>
+<s> MOVE FOWARD </s>
+<s> TURN LEFT </s>
+<s> TURN RIGHT </s>
+<s> CANCEL </s>
+<s> MOVE FOWARDS </s>
+<s> MOVE FOWARD </s>
+<s> MOVE BACKWARDS </s>
+<s> MOVE BACKWARD </s>
+<s> MOVE RIGHT </s>
+<s> TURN LEFT </s>
+<s> TURN RIGHT </s>
+<s> STOP </s>
+<s> CANCEL </s>
+<s> GET CURRENT LOCATION </s>
+<s> FAIL BEEP </s>
+<s> SUCCESS BEEP </s>
+<s> BEEP WITH VALUE </s>
+<s> WAIT </s>
+<s> SET MARK ALPHA </s>
+<s> SET MARK BETA </s>
+<s> SET RESOURCE </s>
+<s> CHECK RESOURCE </s>
+<s> AS </s>
+<s> EXECUTE PROGRAM </s>
+<s> LOOK FOR </s>
+<s> BEEP WITH VALUE </s>
+<s> WAIT FOR </s>
+<s> SENTINEL </s>
+<s> QUAN </s>
+<s> START CACHE </s>
+<s> STOP CACHE </s>
+<s> CLEAR CACHE </s>
+<s> EXECUTE CACHE </s>
+<s> UNDO </s>
+<s> NOW </s>
+<s> THEN </s>
+<s> THEN FOR </s>
+<s> NOW FOR </s>
+<s> FOR ONE </s>
+<s> FOR TWO </s>
+<s> FOR THREE </s>
+<s> FOR FOUR </s>
+<s> FOR FIVE </s>
+<s> FOR SIX </s>
+<s> FOR SEVEN </s>
+<s> FOR EIGHT </s>
+<s> FOR NINE </s>
+<s> FOR TEN </s>
+<s> ONE </s>
+<s> TWO </s>
+<s> THREE </s>
+<s> FOUR </s>
+<s> FIVE </s>
+<s> SIX </s>
+<s> SEVEN </s>
+<s> EIGHT </s>
+<s> NINE </s>
+<s> TEN </s>
+<s> ELEVEN </s>
+<s> TWELVE </s>
+<s> THIRTEEN </s>
+<s> FOURTEEN </s>
+<s> FIFTEEN </s>
+<s> SIXTEEN </s>
+<s> SEVENTEEN </s>
+<s> EIGHTEEN </s>
+<s> NINETEEN </s>
+<s> TWENTY </s>
+<s> THIRTY </s>
+<s> FORTY </s>
+<s> FIFTY </s>
+<s> SIXTY </s>
+<s> SEVENTY </s>
+<s> EIGHTY </s>
+<s> NINETY </s>
+<s> HUNDRED </s>
+<s> AND </s>
+<s> SECOND </s>
+<s> SECONDS </s>
+<s> MINUTE </s>
+<s> MINUTES </s>

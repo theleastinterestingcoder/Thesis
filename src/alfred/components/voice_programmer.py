@@ -14,6 +14,7 @@ from json import JSONEncoder
 
 ns = numbers.NumberService()
 from std_msgs.msg import String
+from verbal_tokenizer import TokenException
 
 class voice_programmer:
     keywords = {}
@@ -34,27 +35,16 @@ class voice_programmer:
         self.reset()
 
         # Do the subscriber thing
-        self.sub = rospy.Subscriber('/alfred/voice_programmer', String, self.input_buffer)
+#         self.sub = rospy.Subscriber('/alfred/voice_programmer', String, self.input_buffer)
         self.core_component = core_component
+        self.vt = core_component.vt
 
         self.action_to_node_dic = {}
         tmp = core_component.keyword_to_node  
 
         for module, dic in tmp.iteritems():
             self.action_to_node_dic.update(dic)
-
-#         self.queue_watcher = threading.Thread(target=self.vp_thread_init)
-#         self.is_watching = True
-#         self.queue_watcher.start()
-#         rospy.on_shutdown(self.cleanup)
-
-#     # constantly tries to advance the state
-#     def vp_thread_init(self):
-#         r = rospy.Rate(3)
-#         while (self.is_watching):
-#             self.advance_state()
-#             r.sleep()
-
+    
     # cleans up the variables in this function
     def reset(self):
         # State Variables
@@ -79,8 +69,9 @@ class voice_programmer:
         self.reset()
         self.is_watching = False
    
-   # Compiles a program
-   def compile_program(self, string):
+    # Compiles a program
+    def compile_program(self, string):
+        self.reset()
         self.set_and_clean_data(string)
         self.digest_chunks()
         return self.get_model_as_dict()
@@ -94,10 +85,9 @@ class voice_programmer:
         stuff = os.listdir(path)
         stuff = [s for s in stuff if s[0] != '.'] # ignore the hiddle programs
 
-        rospy.loginfo('Found %s programs: %s' % (len(stuff), stuff))
         # for each file, compile it
         for f in stuff:
-            contents= "".join(open(path + f,'r').readlines())
+            contents= "".join(open(path + '/' + f,'r').readlines())
             rospy.loginfo('contents=%s' % contents)
             name = f.replace('.afd', '')
             programs[name] = self.compile_program(contents)
@@ -125,11 +115,11 @@ class voice_programmer:
         return ans
 
     def set_and_clean_data(self, data):
-        self.raw_speech = data.data.replace('time out', 'timeout')
-        reg = re.compile('\w+')
-        self.speech_chunks += reg.findall(str(data).lower()) # Remember to clean the data
-        time.sleep(0.1)
-        self.advance_state()
+        cleaned = data.replace('time out', 'timeout')
+        self.raw_speech = cleaned
+        reg = re.compile('(?:[\w0-9]+)')
+        self.speech_chunks += reg.findall(str(cleaned).lower()) # Remember to clean the data
+        self.digest_chunks()
          
     def digest_chunks(self):
         words = self.speech_chunks
@@ -231,12 +221,18 @@ class voice_programmer:
 
     # Finds the start node with the matching name
     def find_node(self, name, node_space, include_library=False):
+        # Find name of node in the space of nodes already created
         for n in node_space:
             if n.name == name:
                 return n
-        if include_library and name in self.action_to_node_dic:
-            return self.action_to_node_dic[name]
+        # Find node from the library of actions provided by the core_component
+        if include_library:
+            try:
+                return self.core_component.parse_node_from_command_token(name)
+            except TokenException:
+                return None
         return None
+
 
     def find_start_node(self, node_space):
         for n in self.mission_nodes:
@@ -273,13 +269,13 @@ class voice_programmer:
 
         # For each node, do a name lookup in the node space and the library
         for n in node_space:
-            if n.ps_nd:
+            if n.ps_nd and type(n.ps_nd) == str:
                 found = self.find_node(n.ps_nd, node_space, include_library=True)
                 if not found:
                     raise Exception('Could not not dereference the pointer "%s" for node "%s"' % (n.ps_nd, n.name))
                 else:
                     n.ps_nd = found
-            if n.pf_nd:
+            if n.pf_nd and type(n.pf_nd) == str:
                 found = self.find_node(n.pf_nd,  node_space, include_library=True)
                 if not found:
                     raise Exception('Could not not dereference the pointer "%s" for node "%s"' % (n.pf_nd, n.name))
@@ -295,16 +291,13 @@ class voice_programmer:
         self.node_c.name = argument
 
         node_space = self.get_node_space()
+        # If the name of the node is already in the namespace or the library...
         if self.find_node(argument, node_space):
             raise Exception("VP Error: node name '%s' already exists in node space '%s'" % self.state[-2])
+        # Check if it is in the library
         if self.find_node(argument, node_space, include_library=True):
             hit = self.find_node(argument, node_space, include_library=True)
-            self.node_c.function = hit.function
-            self.node_c.p_args = hit.p_args
-            self.node_c.p_kwargs = hit.p_kwargs
-            self.node_c.name = argument
-            self.node_c.ps_nd = None
-            self.node_c.pf_nd = None
+            self.copy_into_node_c(hit)
 
         self.state.append('node')
 
@@ -360,11 +353,13 @@ class voice_programmer:
 
     def handle_state_node(self, keyword, argument):
         if keyword == 'action':
+            node_space = self.get_node_space()
             # copy over the function and kwargs
-            n = self.action_to_node(keyword, argument)
-            self.node_c.function = n.function
-            self.node_c.p_args   = n.p_args
-            self.node_c.p_kwargs = n.p_kwargs
+            hit = self.find_node(argument, node_space, include_library=True)
+            if not hit:
+                raise Exception('Error: Could not resolve action "%s" ' % argument)
+            self.copy_into_node_c(hit)
+
         # Keep as string; need to resolve as pointer later
         elif keyword == 'if success':
             self.node_c.ps_nd = self.parse_node_alias_from_argument(keyword, argument)
@@ -403,7 +398,7 @@ class voice_programmer:
 
     def handle_state_timeout(self, keyword, argument):
         if keyword == 'time':
-            self.timeout['time'] = parse_arg_as_seconds(argument)
+            self.timeout['time'] = self.core_component.vt.parse_time(argument)
         else:
             raise Exception('Unrecognized keyword "%s" in handle_state_mission')
 
@@ -426,6 +421,13 @@ class voice_programmer:
         elif prev_state == 'timeout':
             return self.timeout_nodes
         raise Exception('VP Error: there is no node space in state "%s"' % prev_state)
+    
+    def copy_into_node_c(self, target):
+        self.node_c.function = target.function
+        self.node_c.p_args = target.p_args
+        self.node_c.p_kwargs = target.p_kwargs
+        self.node_c.ps_nd = target.ps_nd
+        self.node_c.pf_nd = target.pf_nd
 
 
 def parse_arg_as_num(argument):
