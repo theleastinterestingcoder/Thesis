@@ -14,6 +14,7 @@ import time
 
 class kobuki_sound_manager:
     def __init__(self):
+        self.name = 'kobuki_sound_manager'
         self.pub = rospy.Publisher('/mobile_base/commands/sound', msg.Sound, queue_size=10, latch=True)
 
 
