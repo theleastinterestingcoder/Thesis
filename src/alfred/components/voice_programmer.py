@@ -40,10 +40,7 @@ class voice_programmer:
         self.vt = core_component.vt
 
         self.action_to_node_dic = {}
-        tmp = core_component.keyword_to_node  
-
-        for module, dic in tmp.iteritems():
-            self.action_to_node_dic.update(dic)
+        self.update_library()
     
     # cleans up the variables in this function
     def reset(self):
@@ -75,6 +72,14 @@ class voice_programmer:
         self.set_and_clean_data(string)
         self.digest_chunks()
         return self.get_model_as_dict()
+    
+    # Updates the library 
+    def update_library(self):
+        self.action_to_node_dic = {}
+        tmp = self.core_component.keyword_to_node  
+
+        for module, dic in tmp.iteritems():
+            self.action_to_node_dic.update(dic)
 
     # Looks in the folder for any afds files
     def compile_written_programs(self):

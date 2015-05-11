@@ -1,5 +1,5 @@
-Define Program 'sentinel'
-    Define Mission 'first mission'
+Define Program 'delivery'
+    Define Mission 'delivery'
         Start Node 'go to alpha'
             If success, execute Node 'look for quan one'
             If fail, execute Node 'fail beep'
@@ -23,9 +23,19 @@ Define Program 'sentinel'
         End Node
 
         New Node 'exit loop'
-          action set keyword quan as true
-          if success, execute node go home
+          action for five seconds set keyword quan as true
+          if success, execute node go home with result
         End node
+
+        New Node 'go home with result'
+           action go home
+           if successful, execute check keyword quan as true
+        End node
+
+        New Node 'check keyword quan as true'
+           if successful, execute beep with value one
+           if fail, execute beep with value two
+        End Node
     End Mission
 
     Define Modifier

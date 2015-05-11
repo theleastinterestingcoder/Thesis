@@ -139,6 +139,8 @@ class alfred:
 
             'turtlebot_follower_manager' : {
                 'start following' : node(function=self.tfm.follow, success_nd=success_beep, fail_nd=fail_beep),
+                'start follow' : node(function=self.tfm.follow, success_nd=success_beep, fail_nd=fail_beep),
+                'follow me' : node(function=self.tfm.follow, success_nd=success_beep, fail_nd=fail_beep),
             },
 
             'aux' : {
@@ -146,15 +148,22 @@ class alfred:
                 r'wait ' + time_expression  : node(function=rospy.sleep, *[5], success_nd=success_beep, fail_nd=fail_beep),
                 r'set mark alpha' : node(function=self.set_mark, target='alpha'),
                 r'set mark beta'  : node(function=self.set_mark, target='beta'), 
-                r'set resource (\w+) as (\w+)' : node(function=self.save_keyword_variable),
-                r'check resource (\w+) as (\w+)' : node(function=self.check_keyword_variable),
+                r'set mark home'  : node(function=self.set_mark, target='home'), 
+
+                r'set keyword (\w+) as (\w+)' : node(function=self.save_keyword_variable),
+                r'check keyword (\w+) as (\w+)' : node(function=self.check_keyword_variable),
+                r'get keywords' : node(function=self.print_keywords),
 
                 r'start buffer' : node(function=self.start_cache),
                 r'clear buffer' : node(function=self.tx.clear),
                 r'execute buffer' : node(function=self.execute_cache),
                 r'show buffer'    : node(function=self.tx.print_cache),
 
+                r'print to console (\w+)' : node(function=self.print_to_console),
+
                 r'execute program (\w+)' : node(function=self.execute_program),
+                r'recompile programs' : node(function=self.recompile_program),
+                r'recompile program' : node(function=self.recompile_program),
 #                 r'execute program sentinel' : go_to_alpha_n1,
 
             },
@@ -173,8 +182,9 @@ class alfred:
             r'beep with value (\w+)'         : self.vt.parse_numeric,
             r'wait for '+ time_expression    : self.vt.parse_time, 
             r'look for (\w+)'                : self.vt.parse_string, 
-            r'set resource (\w+) as (\w+)'   : self.vt.parse_tuple,
-            r'check resource (\w+) as (\w+)' : self.vt.parse_tuple,
+            r'set keyword (\w+) as (\w+)'    : self.vt.parse_tuple,
+            r'check keyword (\w+) as (\w+)'  : self.vt.parse_tuple,
+            r'print to console (\w+)'        : self.vt.parse_string,
             r'execute program (\w+)'         : self.vt.parse_string,
         }
         
@@ -278,8 +288,6 @@ class alfred:
             }
         return ans
         
-
-
     def handle_command(self, modifier, node, module, command):
         if module == None:
             return
@@ -307,14 +315,35 @@ class alfred:
         if key not in self.resources:
             return False
         ans = self.resources[key] == val
-        rospy.loginfo('aux: resources[%s] == "%s" evaluates to %s' % (key, val, ans))
+        rospy.loginfo('aux: keyword[%s] == "%s" evaluates to %s' % (key, val, ans))
         return ans
 
-    def set_mark(self, target):
-        self.resources[target] = self.ngm.get_current_position()
-        rospy.loginfo(str(self.resources))
+    def print_keywords(self):
+        rospy.loginfo('keywords in memory contain:\n')
+
+        for key, val in self.resources.iteritems():
+            rospy.loginfo('  %s:%s' % (key, val))
+        return True
+    
+    def print_to_console(self, msg):
+        rospy.loginfo(msg)
         return True
 
+    def set_mark(self, target):
+        # This is a little bit hacky, but this will change the node library
+        self.resources[target] = self.ngm.get_current_position()
+        rospy.loginfo(str(self.resources))
+
+        # Reform the nodes in navigation_goal_manager
+        for command, node in self.keyword_to_node['navigation_goal_manager'].iteritems():
+            if 'go' in command:
+                target_c = command.split()[-1]
+                node.p_args=self.resources[target_c]
+
+        return True
+
+    # Note! Not truly a primitive action since this always returns None. Need to save to an external
+    # envrionment
     def execute_program(self, target):
         if target in self.programs.keys():
             modifier = self.programs[target]['modifier']
@@ -343,6 +372,13 @@ class alfred:
             rospy.loginfo('found program!')
         else:
             rospy.loginfo('Fatal error: cannot find program "%s" amongst %s"' % (target, self.programs.keys()))
+
+    def recompile_program(self):
+        self.vp.update_library()
+        self.programs = self.vp.compile_written_programs()
+        return True
+
+
 
     def execute_cache(self):
         text = self.tx.get_cache()
